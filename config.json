@@ -1,0 +1,13 @@
+{
+  "STOCK_PRIMARY": "GameStop",
+  "STOCK_FRACTION_DIGITS": 1,
+  "STOCK_MULTIPLIER_ABOVE_SELL": 0.5,
+  "STOCK_AMOUNT": 1,
+
+  "USERNAME": "noelschrijver@gmail.com",
+  "PASSWORD": "WatIsDezeGame123",
+
+  "DEMO_MODE": true,
+  "LIVE_ACCOUNT_NUM": 1
+}
+
