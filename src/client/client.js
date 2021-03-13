@@ -7,6 +7,8 @@ const findPrice = require("./phases/findPrice")
 const createSellOrder = require("./phases/createSellOrder")
 const awaitSellOrder = require("./phases/awaitSellOrder")
 
+const discordClient = require("./discordClient")
+
 const webdriver = require("../client/webdriver")
 const config = require("../../config.json");
 const location = require("../utils/locations")
@@ -24,6 +26,8 @@ module.exports = {
         utils.log.generic(`Initialising the Harkinator`)
         const driver = await webdriver.start()
         const stockElement = await init(driver)
+
+        await discordClient.init(config.DISCORD_TOKEN)
 
         utils.log.generic(`Starting trading sequence`)
         utils.log.generic(`Probing buy and sell price = ${await utils.getStockBuyPrice(stockElement)} | ${await utils.getStockSellPrice(stockElement)}`)
@@ -89,6 +93,8 @@ async function trade(driver, stockElement) {
 
         // Create an order for current position
         const curSellPriceLevel = await createSellOrder.execute(driver, stockElement, positions, curSellPrice)
+        if (!curSellPriceLevel)
+            continue
 
         // Check for changes in price or fulfillment
         const newSellPrice = await awaitSellOrder.execute(driver, stockElement, positions, boughtSellLevel, curSellPrice, curSellPriceLevel)

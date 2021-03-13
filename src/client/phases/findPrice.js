@@ -20,8 +20,13 @@ module.exports = {
 
         const avg = sum / priceArray.length;
         const spread = await utils.getSpread(element)
+        const stockSellPrice = await utils.getStockSellPrice(element)
 
-        return avg + (spread * percentageAboveSell)
+        if (stockSellPrice < avg)
+            return stockSellPrice + (spread * percentageAboveSell)
+        else
+            return avg + (spread * percentageAboveSell)
+
     },
 
     async sell(driver, element, percentageProfit) {

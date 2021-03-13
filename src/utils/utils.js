@@ -2,6 +2,7 @@ const chalk = require("chalk");
 const location = require("./locations")
 const {By} = require("selenium-webdriver");
 const config = require("../../config.json")
+const discordClient = require("../client/discordClient")
 
 module.exports = {
     async getStockBuyPrice(element) {
@@ -90,6 +91,7 @@ module.exports = {
         error(message) {
             const timestamp = this.getTimeStamp()
             console.log(chalk.redBright(`[${timestamp}] ` + message))
+            discordClient.sendMessage(`[${timestamp}] ` + message)
         },
         debug(message) {
             if (config.DEBUG) {
@@ -97,7 +99,10 @@ module.exports = {
                 console.log(chalk.whiteBright(`[${timestamp}] ` + message))
             }
         },
-
+        discord(message) {
+            const timestamp = this.getTimeStamp()
+            discordClient.sendMessage(`[${timestamp}] ` + message)
+        },
         getTimeStamp() {
             let unix_timestamp = Date.now()
             const date = new Date(unix_timestamp);
