@@ -32,9 +32,10 @@ module.exports = {
                     let sellPrice = await utils.getStockSellPrice(stockElement)
                     return sellPrice += spread * config.STOCK_LOSS_MULTIPLIER
                 case modes.PROFIT:
-                    utils.log.generic(`Sell order is in profit mode`)
+                    return await findPrice.sell(driver, stockElement, config.STOCK_PROFIT)
                     break
                 case modes.BREAK_EVEN:
+                    return await findPrice.sell(driver, stockElement, 0)
                     return
             }
         }
@@ -50,14 +51,18 @@ module.exports = {
 async function getSellMode(driver, stockElement, boughtSellLevel) {
     const spread = await utils.getSpread(stockElement)
     const upperLimitAmount = spread * config.STOCK_SELL_UPPER_LIMIT
-    const lowerLimitAmount = spread * config.STOCK_SELL_LOWER_LIMIT
+    const lowerLimitAmountBreakEven = spread * config.STOCK_SELL_LOWER_LIMIT_BREAK_EVEN
+    const lowerLimitAmountLoss = spread * config.STOCK_SELL_LOWER_LIMIT_LOSS
     const upperLimit = boughtSellLevel + upperLimitAmount
-    const lowerLimit = boughtSellLevel - lowerLimitAmount
+    const lowerLimitBreakEven = boughtSellLevel - lowerLimitAmountBreakEven
+    const lowerLimitLoss = boughtSellLevel - lowerLimitAmountLoss
 
     const sellPrice = await utils.getStockSellPrice(stockElement)
 
-    utils.log.debug(`${sellPrice} < ${lowerLimit} | ${sellPrice} > ${upperLimit}`)
-    if (sellPrice < lowerLimit)
+    utils.log.debug(`${sellPrice} < ${lowerLimitBreakEven} | ${sellPrice} > ${upperLimit}`)
+    if (sellPrice < lowerLimitBreakEven && sellPrice > lowerLimitLoss)
+        return modes.BREAK_EVEN
+    else if (sellPrice < lowerLimitLoss)
         return modes.LOSS
     else if (sellPrice > upperLimit)
         return modes.PROFIT
@@ -66,12 +71,13 @@ async function getSellMode(driver, stockElement, boughtSellLevel) {
 }
 
 async function isSellPriceDelta(driver, stockElement, curSellPriceLevel) {
-    const curStockSellPrice = utils.getStockSellPrice(stockElement)
+    const curStockSellPrice = await utils.getStockSellPrice(stockElement)
 
     const spread = await utils.getSpread(stockElement)
     const LimitAmount = spread * config.STOCK_EVALUATE_DELTA
     const upperLimit = curSellPriceLevel + LimitAmount
     const lowerLimit = curSellPriceLevel - LimitAmount
 
+    utils.log.debug(`${curStockSellPrice} < ${lowerLimit} | ${curStockSellPrice} > ${upperLimit}`)
     return curStockSellPrice > upperLimit || curStockSellPrice < lowerLimit;
 }

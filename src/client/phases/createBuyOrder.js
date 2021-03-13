@@ -6,8 +6,6 @@ const utils = require("../../utils/utils");
 module.exports = {
     async execute(driver, stockElement, amount = 1, price) {
 
-
-
         await stockElement.findElement(By.className("buy")).findElement(By.className("btn")).click()
 
         const amountString = amount.toFixed(config.STOCK_FRACTION_DIGITS).toString().replace('.', ',')
