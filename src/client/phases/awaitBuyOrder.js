@@ -7,6 +7,10 @@ module.exports = {
     async execute(driver, stockElement, amount = 1, sellLevel) {
         utils.log.generic("Awaiting buy order fulfillment")
 
+        while(await utils.getPositionsTotal(driver) <= 0 && await utils.getOrdersTotal(driver) <= 0) {
+            continue
+        }
+
         while (await utils.getPositionsTotal(driver) <= 0) {
 
             if (await isDeltaTooHigh(stockElement, sellLevel)) {

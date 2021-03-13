@@ -103,5 +103,7 @@ async function trade(driver, stockElement) {
             curSellPrice = newSellPrice
     }
 
-    await driver.sleep(1000)
+    utils.log.discord(`:moneybag: ${await utils.getBalance(driver)} :moneybag:`)
+
+    await driver.sleep(500)
 }

@@ -15,6 +15,11 @@ module.exports = {
         return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',', '.'))
     },
 
+    async getBalance(driver) {
+        const balance = await driver.findElement(By.xpath(location.balance_amount)).getText()
+        return balance
+    },
+
     async getOrdersTotal(driver) {
         const stockListElements = await driver.findElements(By.tagName("trade-instrument-order-list"))
         let openOrderTotal = 0
@@ -23,7 +28,7 @@ module.exports = {
                 const stockAmountString = await stockListElement.findElement(By.className("quantity-badge")).getText()
                 openOrderTotal += parseFloat(stockAmountString.replace("+", ""))
             } catch (e) {
-                this.log.warning(e)
+                
             }
         }
         return openOrderTotal

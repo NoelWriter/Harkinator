@@ -20,5 +20,7 @@ module.exports = {
     information_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[3]/trade-deal-ticket/place-order/div/scroll-pane/div[1]/div[1]/div[2]/popup-button/font-icon",
     information_exit_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[3]/trade-deal-ticket/place-order/margin-info-popup/div[1]/div[2]/font-icon",
 
+    balance_amount: "/html/body/app-root/div/topbar/div/div[2]/balance-info/div/topbar-info/div/topbar-info-item[3]/div/div[2]/span",
+
     relative_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[2]/trade-deal-ticket/edit-order/div/scroll-pane/div[1]/div[2]/ml-text"
 }
