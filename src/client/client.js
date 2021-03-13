@@ -75,6 +75,7 @@ async function trade(driver, stockElement) {
     const boughtSellLevel = await awaitBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, sellLevel)
     if (!boughtSellLevel)
         return
+    
 
     let curSellPrice = await findPrice.sell(driver, stockElement, config.STOCK_PROFIT)
     utils.log.debug("Sell price : " + curSellPrice.toString())

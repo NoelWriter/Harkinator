@@ -7,7 +7,7 @@ module.exports = {
     async buy(driver, element, percentageAboveSell) {
         let priceArray = []
 
-        while (priceArray.length < 10) {
+        while (priceArray.length < 30) {
             const sellPrice = await utils.getStockSellPrice(element)
             priceArray.push(sellPrice)
             await driver.sleep(100)

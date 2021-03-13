@@ -8,12 +8,16 @@ module.exports = {
         utils.log.generic("Awaiting buy order fulfillment")
 
         while (await utils.getPositionsTotal(driver) <= 0) {
-            await driver.sleep(500)
 
             if (await isDeltaTooHigh(stockElement, sellLevel)) {
                 await utils.clearOpenOrders(driver)
-                return false
+                
+                if (!await utils.getPositionsTotal(driver))
+                    return false
+                
             }
+
+            await driver.sleep(500)
         }
         const boughtSellLevel = await utils.getStockSellPrice(stockElement)
         utils.log.generic("Order fulfilled")
