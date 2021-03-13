@@ -1,6 +1,7 @@
 const chalk = require("chalk");
 const location = require("./locations")
 const {By} = require("selenium-webdriver");
+const config = require("../../config.json")
 
 module.exports = {
     async getStockBuyPrice(element) {
@@ -21,10 +22,9 @@ module.exports = {
                 const stockAmountString = await stockListElement.findElement(By.className("quantity-badge")).getText()
                 openOrderTotal += parseFloat(stockAmountString.replace("+", ""))
             } catch (e) {
-
+                this.log.warning(e)
             }
         }
-        this.log.generic(`${openOrderTotal} orders are currently open`)
         return openOrderTotal
     },
 
@@ -39,19 +39,38 @@ module.exports = {
 
             }
         }
-        this.log.generic(`${openPositionTotal} positions are currently open`)
         return openPositionTotal
     },
 
-    async clearOpenOrders(driver) {
-        const stockListElements = await driver.findElements(By.tagName("trade-instrument-order-list"))
+    async getPositionHighestPrice(driver) {
+        const stockListElements = await driver.findElements(By.tagName("trade-instrument-list-position-item-renderer"))
+        let highestPositionAmount = 0
         for (const stockListElement of stockListElements) {
-            const stockOrderElements = await stockListElement.findElements(By.tagName("trade-instrument-list-order-item-renderer"))
-            for (const stockOrderElement of stockOrderElements) {
-                await stockOrderElement.findElement(By.className("quantity-badge")).click()
-                await driver.findElement(By.xpath(location.relative_cancel_button)).click()
-                await driver.sleep(100)
+            try {
+                const positionAmountString = await stockListElement.findElement(By.className("entry")).getText()
+                const positionAmount = parseFloat(positionAmountString.split(" ")[1].replace('.', '').replace(',', '.'))
+                if (positionAmount > highestPositionAmount)
+                    highestPositionAmount = positionAmount
+            } catch (e) {
+                this.log.warning(e)
             }
+        }
+        return highestPositionAmount
+    },
+
+    async clearOpenOrders(driver) {
+        try {
+            const stockListElements = await driver.findElements(By.tagName("trade-instrument-order-list"))
+            for (const stockListElement of stockListElements) {
+                const stockOrderElements = await stockListElement.findElements(By.tagName("trade-instrument-list-order-item-renderer"))
+                for (const stockOrderElement of stockOrderElements) {
+                    await stockOrderElement.findElement(By.className("quantity-badge")).click()
+                    await driver.findElement(By.xpath(location.relative_cancel_button)).click()
+                    await driver.sleep(100)
+                }
+            }
+        } catch (e) {
+            this.log.warning("Could not find any orders to close")
         }
     },
 
@@ -71,6 +90,12 @@ module.exports = {
         error(message) {
             const timestamp = this.getTimeStamp()
             console.log(chalk.redBright(`[${timestamp}] ` + message))
+        },
+        debug(message) {
+            if (config.DEBUG) {
+                const timestamp = this.getTimeStamp()
+                console.log(chalk.whiteBright(`[${timestamp}] ` + message))
+            }
         },
 
         getTimeStamp() {

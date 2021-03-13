@@ -5,22 +5,17 @@ const utils = require("../../utils/utils");
 
 module.exports = {
     async execute(driver, stockElement, amount = 1, price) {
-        await stockElement.findElement(By.className("buy")).findElement(By.className("btn")).click()
-
         const amountString = amount.toFixed(config.STOCK_FRACTION_DIGITS).toString().replace('.', ',')
         const priceString = price.toFixed(config.STOCK_FRACTION_DIGITS).toString().replace('.', ',')
+
+        utils.log.generic(`Selling ${amountString} stocks with the price ${priceString}`)
+        await stockElement.findElement(By.className("sell")).findElement(By.className("btn")).click()
 
         await setAmount(stockElement, amountString)
         await setPrice(driver, stockElement, priceString)
 
-        utils.log.generic(`Buying ${amountString} stocks with the price ${priceString}`)
         await stockElement.findElement(By.xpath(location.buy_order_button)).click()
 
-        while (!await utils.getOrdersTotal(driver) > 0 && !(await utils.getPositionsTotal(driver) > 0 && await utils.getOrdersTotal(driver) <= 0)) {
-            await driver.sleep(500)
-        }
-
-        utils.log.generic(`Order placed successfully`)
         return utils.getStockSellPrice(stockElement)
     }
 }

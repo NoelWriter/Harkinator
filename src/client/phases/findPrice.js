@@ -4,7 +4,7 @@ const location = require("../../utils/locations")
 const utils = require("../../utils/utils");
 
 module.exports = {
-    async execute(driver, element, percentageAboveSell) {
+    async buy(driver, element, percentageAboveSell) {
         let priceArray = []
 
         while (priceArray.length < 10) {
@@ -21,5 +21,12 @@ module.exports = {
         const spread = await utils.getSpread(element)
 
         return averageSellPrice + (spread * percentageAboveSell)
+    },
+
+    async sell(driver, element, percentageProfit) {
+        let positionPrice = await utils.getPositionHighestPrice(driver)
+        const spread = await utils.getSpread(element)
+
+        return positionPrice += spread * percentageProfit
     }
 }
