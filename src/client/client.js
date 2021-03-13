@@ -71,6 +71,7 @@ async function trade(driver, stockElement) {
     utils.log.generic(`Found price at ${price}`)
 
     const sellLevel = await createBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, price)
+
     const boughtSellLevel = await awaitBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, sellLevel)
     if (!boughtSellLevel)
         return

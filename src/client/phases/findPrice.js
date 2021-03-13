@@ -13,14 +13,15 @@ module.exports = {
             await driver.sleep(100)
         }
 
-        let total = 0;
-        for (const priceArrayKey in priceArray) {
-            total += priceArray[priceArrayKey];
+        let sum = 0
+        for(let i = 0; i < priceArray.length; i++ ){
+            sum += parseFloat(priceArray[i]) //don't forget to add the base
         }
-        const averageSellPrice = total / priceArray.length;
+
+        const avg = sum / priceArray.length;
         const spread = await utils.getSpread(element)
 
-        return averageSellPrice + (spread * percentageAboveSell)
+        return avg + (spread * percentageAboveSell)
     },
 
     async sell(driver, element, percentageProfit) {
