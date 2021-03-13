@@ -1,13 +1,26 @@
 {
-  "STOCK_PRIMARY": "GameStop",
-  "STOCK_FRACTION_DIGITS": 1,
-  "STOCK_MULTIPLIER_ABOVE_SELL": 0.5,
-  "STOCK_AMOUNT": 1,
+  "STOCK_PRIMARY": "Ethereum / USD",
+  "STOCK_FRACTION_DIGITS": 2,
+  "STOCK_MULTIPLIER_ABOVE_SELL": 0.75,
+  "STOCK_AMOUNT": 0.1,
+  "STOCK_PROFIT": 0.08,
 
-  "USERNAME": "noelschrijver@gmail.com",
-  "PASSWORD": "WatIsDezeGame123",
+  "STOCK_BUY_UPPER_LIMIT": 0.05,
+  "STOCK_BUY_LOWER_LIMIT": 0.05,
+
+  "STOCK_SELL_UPPER_LIMIT": 0.3,
+  "STOCK_SELL_LOWER_LIMIT": 0.3,
+
+  "STOCK_EVALUATE_DELTA": 0.1,
+
+  "STOCK_LOSS_MULTIPLIER": 0.2,
+
+  "USERNAME": "yourmail@gmail.com",
+  "PASSWORD": "password",
 
   "DEMO_MODE": true,
-  "LIVE_ACCOUNT_NUM": 1
+  "LIVE_ACCOUNT_NUM": 1,
+
+  "DEBUG": true
 }
 
