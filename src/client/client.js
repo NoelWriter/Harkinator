@@ -27,7 +27,13 @@ module.exports = {
         const driver = await webdriver.start()
         const stockElement = await init(driver)
 
-        await discordClient.init(config.DISCORD_TOKEN)
+        const discordClientInstance = await discordClient.init(config.DISCORD_TOKEN)
+
+        discordClientInstance.on("message", msg => {
+            if (msg.content.toLowerCase() === 's') {
+                utils.sendScreenshot(driver)
+            }
+        })
 
         utils.log.generic(`Starting trading sequence`)
         utils.log.generic(`Probing buy and sell price = ${await utils.getStockBuyPrice(stockElement)} | ${await utils.getStockSellPrice(stockElement)}`)
@@ -36,6 +42,7 @@ module.exports = {
         utils.log.debug("POSITIONS : " + positions)
 
         while (true) {
+            await utils.checkPause(driver)
             await trade(driver, stockElement)
         }
     },
@@ -67,6 +74,7 @@ async function init(driver) {
 async function trade(driver, stockElement) {
     utils.log.generic(`Starting trade`)
     await utils.clearOpenOrders(driver)
+    await utils.checkPause(driver)
 
     const initialSpread = await utils.getSpread(stockElement)
     utils.log.generic(`Initial spread: ${initialSpread}`)
@@ -88,6 +96,7 @@ async function trade(driver, stockElement) {
     while (await utils.getPositionsTotal(driver) > 0) {
         // Clear open orders
         await utils.clearOpenOrders(driver)
+        await utils.checkPause(driver)
 
         // Get amount of positions to create orders for
         let positions = await utils.getPositionsTotal(driver)

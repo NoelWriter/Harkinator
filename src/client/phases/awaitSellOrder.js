@@ -17,6 +17,7 @@ module.exports = {
 
         while (await utils.getPositionsTotal(driver) > 0) {
             await driver.sleep(500)
+            await utils.checkPause(driver, true)
 
             // On change of stock sell price
             if (!await isSellPriceDelta(driver, stockElement, curSellPriceLevel))
@@ -74,9 +75,10 @@ async function isSellPriceDelta(driver, stockElement, curSellPriceLevel) {
     const curStockSellPrice = await utils.getStockSellPrice(stockElement)
 
     const spread = await utils.getSpread(stockElement)
-    const LimitAmount = spread * config.STOCK_EVALUATE_DELTA
-    const upperLimit = curSellPriceLevel + LimitAmount
-    const lowerLimit = curSellPriceLevel - LimitAmount
+    const LimitAmountUp = spread * config.STOCK_EVALUATE_DELTA_UP
+    const LimitAmountDown = spread * config.STOCK_EVALUATE_DELTA_DOWN
+    const upperLimit = curSellPriceLevel + LimitAmountUp
+    const lowerLimit = curSellPriceLevel - LimitAmountDown
 
     utils.log.debug(`${curStockSellPrice} < ${lowerLimit} | ${curStockSellPrice} > ${upperLimit}`)
     return curStockSellPrice > upperLimit || curStockSellPrice < lowerLimit;

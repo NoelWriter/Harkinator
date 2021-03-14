@@ -8,10 +8,12 @@ module.exports = {
         utils.log.generic("Awaiting buy order fulfillment")
 
         while(await utils.getPositionsTotal(driver) <= 0 && await utils.getOrdersTotal(driver) <= 0) {
-            continue
+            await utils.checkPause(driver)
         }
 
         while (await utils.getPositionsTotal(driver) <= 0) {
+            if (await utils.checkPause(driver, true))
+                return false
 
             if (await isDeltaTooHigh(stockElement, sellLevel)) {
                 await utils.clearOpenOrders(driver)

@@ -12,6 +12,6 @@ module.exports = {
         await driver.wait(until.elementLocated(By.xpath(location.login_modal)), 5000).click()
         await driver.findElement(By.xpath(location.username_field)).sendKeys(username)
         await driver.findElement(By.xpath(location.password_field)).sendKeys(password)
-        await driver.findElement(By.xpath(location.login_button)).click()
+        await driver.wait(until.elementLocated(By.xpath(location.login_button)), 5000).click()
     }
 }

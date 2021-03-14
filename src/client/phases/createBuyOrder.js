@@ -26,7 +26,6 @@ module.exports = {
             return false
         }
 
-
         while (!await utils.getOrdersTotal(driver) > 0 && !(await utils.getPositionsTotal(driver) > 0 && await utils.getOrdersTotal(driver) <= 0)) {
             await driver.sleep(500)
         }

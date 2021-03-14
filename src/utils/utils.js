@@ -57,7 +57,7 @@ module.exports = {
                 if (positionAmount > highestPositionAmount)
                     highestPositionAmount = positionAmount
             } catch (e) {
-                this.log.warning(e)
+                this.log.warning("clearOpenOrders(): " + e)
             }
         }
         return highestPositionAmount
@@ -65,6 +65,12 @@ module.exports = {
 
     async clearOpenOrders(driver) {
         try {
+            const orderTotal = await this.getOrdersTotal(driver);
+            if (orderTotal === 0) {
+                this.log.warning("Could not find any orders to close")
+                return
+            }
+
             const stockListElements = await driver.findElements(By.tagName("trade-instrument-order-list"))
             for (const stockListElement of stockListElements) {
                 const stockOrderElements = await stockListElement.findElements(By.tagName("trade-instrument-list-order-item-renderer"))
@@ -74,9 +80,44 @@ module.exports = {
                     await driver.sleep(100)
                 }
             }
+
+            let waitingCycles = 0
+            while (await this.getOrdersTotal(driver) > 0) {
+                await driver.sleep(100)
+                waitingCycles++
+
+                if (waitingCycles > 20) {
+                    waitingCycles = 0
+                    this.log.error("Platform lag detected")
+                }
+            }
         } catch (e) {
-            this.log.warning("Could not find any orders to close")
+            this.log.warning("clearOpenOrders(): " + e)
         }
+    },
+
+    async sendScreenshot(driver) {
+        const timestamp = this.log.getTimeStamp()
+        const screenshot = await driver.takeScreenshot()
+        await require('fs').writeFile('./src/temp/out.png', screenshot, 'base64', function(err) {
+        });
+        await discordClient.sendMessage(`Screenshot of ${timestamp}`, './src/temp/out.png')
+    },
+
+    async checkPause(driver, clearOrders = false) {
+        let isPaused = false
+
+        if (discordClient.pause) {
+            await this.clearOpenOrders(driver)
+            await discordClient.sendMessage(`${await this.getPositionsTotal(driver)} positions are currently open`)
+        }
+
+        while (discordClient.pause) {
+            await driver.sleep(500)
+            isPaused = true
+        }
+
+        return isPaused;
     },
 
     async getSpread(element) {
