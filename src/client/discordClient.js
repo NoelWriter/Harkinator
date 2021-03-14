@@ -10,11 +10,13 @@ module.exports = {
 
         discordClient.on("message", msg => {
             if (msg.content.toLowerCase() === 'p') {
-                this.pause = !this.pause
-                if (this.pause) {
-                    this.sendMessage("Paused bot")
-                } else {
-                    this.sendMessage("Resumed bot")
+                if (msg.author.id === config.DISCORD_USERID) {
+                    this.pause = !this.pause
+                    if (this.pause) {
+                        this.sendMessage("Paused bot")
+                    } else {
+                        this.sendMessage("Resumed bot")
+                    }
                 }
             }
         })

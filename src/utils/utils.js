@@ -96,12 +96,12 @@ module.exports = {
         }
     },
 
-    async sendScreenshot(driver) {
+    async sendScreenshot(driver, msg) {
         const timestamp = this.log.getTimeStamp()
         const screenshot = await driver.takeScreenshot()
         await require('fs').writeFile('./src/temp/out.png', screenshot, 'base64', function(err) {
         });
-        await discordClient.sendMessage(`Screenshot of ${timestamp}`, './src/temp/out.png')
+        await msg.reply(`Screenshot of ${timestamp}`, './src/temp/out.png')
     },
 
     async checkPause(driver, clearOrders = false) {
