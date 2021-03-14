@@ -16,7 +16,7 @@ module.exports = {
 
         utils.log.generic(`Buying ${amountString} stocks with the price ${priceString}`)
 
-        if (await utils.getPositionsTotal > 0)
+        if (await utils.getPositionsTotal(driver) > 0)
             return false
         
         await stockElement.findElement(By.xpath(location.buy_order_button)).click()
