@@ -1,7 +1,7 @@
 const {By, until, Key} = require("selenium-webdriver");
 const location = require("../../utils/locations")
 const config = require("../../../config.json");
-const utils = require("../../utils/utils");
+const utils = require("../../utils/utils")
 
 module.exports = {
     async execute(driver, stockElement, amount = 1, price) {
@@ -16,10 +16,16 @@ module.exports = {
 
         utils.log.generic(`Buying ${amountString} stocks with the price ${priceString}`)
 
-        if (utils.getPositionsTotal > 0)
+        if (await utils.getPositionsTotal > 0)
             return false
         
         await stockElement.findElement(By.xpath(location.buy_order_button)).click()
+
+        if (await isInvalidBalance(driver)) {
+            await driver.sleep(10000)
+            return false
+        }
+
 
         while (!await utils.getOrdersTotal(driver) > 0 && !(await utils.getPositionsTotal(driver) > 0 && await utils.getOrdersTotal(driver) <= 0)) {
             await driver.sleep(500)
@@ -44,4 +50,18 @@ async function setPrice(driver, stockElement, priceString) {
     await inputPriceElement.click()
     await inputPriceElement.sendKeys(Key.CONTROL, 'a')
     await inputPriceElement.sendKeys(priceString)
+}
+
+async function isInvalidBalance(driver) {
+    try {
+        const popuptext = await driver.findElement(By.className("popover-notification__title")).getText()
+        if (popuptext === "Order geweigerd") {
+            utils.log.warning("Account financing error found")
+            utils.log.discord("Saldo laag popup")
+            return true
+        }
+            return false
+    } catch (e) {
+        return false
+    }
 }

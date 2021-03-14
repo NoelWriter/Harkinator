@@ -16,8 +16,7 @@ module.exports = {
     },
 
     async getBalance(driver) {
-        const balance = await driver.findElement(By.xpath(location.balance_amount)).getText()
-        return balance
+        return await driver.findElement(By.xpath(location.balance_amount)).getText()
     },
 
     async getOrdersTotal(driver) {

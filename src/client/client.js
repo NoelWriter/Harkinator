@@ -75,11 +75,12 @@ async function trade(driver, stockElement) {
     utils.log.generic(`Found price at ${price}`)
 
     const sellLevel = await createBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, price)
+    if (!sellLevel)
+        return
 
     const boughtSellLevel = await awaitBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, sellLevel)
     if (!boughtSellLevel)
         return
-    
 
     let curSellPrice = await findPrice.sell(driver, stockElement, config.STOCK_PROFIT)
     utils.log.debug("Sell price : " + curSellPrice.toString())
@@ -107,3 +108,11 @@ async function trade(driver, stockElement) {
 
     await driver.sleep(500)
 }
+
+async function probePlatformLatency(driver, stockElement) {
+    const t0 = performance.now()
+    await createBuyOrder.execute(driver, stockElement, 1, this.getStockSellPrice(stockElement))
+    const t1 = performance.now()
+    return t1 - t0
+}
+
