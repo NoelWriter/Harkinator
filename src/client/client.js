@@ -11,10 +11,7 @@ const discordClient = require("./discordClient")
 
 const webdriver = require("../client/webdriver")
 const config = require("../../config.json");
-const location = require("../utils/locations")
 const utils = require("../utils/utils")
-const chalk = require("chalk");
-const {By, until} = require("selenium-webdriver");
 
 module.exports = {
     /**
@@ -30,8 +27,8 @@ module.exports = {
         const discordClientInstance = await discordClient.init(config.DISCORD_TOKEN)
 
         discordClientInstance.on("message", msg => {
-            if (msg.content.toLowerCase() === 's') {
-                utils.sendScreenshot(driver)
+            if (msg.content.toLowerCase() === 's' && msg.author.id === config.DISCORD_USERID) {
+                utils.sendScreenshot(driver, msg)
             }
         })
 
