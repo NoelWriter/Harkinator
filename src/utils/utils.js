@@ -124,6 +124,15 @@ module.exports = {
         return await this.getStockBuyPrice(element) - await this.getStockSellPrice(element)
     },
 
+    getOs() {
+        var opsys = process.platform;
+        if (opsys == "darwin") {
+            return "MacOS";
+        }
+
+        return "Windows";
+    },
+
     log: {
         generic(message) {
             const timestamp = this.getTimeStamp()

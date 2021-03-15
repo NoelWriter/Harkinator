@@ -38,7 +38,7 @@ module.exports = {
 async function setAmount(stockElement, amountString) {
     const inputAmountElement = stockElement.findElement(By.xpath(location.buy_input_amount))
     await inputAmountElement.click()
-    await inputAmountElement.sendKeys(Key.CONTROL, 'a')
+    await inputAmountElement.sendKeys((utils.getOs() === 'MacOS' ? Key.COMMAND : Key.CONTROL), 'a')
     await inputAmountElement.sendKeys(amountString)
 }
 
@@ -47,7 +47,7 @@ async function setPrice(driver, stockElement, priceString) {
     await driver.sleep(200) // Time to let website finish animation
     const inputPriceElement = stockElement.findElement(By.xpath(location.buy_input_price_amount))
     await inputPriceElement.click()
-    await inputPriceElement.sendKeys(Key.CONTROL, 'a')
+    await inputPriceElement.sendKeys((utils.getOs() === 'MacOS' ? Key.COMMAND : Key.CONTROL), 'a')
     await inputPriceElement.sendKeys(priceString)
 }
 
