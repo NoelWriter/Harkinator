@@ -40,11 +40,14 @@
 
 #### DEBUG
 
-#### DISCORD_TOKEN
+#### DISCORD_TOKEN 
 
 #### DISCORD_USERID
+Vul in je Discord user id zodat je via Discord op de hoogte blijft.
 
 #### USERNAME
+Vul in je Capitol gebruikersnaam.
 
 #### PASSWORD
+Vul in je Capitol wachtwoord.
 
