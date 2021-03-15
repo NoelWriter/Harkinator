@@ -2,6 +2,9 @@ module.exports = {
     username_field: "/html/body/app-root/login-popup/login-component/div/div[2]/form/div[1]/div[4]/input",
     password_field: "/html/body/app-root/login-popup/login-component/div/div[2]/form/div[1]/div[6]/input",
     login_button: "/html/body/app-root/login-popup/login-component/div/div[2]/form/div[1]/button",
+
+    login_button_2fa: "/html/body/app-root/login-popup/login-component/div/div[2]/form/div[2]/button",
+
     login_modal: "/html/body/app-root/signup-popup/signup-component/div/div[2]/form/div[8]/div/span",
 
     account_dropdown: "/html/body/app-root/div/topbar/div/topbar-accounts-list/div",
