@@ -52,7 +52,6 @@ async function setAmount(stockElement, amountString) {
 async function setPrice(driver, stockElement, priceString) {
     await stockElement.findElement(By.xpath(location.buy_input_price_toggle)).click()
     const inputPriceElement = stockElement.findElement(By.xpath(location.buy_input_price_amount))
-    await driver.sleep(100)
     await inputPriceElement.click()
     await inputPriceElement.sendKeys(Key.CONTROL, 'a')
     await inputPriceElement.sendKeys(priceString)

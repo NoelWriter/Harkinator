@@ -10,8 +10,10 @@ const awaitSellOrder = require("./phases/awaitSellOrder")
 const discordClient = require("./discordClient")
 
 const webdriver = require("../client/webdriver")
+const locations = require("../utils/locations")
 const config = require("../../config.json");
 const utils = require("../utils/utils")
+const {By} = require("selenium-webdriver");
 
 module.exports = {
     /**
@@ -71,6 +73,10 @@ async function init(driver) {
 async function trade(driver, stockElement) {
     utils.log.generic(`Starting trade`)
     await utils.clearOpenOrders(driver)
+
+    try {
+        await driver.findElement(By.xpath(locations.order_panel_close_button)).click()
+    } catch (e) { }
     await utils.checkPause(driver)
 
     if (await utils.getPositionsTotal(driver) !== 0)
