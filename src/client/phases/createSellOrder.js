@@ -6,6 +6,10 @@ const utils = require("../../utils/utils");
 module.exports = {
     async execute(driver, stockElement, amount = 1, price) {
         const amountString = amount.toFixed(config.STOCK_FRACTION_DIGITS).toString().replace('.', ',')
+
+        if (config.STOCK_ROUND_TO_WHOLE)
+            price = Math.round(price)
+
         const priceString = price.toFixed(config.STOCK_FRACTION_DIGITS).toString().replace('.', ',')
 
         utils.log.generic(`Selling ${amountString} stocks with the price ${priceString}`)
