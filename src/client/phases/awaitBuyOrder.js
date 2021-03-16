@@ -8,7 +8,7 @@ module.exports = {
         utils.log.generic("Awaiting buy order fulfillment")
 
         // Quick response system
-        if (await isDeltaTooHigh(stockElement, sellLevel)) {
+        if (await isDeltaTooHigh(stockElement, sellLevel) && await utils.getPositionsTotal(driver) <= 0) {
             await utils.clearOpenOrders(driver)
             if (!await utils.getPositionsTotal(driver))
                 return false

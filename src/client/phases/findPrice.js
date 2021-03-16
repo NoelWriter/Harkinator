@@ -26,11 +26,11 @@ module.exports = {
             sumSpread += parseFloat(priceArray[i])
         }
 
-        const avgPrice = sumPrice / priceArray.length;
-        const avgSpread = sumSpread / spreadArray.length;
+        const avgPrice = sumPrice / priceArray.length; // 3
+        const avgSpread = sumSpread / spreadArray.length; // 1
 
-        const curSpread = await utils.getSpread(element)
-        const curStockSellPrice = await utils.getStockSellPrice(element)
+        const curSpread = await utils.getSpread(element) // 1
+        const curStockSellPrice = await utils.getStockSellPrice(element) // 2
 
         if (curSpread < avgSpread)
             if (curStockSellPrice < avgPrice)
