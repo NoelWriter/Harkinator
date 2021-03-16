@@ -14,7 +14,7 @@ module.exports = {
         await setAmount(stockElement, amountString)
         await setPrice(driver, stockElement, priceString)
 
-        if (!await utils.getPositionsTotal(driver) >= amount)
+        if (!await utils.getPositionsTotal(driver) === amount)
             return false
 
         await stockElement.findElement(By.xpath(location.buy_order_button)).click()

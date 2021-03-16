@@ -30,6 +30,12 @@ module.exports = {
                 
             }
         }
+
+        if (await utils.getPositionsTotal(driver) !== config.STOCK_AMOUNT) {
+            await driver.sleep(config.STOCK_BUY_FILL_WAIT)
+        }
+        
+        
         const boughtSellLevel = await utils.getStockSellPrice(stockElement)
         utils.log.generic("Order fulfilled")
         return boughtSellLevel
