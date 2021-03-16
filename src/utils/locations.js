@@ -25,5 +25,8 @@ module.exports = {
     popup_close_button: "/html/body/app-root/alerts/div/div[2]/div[1]/span",
     order_panel_close_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[1]/div[2]/font-icon",
 
-    relative_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[2]/trade-deal-ticket/edit-order/div/scroll-pane/div[1]/div[2]/ml-text"
+    relative_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[2]/trade-deal-ticket/edit-order/div/scroll-pane/div[1]/div[2]/ml-text",
+    buy_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div[1]/div/trade-watchlist-wishlist-list/scroll-pane/div[1]/trade-watchlist-instruments-list/trade-instrument-order-list/trade-instrument-list-order-item-renderer/div/div/div/div[4]",
+    sell_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div/div/trade-watchlist-wishlist-list/scroll-pane/div[1]/trade-watchlist-instruments-list/trade-instrument-order-list/trade-instrument-list-order-item-renderer/div/div/div/div[4]"
+
 }
