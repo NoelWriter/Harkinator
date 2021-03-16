@@ -137,7 +137,7 @@ async function trade(driver, stockElement) {
 
 async function probePlatformLatency(driver, stockElement) {
     let t0 = Date.now()
-    await createBuyOrder.execute(driver, stockElement, 0.1, await utils.getStockSellPrice(stockElement) * 0.8)
+    await createBuyOrder.execute(driver, stockElement, config.STOCK_PROBE_AMOUNT, await utils.getStockSellPrice(stockElement) * 0.8)
     let t1 = Date.now()
     await utils.clearOpenOrders(driver)
     return t1 - t0
