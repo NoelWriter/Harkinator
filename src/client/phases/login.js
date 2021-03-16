@@ -5,7 +5,7 @@ const utils = require("../../utils/utils");
 
 module.exports = {
     async execute(driver, username, password, twoFactAuth) {
-        utils.log.generic(`Logging in`)
+        utils.log.generic(`Logging in 💰`)
 
         // Wait until chart is loaded
         await driver.sleep(4000)
