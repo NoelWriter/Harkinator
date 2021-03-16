@@ -52,7 +52,7 @@ module.exports = {
  */
 async function init(driver) {
     // Log in user
-    await login.execute(driver, config.USERNAME, config.PASSWORD)
+    await login.execute(driver, config.USERNAME, config.PASSWORD, config.TWO_FACT_AUTH)
 
     // Enter specified mode
     await enterMode.execute(driver, config.DEMO_MODE, config.LIVE_ACCOUNT_NUM)
