@@ -2,13 +2,14 @@
 
 1. npm install in root directory
 2. Install the gecko driver here https://github.com/mozilla/geckodriver/releases/
-3. Copy config.json.example to config.json and put in the login credentials
+3. Copy config.json.example to config.json and put in your login credentials
 4. ???
 5. Profit
 
 ## config.json
 
 #### STOCK_PRIMARY
+Vul hier de naam van de stock in. Let op dit veld is hoofdlettergevoelig.
 
 #### STOCK_FRACTION_DIGITS 
 
@@ -35,6 +36,7 @@
 #### STOCK_LOSS_MULTIPLIER
 
 #### DEMO_MODE
+Het script zal draaien in de demo omgeving van Capitol.
 
 #### LIVE_ACCOUNT_NUM
 
