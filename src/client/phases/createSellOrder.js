@@ -19,6 +19,9 @@ module.exports = {
 
         await stockElement.findElement(By.xpath(location.buy_order_button)).click()
 
+        if (await isInvalidBalance(driver))
+            return false
+
         return utils.getStockSellPrice(stockElement)
     }
 }
@@ -32,9 +35,24 @@ async function setAmount(stockElement, amountString) {
 
 async function setPrice(driver, stockElement, priceString) {
     await stockElement.findElement(By.xpath(location.buy_input_price_toggle)).click()
-    await driver.sleep(200) // Time to let website finish animation
+    await driver.sleep(50) // Time to let website finish animation
     const inputPriceElement = stockElement.findElement(By.xpath(location.buy_input_price_amount))
     await inputPriceElement.click()
     await inputPriceElement.sendKeys(Key.CONTROL, 'a')
     await inputPriceElement.sendKeys(priceString)
+}
+
+
+async function isInvalidBalance(driver) {
+    try {
+        const popuptext = await driver.findElement(By.className("popover-notification__title")).getText()
+        if (popuptext === "Order geweigerd") {
+            utils.log.warning("Account financing error found")
+            utils.log.discord("Saldo laag popup")
+            return true
+        }
+        return false
+    } catch (e) {
+        return false
+    }
 }
