@@ -73,6 +73,9 @@ async function trade(driver, stockElement) {
     await utils.clearOpenOrders(driver)
     await utils.checkPause(driver)
 
+    if (await utils.getPositionsTotal(driver) !== 0)
+        utils.log.error("Positions are still open!")
+
     const initialSpread = await utils.getSpread(stockElement)
     utils.log.generic(`Initial spread: ${initialSpread}`)
 
@@ -89,7 +92,6 @@ async function trade(driver, stockElement) {
     const price = await findPrice.buy(driver, stockElement, config.STOCK_MULTIPLIER_ABOVE_SELL)
     const curSellLevel = await utils.getStockSellPrice(stockElement)
     utils.log.generic(`Found price at ${price}`)
-
 
     const sellLevel = await createBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, price, curSellLevel)
     if (!sellLevel)

@@ -16,8 +16,10 @@ module.exports = {
 
         utils.log.generic(`Buying ${amountString} stocks with the price ${priceString}`)
 
-        if (await utils.getPositionsTotal(driver) > 0)
+        if (await utils.getPositionsTotal(driver) > 0) {
+            utils.log.error("Position already filled detected")
             return false
+        }
 
         if (await utils.getStockSellPrice(stockElement) < (curSellLevel - await utils.getSpread(stockElement) * config.FREEFALL_INDICATOR)) {
             utils.log.error("Freefall detected")
@@ -50,6 +52,7 @@ async function setAmount(stockElement, amountString) {
 async function setPrice(driver, stockElement, priceString) {
     await stockElement.findElement(By.xpath(location.buy_input_price_toggle)).click()
     const inputPriceElement = stockElement.findElement(By.xpath(location.buy_input_price_amount))
+    await driver.sleep(100)
     await inputPriceElement.click()
     await inputPriceElement.sendKeys(Key.CONTROL, 'a')
     await inputPriceElement.sendKeys(priceString)

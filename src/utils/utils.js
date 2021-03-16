@@ -41,7 +41,7 @@ module.exports = {
                 const stockAmountString = await stockListElement.findElement(By.className("quantity-badge")).getText()
                 openPositionTotal += parseFloat(stockAmountString.replace("+", ""))
             } catch (e) {
-
+                this.log.warning("clearOpenOrders(): " + e)
             }
         }
         return openPositionTotal
