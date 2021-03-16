@@ -1,7 +1,7 @@
 # Harkinator 
 
 1. npm install in root directory
-2. Install the gecko driver here https://github.com/mozilla/geckodriver/releases/
+2. Install the chrome driver https://chromedriver.storage.googleapis.com/index.html?path=89.0.4389.23/
 3. Copy config.json.example to config.json and put in your login credentials
 4. ???
 5. Profit
