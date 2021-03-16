@@ -16,7 +16,6 @@ module.exports = {
         utils.log.generic("Awaiting sell order fulfillment")
 
         while (await utils.getPositionsTotal(driver) > 0) {
-            await driver.sleep(500)
             await utils.checkPause(driver, true)
 
             // On change of stock sell price
@@ -26,7 +25,6 @@ module.exports = {
             switch (await getSellMode(driver, stockElement, boughtSellLevel)) {
                 case modes.NORMAL:
                     return await findPrice.sell(driver, stockElement, config.STOCK_PROFIT)
-                    break
                 case modes.LOSS:
                     utils.log.warning(`Sell order is in loss mode`)
                     const spread = await utils.getSpread(stockElement)
@@ -34,10 +32,8 @@ module.exports = {
                     return sellPrice += spread * config.STOCK_LOSS_MULTIPLIER
                 case modes.PROFIT:
                     return await findPrice.sell(driver, stockElement, config.STOCK_PROFIT * 1.5)
-                    break
                 case modes.BREAK_EVEN:
                     return await findPrice.sell(driver, stockElement, 0)
-                    return
             }
         }
         utils.log.generic("Order fulfilled")

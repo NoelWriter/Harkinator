@@ -10,8 +10,10 @@ const awaitSellOrder = require("./phases/awaitSellOrder")
 const discordClient = require("./discordClient")
 
 const webdriver = require("../client/webdriver")
+const locations = require("../utils/locations")
 const config = require("../../config.json");
 const utils = require("../utils/utils")
+const {By} = require("selenium-webdriver");
 
 module.exports = {
     /**
@@ -71,15 +73,33 @@ async function init(driver) {
 async function trade(driver, stockElement) {
     utils.log.generic(`Starting trade`)
     await utils.clearOpenOrders(driver)
+
+    try {
+        await driver.findElement(By.xpath(locations.order_panel_close_button)).click()
+    } catch (e) { }
     await utils.checkPause(driver)
+
+    if (await utils.getPositionsTotal(driver) !== 0)
+        utils.log.error("Positions are still open!")
 
     const initialSpread = await utils.getSpread(stockElement)
     utils.log.generic(`Initial spread: ${initialSpread}`)
 
+    utils.log.generic(`Probing platform lag..`)
+    const platformLag = await probePlatformLatency(driver, stockElement)
+    utils.log.generic(`Buy order delay is currently ${platformLag}ms`)
+
+    if (platformLag > config.LAG_MAX_ORDER_DELAY) {
+        utils.log.error(`Platform lag detected, buy order delay is currently ${platformLag}ms. Hibernating for 10 seconds`)
+        await driver.sleep(10000)
+        return
+    }
+
     const price = await findPrice.buy(driver, stockElement, config.STOCK_MULTIPLIER_ABOVE_SELL)
+    const curSellLevel = await utils.getStockSellPrice(stockElement)
     utils.log.generic(`Found price at ${price}`)
 
-    const sellLevel = await createBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, price)
+    const sellLevel = await createBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, price, curSellLevel)
     if (!sellLevel)
         return
 
@@ -116,9 +136,10 @@ async function trade(driver, stockElement) {
 }
 
 async function probePlatformLatency(driver, stockElement) {
-    const t0 = performance.now()
-    await createBuyOrder.execute(driver, stockElement, 1, this.getStockSellPrice(stockElement))
-    const t1 = performance.now()
+    let t0 = Date.now()
+    await createBuyOrder.execute(driver, stockElement, config.STOCK_PROBE_AMOUNT, await utils.getStockSellPrice(stockElement) * 0.8)
+    let t1 = Date.now()
+    await utils.clearOpenOrders(driver)
     return t1 - t0
 }
 

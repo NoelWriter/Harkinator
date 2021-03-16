@@ -8,29 +8,29 @@ module.exports = {
         let priceArray = []
         let spreadArray = []
 
-        while (priceArray.length < 30) {
+        while (priceArray.length < 20) {
+            await driver.sleep(100)
             const sellPrice = await utils.getStockSellPrice(element)
-            const spreadAmount = await utils.getStockSellPrice(element)
+            const spreadAmount = await utils.getSpread(element)
             priceArray.push(sellPrice)
             spreadArray.push(spreadAmount)
-            await driver.sleep(100)
         }
 
         let sumPrice = 0
         for(let i = 0; i < priceArray.length; i++ ){
-            sumPrice += parseFloat(priceArray[i]) //don't forget to add the base
+            sumPrice += parseFloat(priceArray[i])
         }
 
         let sumSpread = 0
         for(let i = 0; i < spreadArray.length; i++ ){
-            sumSpread += parseFloat(priceArray[i]) //don't forget to add the base
+            sumSpread += parseFloat(priceArray[i])
         }
 
-        const avgPrice = sumPrice / priceArray.length;
-        const avgSpread = sumSpread / spreadArray.length;
+        const avgPrice = sumPrice / priceArray.length; // 3
+        const avgSpread = sumSpread / spreadArray.length; // 1
 
-        const curSpread = await utils.getSpread(element)
-        const curStockSellPrice = await utils.getStockSellPrice(element)
+        const curSpread = await utils.getSpread(element) // 1
+        const curStockSellPrice = await utils.getStockSellPrice(element) // 2
 
         if (curSpread < avgSpread)
             if (curStockSellPrice < avgPrice)

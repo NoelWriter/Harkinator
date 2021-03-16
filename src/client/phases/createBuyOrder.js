@@ -4,7 +4,7 @@ const config = require("../../../config.json");
 const utils = require("../../utils/utils")
 
 module.exports = {
-    async execute(driver, stockElement, amount = 1, price) {
+    async execute(driver, stockElement, amount = 1, price, curSellLevel) {
 
         await stockElement.findElement(By.className("buy")).findElement(By.className("btn")).click()
 
@@ -16,8 +16,16 @@ module.exports = {
 
         utils.log.generic(`Buying ${amountString} stocks with the price ${priceString}`)
 
-        if (await utils.getPositionsTotal(driver) > 0)
+        if (await utils.getPositionsTotal(driver) > 0) {
+            utils.log.error("Position already filled detected")
             return false
+        }
+
+        if (await utils.getStockSellPrice(stockElement) < (curSellLevel - await utils.getSpread(stockElement) * config.FREEFALL_INDICATOR)) {
+            utils.log.error("Freefall detected")
+            await driver.sleep(5000)
+            return false
+        }
         
         await stockElement.findElement(By.xpath(location.buy_order_button)).click()
 
@@ -27,7 +35,7 @@ module.exports = {
         }
 
         while (!await utils.getOrdersTotal(driver) > 0 && !(await utils.getPositionsTotal(driver) > 0 && await utils.getOrdersTotal(driver) <= 0)) {
-            await driver.sleep(500)
+            continue
         }
 
         utils.log.generic(`Order placed successfully`)
@@ -44,7 +52,6 @@ async function setAmount(stockElement, amountString) {
 
 async function setPrice(driver, stockElement, priceString) {
     await stockElement.findElement(By.xpath(location.buy_input_price_toggle)).click()
-    await driver.sleep(200) // Time to let website finish animation
     const inputPriceElement = stockElement.findElement(By.xpath(location.buy_input_price_amount))
     await inputPriceElement.click()
     await inputPriceElement.sendKeys((utils.getOs() === 'MacOS' ? Key.COMMAND : Key.CONTROL), 'a')

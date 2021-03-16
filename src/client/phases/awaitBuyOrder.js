@@ -7,6 +7,13 @@ module.exports = {
     async execute(driver, stockElement, amount = 1, sellLevel) {
         utils.log.generic("Awaiting buy order fulfillment")
 
+        // Quick response system
+        if (await isDeltaTooHigh(stockElement, sellLevel) && await utils.getPositionsTotal(driver) <= 0) {
+            await utils.clearOpenOrders(driver)
+            if (!await utils.getPositionsTotal(driver))
+                return false
+        }
+
         while(await utils.getPositionsTotal(driver) <= 0 && await utils.getOrdersTotal(driver) <= 0) {
             await utils.checkPause(driver)
         }
@@ -22,8 +29,6 @@ module.exports = {
                     return false
                 
             }
-
-            await driver.sleep(500)
         }
         const boughtSellLevel = await utils.getStockSellPrice(stockElement)
         utils.log.generic("Order fulfilled")

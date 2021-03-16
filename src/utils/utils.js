@@ -41,7 +41,7 @@ module.exports = {
                 const stockAmountString = await stockListElement.findElement(By.className("quantity-badge")).getText()
                 openPositionTotal += parseFloat(stockAmountString.replace("+", ""))
             } catch (e) {
-
+                this.log.warning("clearOpenOrders(): " + e)
             }
         }
         return openPositionTotal
@@ -71,19 +71,20 @@ module.exports = {
                 return
             }
 
-            const stockListElements = await driver.findElements(By.tagName("trade-instrument-order-list"))
-            for (const stockListElement of stockListElements) {
-                const stockOrderElements = await stockListElement.findElements(By.tagName("trade-instrument-list-order-item-renderer"))
-                for (const stockOrderElement of stockOrderElements) {
-                    await stockOrderElement.findElement(By.className("quantity-badge")).click()
-                    await driver.findElement(By.xpath(location.relative_cancel_button)).click()
-                    await driver.sleep(100)
+            const executeOrderCancelation = async (driver) => {
+                const stockListElements = await driver.findElements(By.tagName("trade-instrument-order-list"))
+                for (const stockListElement of stockListElements) {
+                    const stockOrderElements = await stockListElement.findElements(By.tagName("trade-instrument-list-order-item-renderer"))
+                    for (const stockOrderElement of stockOrderElements) {
+                        await stockOrderElement.findElement(By.className("quantity-badge")).click()
+                        await driver.findElement(By.xpath(location.relative_cancel_button)).click()
+                    }
                 }
             }
 
             let waitingCycles = 0
-            while (await this.getOrdersTotal(driver) > 0) {
-                await driver.sleep(100)
+            while (await this.getOrdersTotal(driver) !== 0) {
+                await executeOrderCancelation(driver)
                 waitingCycles++
 
                 if (waitingCycles > 20) {
@@ -100,8 +101,9 @@ module.exports = {
         const timestamp = this.log.getTimeStamp()
         const screenshot = await driver.takeScreenshot()
         await require('fs').writeFile('./src/temp/out.png', screenshot, 'base64', function(err) {
+            console.log(err)
         });
-        await msg.reply(`Screenshot of ${timestamp}`, './src/temp/out.png')
+        await msg.channel.send(`Screenshot of ${timestamp}`, {files: ['./src/temp/out.png']})
     },
 
     async checkPause(driver, clearOrders = false) {

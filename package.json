@@ -14,6 +14,10 @@
   },
   "dependencies": {
     "discord.js": "^12.5.1",
-    "selenium-webdriver": "^4.0.0-beta.1"
+    "phantom": "^6.3.0",
+    "phantomjs": "^2.1.7",
+    "phantomjs-prebuilt": "^2.1.16",
+    "selenium-webdriver": "^4.0.0-beta.1",
+    "webdriverjs": "^1.7.5"
   }
 }
