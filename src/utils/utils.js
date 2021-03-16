@@ -1,6 +1,6 @@
 const chalk = require("chalk");
 const location = require("./locations")
-const {By} = require("selenium-webdriver");
+const { By } = require("selenium-webdriver");
 const config = require("../../config.json")
 const discordClient = require("../client/discordClient")
 
@@ -27,7 +27,7 @@ module.exports = {
                 const stockAmountString = await stockListElement.findElement(By.className("quantity-badge")).getText()
                 openOrderTotal += parseFloat(stockAmountString.replace("+", ""))
             } catch (e) {
-                
+
             }
         }
         return openOrderTotal
@@ -41,7 +41,7 @@ module.exports = {
                 const stockAmountString = await stockListElement.findElement(By.className("quantity-badge")).getText()
                 openPositionTotal += parseFloat(stockAmountString.replace("+", ""))
             } catch (e) {
-                this.log.warning("clearOpenOrders(): " + e)
+                this.log.warning("getPositionsTotal(): " + e)
             }
         }
         return openPositionTotal
@@ -57,7 +57,7 @@ module.exports = {
                 if (positionAmount > highestPositionAmount)
                     highestPositionAmount = positionAmount
             } catch (e) {
-                this.log.warning("clearOpenOrders(): " + e)
+                this.log.warning("getPositionHighestPrice(): " + e)
             }
         }
         return highestPositionAmount
@@ -67,7 +67,7 @@ module.exports = {
         try {
             const orderTotal = await this.getOrdersTotal(driver);
             if (orderTotal === 0) {
-                this.log.warning("Could not find any orders to close")
+                this.log.debug("Could not find any orders to close")
                 return
             }
 
@@ -76,8 +76,13 @@ module.exports = {
                 for (const stockListElement of stockListElements) {
                     const stockOrderElements = await stockListElement.findElements(By.tagName("trade-instrument-list-order-item-renderer"))
                     for (const stockOrderElement of stockOrderElements) {
-                        await stockOrderElement.findElement(By.className("quantity-badge")).click()
-                        await driver.findElement(By.xpath(location.relative_cancel_button)).click()
+                        try {
+                            await driver.findElement(By.xpath(location.buy_cancel_button)).click()
+                            await driver.findElement(By.xpath(location.sell_cancel_button)).click()
+                        } catch (e) {
+                            this.log.debug("executeOrderCancelation(): " + e)
+                        }
+
                     }
                 }
             }
@@ -100,10 +105,10 @@ module.exports = {
     async sendScreenshot(driver, msg) {
         const timestamp = this.log.getTimeStamp()
         const screenshot = await driver.takeScreenshot()
-        await require('fs').writeFile('./src/temp/out.png', screenshot, 'base64', function(err) {
+        await require('fs').writeFile('./src/temp/out.png', screenshot, 'base64', function (err) {
             console.log(err)
         });
-        await msg.channel.send(`Screenshot of ${timestamp}`, {files: ['./src/temp/out.png']})
+        await msg.channel.send(`Screenshot of ${timestamp}`, { files: ['./src/temp/out.png'] })
     },
 
     async checkPause(driver, clearOrders = false) {
