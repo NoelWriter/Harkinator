@@ -22,7 +22,7 @@ module.exports = {
      * @param {string} stockName
      */
     async execute (stockName) {
-        utils.log.generic(`Initialising the Harkinator`)
+        utils.log.generic(`Initialising the Harkinator 🚀`)
         const driver = await webdriver.start()
         const stockElement = await init(driver)
 
@@ -52,7 +52,7 @@ module.exports = {
  */
 async function init(driver) {
     // Log in user
-    await login.execute(driver, config.USERNAME, config.PASSWORD)
+    await login.execute(driver, config.USERNAME, config.PASSWORD, config.TWO_FACT_AUTH)
 
     // Enter specified mode
     await enterMode.execute(driver, config.DEMO_MODE, config.LIVE_ACCOUNT_NUM)

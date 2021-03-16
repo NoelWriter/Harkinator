@@ -4,8 +4,8 @@ const location = require("../../utils/locations")
 const utils = require("../../utils/utils");
 
 module.exports = {
-    async execute(driver, username, password) {
-        utils.log.generic(`Logging in`)
+    async execute(driver, username, password, twoFactAuth) {
+        utils.log.generic(`Logging in 💰`)
 
         // Wait until chart is loaded
         await driver.sleep(4000)
@@ -13,5 +13,11 @@ module.exports = {
         await driver.findElement(By.xpath(location.username_field)).sendKeys(username)
         await driver.findElement(By.xpath(location.password_field)).sendKeys(password)
         await driver.wait(until.elementLocated(By.xpath(location.login_button)), 5000).click()
+
+        // Wait 10 seconds till auth code is filled in if two factor authentication (2FA) is enabled
+        if (twoFactAuth) {
+            await driver.sleep(10000)
+            await driver.wait(until.elementLocated(By.xpath(location.login_button_2fa)), 5000).click()
+        }
     }
 }
