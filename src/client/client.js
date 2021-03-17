@@ -22,7 +22,7 @@ module.exports = {
      * @param {string} stockName
      */
     async execute (stockName) {
-        utils.log.generic(`Initialising the Harkinator 🚀`)
+        utils.log.generic(`Initialising the Harkinator`)
         const driver = await webdriver.start()
         const stockElement = await init(driver)
 
@@ -92,7 +92,7 @@ async function trade(driver, stockElement) {
     const initialSpread = await utils.getSpread(stockElement)
     utils.log.generic(`Initial spread: ${initialSpread}`)
 
-    utils.log.generic(`Probing platform lag..`)
+    utils.log.generic(`Probing platform lag...`)
     const platformLag = await probePlatformLatency(driver, stockElement)
     utils.log.generic(`Buy order delay is currently ${platformLag}ms`)
 
