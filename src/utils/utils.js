@@ -102,6 +102,16 @@ module.exports = {
         }
     },
 
+    async clearOpenPosition(driver) {
+        this.log.error("Force closing open positions in 60 seconds!")
+        await driver.sleep(60000)
+        try {
+            await driver.findElement(By.xpath(location.position_close_button)).click()
+        }catch (e){
+            this.log.debug("clearOpenPosition(): " + e)
+        }
+    },
+
     async sendScreenshot(driver, msg) {
         const timestamp = this.log.getTimeStamp()
         const screenshot = await driver.takeScreenshot()

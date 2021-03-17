@@ -79,8 +79,15 @@ async function trade(driver, stockElement) {
     } catch (e) { }
     await utils.checkPause(driver)
 
-    if (await utils.getPositionsTotal(driver) !== 0)
+    if (await utils.getPositionsTotal(driver) !== 0) {
         utils.log.error("Positions are still open!")
+        
+        if (config.FORCE_CLOSE_OPEN_POSITIONS)
+            await utils.clearOpenPosition(driver)
+            
+    }
+
+
 
     const initialSpread = await utils.getSpread(stockElement)
     utils.log.generic(`Initial spread: ${initialSpread}`)
