@@ -4,7 +4,7 @@ const location = require("../../utils/locations")
 const utils = require("../../utils/utils");
 
 module.exports = {
-    async execute(driver, username, password, twoFactAuth) {
+    async execute(driver, username, password, twoFactAuth = false) {
         utils.log.generic(`Logging in`)
 
         // Wait until chart is loaded
