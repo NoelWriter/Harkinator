@@ -64,7 +64,6 @@ async function isInvalidBalance(driver) {
         const popuptext = await driver.findElement(By.className("popover-notification__title")).getText()
         if (popuptext === "Order geweigerd") {
             utils.log.warning("Account financing error found")
-            utils.log.discord("Saldo laag popup")
             return true
         }
             return false
