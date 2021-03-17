@@ -90,7 +90,7 @@ async function trade(driver, stockElement) {
     utils.log.generic(`Buy order delay is currently ${platformLag}ms`)
 
     if (platformLag > config.LAG_MAX_ORDER_DELAY) {
-        utils.log.error(`Platform lag detected, buy order delay is currently ${platformLag}ms. Hibernating for 10 seconds`)
+        utils.log.warning(`Platform lag detected, buy order delay is currently ${platformLag}ms. Hibernating for 10 seconds`)
         await driver.sleep(10000)
         return
     }

@@ -32,13 +32,11 @@ module.exports = {
         
         await stockElement.findElement(By.xpath(location.buy_order_button)).click()
 
-        if (await isInvalidBalance(driver)) {
-            await driver.sleep(10000)
-            return false
-        }
-
         while (!await utils.getOrdersTotal(driver) > 0 && !(await utils.getPositionsTotal(driver) > 0 && await utils.getOrdersTotal(driver) <= 0)) {
-            continue
+            if (await isInvalidBalance(driver)) {
+                await driver.sleep(10000)
+                return false
+            }
         }
 
         utils.log.generic(`Order placed successfully`)

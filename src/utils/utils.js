@@ -94,7 +94,7 @@ module.exports = {
 
                 if (waitingCycles > 20) {
                     waitingCycles = 0
-                    this.log.error("Platform lag detected")
+                    this.log.warning("Platform lag detected")
                 }
             }
         } catch (e) {
