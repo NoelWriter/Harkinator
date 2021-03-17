@@ -3,8 +3,9 @@
 1. npm install in root directory
 2. Install the chrome driver https://chromedriver.storage.googleapis.com/index.html?path=89.0.4389.23/
 3. Copy config.json.example to config.json and put in your login credentials
-4. ???
-5. Profit
+4. Execute `npm start` in the root folder
+5. ???
+6. Profit
 
 ## config.json
 
