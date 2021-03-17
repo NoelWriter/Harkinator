@@ -36,7 +36,7 @@ module.exports = {
                     return await findPrice.sell(driver, stockElement, 0)
             }
         }
-        utils.log.generic("Order fulfilled")
+        utils.log.generic("Order fulfilled 🐻🌈")
 
         if (await utils.getPositionsTotal(driver) < amount)
             await utils.clearOpenOrders(driver)
