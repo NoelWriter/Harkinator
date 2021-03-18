@@ -19,8 +19,12 @@ module.exports = {
         driver.get(URL)
         return driver
         } else {
+			var options = new firefox.Options();
+			options.setPreference("intl.accept_languages", "nl,nl");
+			
             const driver = new webdriver.Builder()
             .forBrowser('firefox')
+			.setFirefoxOptions(options)
             .build()
             driver.get(URL)
         return driver
