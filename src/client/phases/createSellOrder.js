@@ -21,7 +21,12 @@ module.exports = {
         if (!await utils.getPositionsTotal(driver) === amount)
             return false
 
-        await stockElement.findElement(By.xpath(location.buy_order_button)).click()
+        try {
+            await stockElement.findElement(By.xpath(location.buy_order_button)).click()
+        }catch {
+            return false
+        }
+        
 
         if (await isInvalidBalance(driver))
             return false
