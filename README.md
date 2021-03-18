@@ -81,7 +81,7 @@ Bij 3000 wordt de bot tijdelijk gepauzeerd wanneer er meer dan 3 seconden vertra
 Toggle het automatisch sluiten van openstaande posities bij het starten van een nieuwe trade.
 
 #### DEMO_MODE
-Het script zal draaien in de demo omgeving van Capitol.
+Het script zal draaien in de demo omgeving van Capital.
 
 #### LIVE_ACCOUNT_NUM
 Selecteer sub-account uit lijst.
@@ -97,8 +97,8 @@ Token van de discord bot voor het doorgeven van informatie over de capital bot.
 Vul in je Discord user id zodat je via Discord op de hoogte blijft.
 
 #### USERNAME
-Vul in je Capitol gebruikersnaam.
+Vul in je Capital gebruikersnaam.
 
 #### PASSWORD
-Vul in je Capitol wachtwoord.
+Vul in je Capital wachtwoord.
 
