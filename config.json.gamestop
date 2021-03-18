@@ -29,6 +29,17 @@
   
     "DEBUG": false,
     "HEADLESS": false,
+<<<<<<< HEAD
+=======
+  
+    "DISCORD_TOKEN": "ODIwMzM3MzI5ODEzMzIzODQ2.YEzsrA.0Yu3lEYwobBWd0exKV2jUMdPpyA",
+    "DISCORD_USERID": "128993406742560768",
+  
+    "TWO_FACT_AUTH": true,
+    
+    "USERNAME": "",
+    "PASSWORD": ""
+>>>>>>> e80013acca688e98b97bc6fab24be018db062b94
   }
   
   
