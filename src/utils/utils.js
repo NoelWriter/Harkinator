@@ -116,7 +116,8 @@ module.exports = {
         const timestamp = this.log.getTimeStamp()
         const screenshot = await driver.takeScreenshot()
         await require('fs').writeFile('./src/temp/out.png', screenshot, 'base64', function (err) {
-            console.log(err)
+            if (err)
+                this.log.error(err)
         });
         await msg.channel.send(`Screenshot of ${timestamp}`, { files: ['./src/temp/out.png'] })
     },
@@ -142,8 +143,8 @@ module.exports = {
     },
 
     getOs() {
-        var opsys = process.platform;
-        if (opsys == "darwin") {
+        const opsys = process.platform;
+        if (opsys === "darwin") {
             return "MacOS";
         }
 

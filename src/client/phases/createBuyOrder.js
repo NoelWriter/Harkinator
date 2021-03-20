@@ -26,7 +26,7 @@ module.exports = {
 
         if (await utils.getStockSellPrice(stockElement) < (curSellLevel - await utils.getSpread(stockElement) * config.FREEFALL_INDICATOR)) {
             utils.log.warning("Freefall detected")
-            await driver.sleep(5000)
+            await driver.sleep(config.DELAY_FREEFALL_DETECTED)
             return false
         }
         
