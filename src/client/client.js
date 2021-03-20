@@ -7,6 +7,8 @@ const findPrice = require("./phases/findPrice")
 const createSellOrder = require("./phases/createSellOrder")
 const awaitSellOrder = require("./phases/awaitSellOrder")
 
+const discordClient = require("./discordClient")
+
 const webdriver = require("../client/webdriver")
 const locations = require("../utils/locations")
 const config = require("../config/config.json");
@@ -14,33 +16,23 @@ const utils = require("../utils/utils")
 const {By} = require("selenium-webdriver");
 
 module.exports = {
-    instanceName: "",
     /**
      * Execute client instance
      *
      * @param {string} stockName
-     * @param instance
-     * @param delay
-     * @param discordClientInstance
      */
-    async execute (stockName, instance, delay, discordClientInstance) {
-
-        // Timeout between starting instances to prevent internet clogging
-        await new Promise(resolve => setTimeout(resolve, delay));
-
-        // Initialize webdriver
-        utils.log.generic(`Initialising Harkinator: ` + instance)
+    async execute (stockName) {
+        utils.log.generic(`Initialising the Harkinator`)
         const driver = await webdriver.start()
+        const stockElement = await init(driver)
+
+        const discordClientInstance = await discordClient.init(config.DISCORD_TOKEN)
 
         discordClientInstance.on("message", msg => {
             if (msg.content.toLowerCase() === 's' && msg.author.id === config.DISCORD_USERID) {
                 utils.sendScreenshot(driver, msg)
             }
         })
-
-        // Initialize client login and account
-        const stockElement = await init(driver, instance)
-        await utils.setInstanceName(driver)
 
         utils.log.generic(`Starting trading sequence`)
         utils.log.generic(`Probing buy and sell price = ${await utils.getStockBuyPrice(stockElement)} | ${await utils.getStockSellPrice(stockElement)}`)
@@ -57,14 +49,13 @@ module.exports = {
 
 /**
  * @param {*} driver
- * @param instance
  */
-async function init(driver, instance) {
+async function init(driver) {
     // Log in user
     await login.execute(driver, config.USERNAME, config.PASSWORD, config.TWO_FACT_AUTH)
 
     // Enter specified mode
-    await enterMode.execute(driver, config.DEMO_MODE, instance)
+    await enterMode.execute(driver, config.DEMO_MODE, config.LIVE_ACCOUNT_NUM)
 
     // Find stock
     const stockElement = await findStock.execute(driver, config.STOCK_PRIMARY)
@@ -81,19 +72,13 @@ async function init(driver, instance) {
  */
 async function trade(driver, stockElement) {
     utils.log.generic(`Starting trade`)
-
-    // Clear all open orders
     await utils.clearOpenOrders(driver)
 
-    // Close trading panel to prevent buying high
     try {
         await driver.findElement(By.xpath(locations.order_panel_close_button)).click()
     } catch (e) { }
-
-    // Check if pause has been called
     await utils.checkPause(driver)
 
-    // Clear any open positions
     if (await utils.getPositionsTotal(driver) !== 0) {
         utils.log.error("Positions are still open!")
         
@@ -102,42 +87,36 @@ async function trade(driver, stockElement) {
             
     }
 
-    // Fetch current spread
+
+
     const initialSpread = await utils.getSpread(stockElement)
     utils.log.generic(`Initial spread: ${initialSpread}`)
 
-    // Probe lag to maintain bot functionality
     utils.log.generic(`Probing platform lag...`)
     const platformLag = await probePlatformLatency(driver, stockElement)
     utils.log.generic(`Buy order delay is currently ${platformLag}ms`)
 
     if (platformLag > config.LAG_MAX_ORDER_DELAY) {
-        const sleepAmount = config.DELAY_PLATFORM_LAG
-        utils.log.warning(`Platform lag detected, buy order delay is currently ${platformLag}ms. Hibernating for ${sleepAmount/1000} seconds`)
-        await driver.sleep(sleepAmount)
+        utils.log.warning(`Platform lag detected, buy order delay is currently ${platformLag}ms. Hibernating for 10 seconds`)
+        await driver.sleep(10000)
         return
     }
 
-    // Find buy price
     const price = await findPrice.buy(driver, stockElement, config.STOCK_MULTIPLIER_ABOVE_SELL)
     const curSellLevel = await utils.getStockSellPrice(stockElement)
     utils.log.generic(`Found price at ${price}`)
 
-    // Create buy order
     const sellLevel = await createBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, price, curSellLevel)
     if (!sellLevel)
         return
 
-    // Wait for buy order to be filled
     const boughtSellLevel = await awaitBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, sellLevel)
     if (!boughtSellLevel)
         return
 
-    // Find the sell price for the positions held
     let curSellPrice = await findPrice.sell(driver, stockElement, config.STOCK_PROFIT)
     utils.log.debug("Sell price : " + curSellPrice.toString())
 
-    // Loop to keep updating sell position
     while (await utils.getPositionsTotal(driver) > 0) {
         // Clear open orders
         await utils.clearOpenOrders(driver)
@@ -159,6 +138,8 @@ async function trade(driver, stockElement) {
     }
 
     utils.log.discord(`:moneybag: ${await utils.getBalance(driver)} :moneybag:`)
+
+    await driver.sleep(500)
 }
 
 async function probePlatformLatency(driver, stockElement) {
