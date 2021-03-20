@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/tailwind.css" rel="stylesheet">
+    <title>Harkinator</title>
+</head>
+<body>
+    <div class="container mx-auto p-4">
+        <h1 class="text-5xl pb-4">Harkinator</h1>
+
+        <div id="app">
+            <button v-on:click="saveData">
+                Get data
+            </button>
+
+            <table class="table-auto border">
+                <thead>
+                    <tr class="border-b-2 border-gray-300">
+                        <th class="px-4 py-3">Key</th>
+                        <th class="px-4 py-3">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-if="filterData(key)" class="border-b-2 border-gray-300" v-for="(value, key) in results">
+                        <td class="border-b-2 px-4 py-3">{{ key }}</td>
+                        <td class="border-b-2 px-4 py-3"><input type="text" :name="'input-'+key" v-model="results[key]"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
