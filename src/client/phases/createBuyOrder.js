@@ -26,7 +26,7 @@ module.exports = {
 
         if (await utils.getStockSellPrice(stockElement) < (curSellLevel - await utils.getSpread(stockElement) * config.FREEFALL_INDICATOR)) {
             utils.log.warning("Freefall detected")
-            await driver.sleep(5000)
+            await driver.sleep(config.DELAY_FREEFALL_DETECTED)
             return false
         }
         
@@ -60,6 +60,14 @@ async function setPrice(driver, stockElement, priceString) {
 }
 
 async function isInvalidBalance(driver) {
+    try {
+        await driver.findElement(By.xpath(location.popup_close_button)).click()
+        utils.log.warning("Account financing fullscreen error found")
+        return true
+    } catch (e) {
+        
+    }
+
     try {
         const popuptext = await driver.findElement(By.className("popover-notification__title")).getText()
         if (popuptext === "Order geweigerd") {
