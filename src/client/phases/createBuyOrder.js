@@ -62,9 +62,10 @@ async function setPrice(driver, stockElement, priceString) {
 async function isInvalidBalance(driver) {
     try {
         await driver.findElement(By.xpath(location.popup_close_button)).click()
+        utils.log.warning("Account financing fullscreen error found")
         return true
     } catch (e) {
-        utils.log.warning("Account financing fullscreen error found")
+        
     }
 
     try {

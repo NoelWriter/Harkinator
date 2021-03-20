@@ -7,8 +7,6 @@ const findPrice = require("./phases/findPrice")
 const createSellOrder = require("./phases/createSellOrder")
 const awaitSellOrder = require("./phases/awaitSellOrder")
 
-const discordClient = require("./discordClient")
-
 const webdriver = require("../client/webdriver")
 const locations = require("../utils/locations")
 const config = require("../../config.json");
@@ -16,23 +14,22 @@ const utils = require("../utils/utils")
 const {By} = require("selenium-webdriver");
 
 module.exports = {
+    instanceName: "",
     /**
      * Execute client instance
      *
      * @param {string} stockName
      */
-    async execute (stockName) {
-        utils.log.generic(`Initialising the Harkinator`)
+    async execute (stockName, instance, delay) {
+
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        utils.log.generic(`Initialising Harkinator: ` + instance)
         const driver = await webdriver.start()
-        const stockElement = await init(driver)
 
-        const discordClientInstance = await discordClient.init(config.DISCORD_TOKEN)
-
-        discordClientInstance.on("message", msg => {
-            if (msg.content.toLowerCase() === 's' && msg.author.id === config.DISCORD_USERID) {
-                utils.sendScreenshot(driver, msg)
-            }
-        })
+        const stockElement = await init(driver, instance)
+        await utils.setInstanceName(driver)
+        
 
         utils.log.generic(`Starting trading sequence`)
         utils.log.generic(`Probing buy and sell price = ${await utils.getStockBuyPrice(stockElement)} | ${await utils.getStockSellPrice(stockElement)}`)
@@ -50,12 +47,12 @@ module.exports = {
 /**
  * @param {*} driver
  */
-async function init(driver) {
+async function init(driver, instance) {
     // Log in user
     await login.execute(driver, config.USERNAME, config.PASSWORD, config.TWO_FACT_AUTH)
 
     // Enter specified mode
-    await enterMode.execute(driver, config.DEMO_MODE, config.LIVE_ACCOUNT_NUM)
+    await enterMode.execute(driver, config.DEMO_MODE, instance)
 
     // Find stock
     const stockElement = await findStock.execute(driver, config.STOCK_PRIMARY)

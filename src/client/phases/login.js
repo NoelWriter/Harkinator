@@ -9,15 +9,15 @@ module.exports = {
 
         // Wait until chart is loaded
         await driver.sleep(4000)
-        await driver.wait(until.elementLocated(By.xpath(location.login_modal)), 5000).click()
+        await driver.wait(until.elementLocated(By.xpath(location.login_modal)), 10000).click()
         await driver.findElement(By.xpath(location.username_field)).sendKeys(username)
         await driver.findElement(By.xpath(location.password_field)).sendKeys(password)
-        await driver.wait(until.elementLocated(By.xpath(location.login_button)), 5000).click()
+        await driver.wait(until.elementLocated(By.xpath(location.login_button)), 10000).click()
 
         // Wait 10 seconds till auth code is filled in if two factor authentication (2FA) is enabled
         if (twoFactAuth) {
             await driver.sleep(10000)
-            await driver.wait(until.elementLocated(By.xpath(location.login_button_2fa)), 5000).click()
+            await driver.wait(until.elementLocated(By.xpath(location.login_button_2fa)), 10000).click()
         }
     }
 }

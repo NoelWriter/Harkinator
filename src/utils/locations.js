@@ -26,9 +26,11 @@ module.exports = {
     balance_amount: "/html/body/app-root/div/topbar/div/div[2]/balance-info/div/topbar-info/div/topbar-info-item[3]/div/div[2]/span",
 
     popup_close_button: "/html/body/app-root/alerts/div/div[2]/div[1]/span",
-    order_panel_close_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[1]/div[2]/font-icon",
-    position_close_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div/div/trade-watchlist-wishlist-list/scroll-pane/div[1]/trade-watchlist-instruments-list/trade-instrument-position-list[2]/trade-instrument-list-position-item-renderer/div/div/div/div[4]/div",
+    account_name: "/html/body/app-root/div/topbar/div/topbar-accounts-list/div/div[1]/div/div",
 
+    
+    order_panel_close_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[1]/div[2]/font-icon",
+    position_close_button:     "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div/div/trade-watchlist-wishlist-list/scroll-pane/div[1]/trade-watchlist-instruments-list/trade-instrument-position-list[2]/trade-instrument-list-position-item-renderer/div/div/div/div[4]/div",
     relative_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[2]/trade-deal-ticket/edit-order/div/scroll-pane/div[1]/div[2]/ml-text",
     buy_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div[1]/div/trade-watchlist-wishlist-list/scroll-pane/div[1]/trade-watchlist-instruments-list/trade-instrument-order-list/trade-instrument-list-order-item-renderer/div/div/div/div[4]",
     sell_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div/div/trade-watchlist-wishlist-list/scroll-pane/div[1]/trade-watchlist-instruments-list/trade-instrument-order-list/trade-instrument-list-order-item-renderer/div/div/div/div[4]"
