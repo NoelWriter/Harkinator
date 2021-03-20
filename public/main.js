@@ -1,25 +1,30 @@
+var baseUrl = "http://localhost:3001/";
+
 var app = new Vue({
-  el: '#app',
+  el: "#app",
   data: {
-    results: []
+    results: [],
   },
   mounted: function () {
-      fetch('config.json')
-      .then(response => response.json())
-      .then((json) => {
-          this.results = json;
+    fetch(baseUrl + "config")
+      .then((response) => response.json())
+      .then((results) => {
+        this.results = results.data;
       });
   },
   methods: {
-    filterData: function (key) {
-      if (key === 'USERNAME' || key === 'PASSWORD') {
-        return false;
-      }
+    saveData: function (event) {
+      event.preventDefault();
 
-      return true;
+      fetch(baseUrl + "config", {
+        method: "post",
+        headers: {
+          Accept: "application/json, text/plain, */*", "Content-Type": "application/json",
+        },
+        body: JSON.stringify(this.results),
+      })
+      .then((results) => results.json())
+      .then((results) => this.results = results.data);
     },
-    saveData: function(event) {
-      console.log(this.results);
-    }
-  }
-})
+  },
+});

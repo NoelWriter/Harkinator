@@ -11,7 +11,7 @@ const discordClient = require("./discordClient")
 
 const webdriver = require("../client/webdriver")
 const locations = require("../utils/locations")
-const config = require("../../config.json");
+const config = require("../config/config.json");
 const utils = require("../utils/utils")
 const {By} = require("selenium-webdriver");
 

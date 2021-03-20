@@ -1,8 +1,8 @@
 const chalk = require("chalk");
-const location = require("./locations")
+const location = require("./locations");
 const { By } = require("selenium-webdriver");
-const config = require("../../config.json")
-const discordClient = require("../client/discordClient")
+const config = require("../config/config.json");
+const discordClient = require("../client/discordClient");
 
 module.exports = {
     async getStockBuyPrice(element) {

@@ -1,6 +1,6 @@
 const {By, until, Key} = require("selenium-webdriver");
 const location = require("../../utils/locations")
-const config = require("../../../config.json");
+const config = require("../../config/config.json");
 const utils = require("../../utils/utils");
 const findPrice = require("./findPrice")
 

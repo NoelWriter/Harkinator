@@ -1,6 +1,6 @@
 const webdriver = require("selenium-webdriver");
 const chrome = require('selenium-webdriver/chrome');
-const config = require("../../config.json");
+const config = require("../config/config.json");
 const firefox = require('selenium-webdriver/firefox')
 const { Builder } = require('selenium-webdriver');
 //const phantomjs = require("phantomjs")npm 

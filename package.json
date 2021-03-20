@@ -5,17 +5,27 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "init-frontend": "node src/server.js",
+    "init-backend": "http-server -a localhost -p 8080",
+    "open": "open http://localhost:8080",
+    "init-dashboard": "npm-run-all -p -r init-backend init-frontend open",
     "start": "node src/main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "autoprefixer": "^10.2.5",
     "chalk": "^4.1.0",
-    "http-server": "^0.12.3"
+    "http-server": "^0.12.3",
+    "parallelshell": "^3.0.2",
+    "postcss": "^8.2.8",
+    "tailwindcss": "^2.0.4"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "discord.js": "^12.5.1",
+    "express": "^4.17.1",
     "selenium-webdriver": "^4.0.0-beta.1",
     "webdriverjs": "^1.7.5"
   }

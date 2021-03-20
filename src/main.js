@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------
 //                           HARKINATOR
 // ----------------------------------------------------------------
-const config = require("../public/config.json");
+const config = require("./config/config.json");
 const client = require("./client/client")
 const utils = require("./utils/utils")
 
