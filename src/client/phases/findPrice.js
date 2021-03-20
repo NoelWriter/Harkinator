@@ -8,7 +8,7 @@ module.exports = {
         let priceArray = []
         let spreadArray = []
 
-        while (priceArray.length < 20) {
+        while (priceArray.length < 2) {
             await driver.sleep(100)
             const sellPrice = await utils.getStockSellPrice(element)
             const spreadAmount = await utils.getSpread(element)
