@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "pre-install": "npm i http-server npm-run-all -g",
+    "pre-install": "npm i http-server npm-run-all open-cli -g",
     "test": "echo \"Error: no test specified\" && exit 1",
     "init-backend": "node src/server.js",
     "init-frontend": "http-server -a localhost -p 8080",
-    "open": "start http://localhost:8080",
-    "init-dashboard": "npm-run-all -p init-backend init-frontend open",
+    "open": "open-cli http://localhost:8080",
+    "dashboard": "npm-run-all -p init-backend init-frontend open",
     "start": "node src/main.js"
   },
   "keywords": [],
