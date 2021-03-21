@@ -170,7 +170,7 @@
                             <div class="flex items-center h-5">
                               <input
                                 id="STOCK_ROUND_TO_WHOLE"
-                                name="comments"
+       
                                 type="checkbox"
                                 v-model="results.STOCK_ROUND_TO_WHOLE"
                                 true-value="true"
@@ -425,7 +425,7 @@
                             for="STOCK_PROBE_AMOUNT"
                             class="block text-sm font-medium text-gray-700"
                           >
-                          Hoeveelheid aandelen die de bot ordert bij de lag test
+                          Aantal aandelen betreft lag test
                           </label>
                           <div class="mt-1 flex rounded-md shadow-sm">
                             <input
@@ -500,7 +500,7 @@
                             <div class="flex items-center h-5">
                               <input
                                 id="FORCE_CLOSE_OPEN_POSITIONS"
-                                name="comments"
+                      
                                 type="checkbox"
                                 v-model="results.FORCE_CLOSE_OPEN_POSITIONS"
                                 true-value="true"
@@ -531,7 +531,7 @@
                             <div class="flex items-center h-5">
                               <input
                                 id="DEMO_MODE"
-                                name="comments"
+                       
                                 type="checkbox"
                                 v-model="results.DEMO_MODE"
                                 true-value="true"
@@ -583,8 +583,8 @@
                           <div class="flex items-start">
                             <div class="flex items-center h-5">
                               <input
-                                id="comments"
-                                name="comments"
+                                id="DEBUG"
+                         
                                 type="checkbox"
                                 v-model="results.DEBUG"
                                 true-value="true"
@@ -594,12 +594,70 @@
                             </div>
                             <div class="ml-3 text-sm">
                               <label
-                                for="comments"
+                                for="DEBUG"
                                 class="font-medium text-gray-700"
                                 >Debug mode</label
                               >
                               <p class="text-gray-500">
                                 Toggle debug mode. Zichtbaar in console.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                              <input
+                                id="HEADLESS"
+                                type="checkbox"
+                                v-model="results.HEADLESS"
+                                true-value="true"
+                                false-value="false"
+                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                              />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label
+                                for="HEADLESS"
+                                class="font-medium text-gray-700"
+                                >Headless mode</label
+                              >
+                              <p class="text-gray-500">
+                                Toggle headless mode. Er zullen geen browser schermen geopend worden als deze optie geselecteerd is.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                              <input
+                                id="TWO_FACT_AUTH"
+                                type="checkbox"
+                                v-model="results.TWO_FACT_AUTH"
+                                true-value="true"
+                                false-value="false"
+                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                              />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label
+                                for="TWO_FACT_AUTH"
+                                class="font-medium text-gray-700"
+                                >Two factor authentication mode</label
+                              >
+                              <p class="text-gray-500">
+                                Two factor authentication (2FA) mode geeft je tijd om je 6-cijferige code in te voeren.
                               </p>
                             </div>
                           </div>
