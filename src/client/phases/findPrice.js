@@ -2,7 +2,7 @@ const chalk = require("chalk");
 const {By, until} = require("selenium-webdriver");
 const location = require("../../utils/locations")
 const utils = require("../../utils/utils");
-const config = require("../../config/config.json")
+const config = require("../../../config.json");
 
 module.exports = {
     async buy(driver, element, percentageAboveSell) {
