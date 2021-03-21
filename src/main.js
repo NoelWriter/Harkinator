@@ -7,16 +7,11 @@ const utils = require("./utils/utils")
 const discordClient = require("./client/discordClient")
 
 discordClient.init(config.DISCORD_TOKEN).then((discordClientInstance) => {
-    // Multi-instancing
-    let instanceCalls = []
+ 
 
-    for (let instance = 0; instance < config.NUM_INSTANCES; instance++) {
-        instanceCalls.push(client.execute(config.STOCK_PRIMARY, instance+2, 10000*instance, discordClientInstance))
-    }
+    const instance = parseInt(process.argv[2])
 
-    Promise.all(instanceCalls)
-        .then(results => console.log(results));
-
+    client.execute(config.STOCK_PRIMARY, instance+1, 10000*instance, discordClientInstance)
 
 })
 
