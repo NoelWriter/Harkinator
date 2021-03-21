@@ -54,12 +54,20 @@ async function setPrice(driver, stockElement, priceString) {
 
 async function isInvalidBalance(driver) {
     try {
+        await driver.findElement(By.xpath(location.popup_close_button)).click()
+        utils.log.warning("Account financing fullscreen error found")
+        return true
+    } catch (e) {
+        
+    }
+
+    try {
         const popuptext = await driver.findElement(By.className("popover-notification__title")).getText()
         if (popuptext === "Order geweigerd") {
             utils.log.warning("Account financing error found")
             return true
         }
-        return false
+            return false
     } catch (e) {
         return false
     }
