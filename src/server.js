@@ -5,7 +5,7 @@ const fs = require("fs");
 const app = express();
 const port = 3001;
 
-const configFile = __dirname + "/config/config.json";
+const configFile = __dirname + "/../config.json";
 
 app.use(cors());
 app.use(express.json());

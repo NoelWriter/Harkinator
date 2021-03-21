@@ -6,7 +6,7 @@
   "scripts": {
     "pre-install": "npm i http-server npm-run-all open-cli -g",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "init-backend": "node src/server.js",
+    "init-backend": "node src/server.js 0",
     "init-frontend": "http-server -a localhost -p 8080",
     "open": "open-cli http://localhost:8080",
     "dashboard": "npm-run-all -p init-backend init-frontend open",
