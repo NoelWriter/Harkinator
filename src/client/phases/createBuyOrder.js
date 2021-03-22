@@ -32,7 +32,7 @@ module.exports = {
         
         await stockElement.findElement(By.xpath(location.buy_order_button)).click()
 
-        while (!await utils.getOrdersTotal(driver) > 0 && !(await utils.getPositionsTotal(driver) > 0 && await utils.getOrdersTotal(driver) <= 0)) {
+        while (!(await utils.getOrdersTotal(driver) > 0) && !(await utils.getPositionsTotal(driver) > 0)) {
             if (await isInvalidBalance(driver)) {
                 await driver.sleep(10000)
                 return false
