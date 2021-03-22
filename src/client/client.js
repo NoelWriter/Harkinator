@@ -52,6 +52,12 @@ module.exports = {
 
         // Initialize client login and account
         const stockElement = await init(driver, instance)
+
+        if (!stockElement) {
+            driver.quit()
+            await this.execute(this.stockName, this.instance, 0, this.discordClientInstance)
+        }
+
         await utils.setInstanceName(driver)
 
         utils.log.generic(`Starting trading sequence`)
@@ -73,7 +79,7 @@ module.exports = {
     async trade(driver, stockElement) {
         utils.log.generic(`Starting trade`)
 
-        if ((Date.now() - this.driverStartDate) > 7200000) {
+        if ((Date.now() - this.driverStartDate) > 3600000) {
             driver.quit()
             await this.execute(this.stockName, this.instance, 0, this.discordClientInstance)
         }
@@ -164,18 +170,26 @@ module.exports = {
  */
 async function init(driver, instance) {
     // Log in user
-    await login.execute(driver, config.USERNAME, config.PASSWORD, config.TWO_FACT_AUTH)
+    try {
+        const loginSucces = await login.execute(driver, config.USERNAME, config.PASSWORD, config.TWO_FACT_AUTH)
 
-    // Enter specified mode
-    await enterMode.execute(driver, config.DEMO_MODE, instance)
+        if(!loginSucces)
+            return false
 
-    // Find stock
-    const stockElement = await findStock.execute(driver, config.STOCK_PRIMARY)
+        // Enter specified mode
+        await enterMode.execute(driver, config.DEMO_MODE, instance)
 
-    if (!stockElement)
-        throw 'stockElement not found';
+        // Find stock
+        const stockElement = await findStock.execute(driver, config.STOCK_PRIMARY)
 
-    return stockElement
+        if (!stockElement)
+            throw 'stockElement not found';
+
+        return stockElement
+    } catch (e) {
+        return false
+    }
+    
 }
 
 async function probePlatformLatency(driver, stockElement) {

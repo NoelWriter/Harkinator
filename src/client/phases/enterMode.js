@@ -6,7 +6,7 @@ const utils = require("../../utils/utils");
 module.exports = {
     async execute(driver, isDemo = false, liveAccountNum = 1) {
         utils.log.generic(`Entering ${isDemo ? "Demo" : "Live"} modus`)
-        await driver.wait(until.elementLocated(By.xpath(location.account_dropdown)), 10000).click()
+        await driver.wait(until.elementLocated(By.xpath(location.account_dropdown)), 30000).click()
 
         if (!isDemo)
             await driver.findElement(By.xpath(location.account_selector + `[${liveAccountNum}]/div`)).click()

@@ -30,8 +30,7 @@ module.exports = {
 
     
     order_panel_close_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[1]/div[2]/font-icon",
-    position_close_button:     "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div/div/trade-watchlist-wishlist-list/scroll-pane/div[1]/trade-watchlist-instruments-list/trade-instrument-position-list[2]/trade-instrument-list-position-item-renderer/div/div/div/div[4]/div",
-    relative_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[2]/trade-deal-ticket/edit-order/div/scroll-pane/div[1]/div[2]/ml-text",
+    list_of_stocks: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div[1]/div/trade-watchlist-wishlist-list",
     buy_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div[1]/div/trade-watchlist-wishlist-list/scroll-pane/div[1]/trade-watchlist-instruments-list/trade-instrument-order-list/trade-instrument-list-order-item-renderer/div/div/div/div[4]",
     sell_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div/div/trade-watchlist-wishlist-list/scroll-pane/div[1]/trade-watchlist-instruments-list/trade-instrument-order-list/trade-instrument-list-order-item-renderer/div/div/div/div[4]"
 
