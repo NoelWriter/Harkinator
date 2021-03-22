@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link href="/tailwind.css" rel="stylesheet" /> -->
+
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <title>Harkinator</title>
+  </head>
+  <body>
+    <!-- This example requires Tailwind CSS v2.0+ -->
+    <div id="app">
+      <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <h1 class="text-3xl font-bold text-gray-900">Harkinator</h1>
+        </div>
+      </header>
+      <main>
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div>
+            <div class="md:grid md:grid-cols-3 md:gap-6">
+              <div class="md:col-span-1">
+                <div class="px-4 sm:px-0">
+                  <h3 class="text-lg font-medium leading-6 text-gray-900">
+                    Configuration
+                  </h3>
+                  <p class="mt-1 text-sm text-gray-600">
+                    Deze informatie zal het script gebruiken.
+                  </p>
+                </div>
+              </div>
+              <div class="mt-5 md:mt-0 md:col-span-2">
+                <form action="#" method="POST">
+                  <div class="shadow sm:rounded-md sm:overflow-hidden">
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                            <label
+                                for="STOCK_PRIMARY"
+                                class="block text-sm font-medium text-gray-700"
+                            >
+                                Naam
+                            </label>
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <input
+                                type="text"
+                                v-model="results.STOCK_PRIMARY"
+                                id="STOCK_PRIMARY"
+                                class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                                
+                                />
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Vul hier de naam van de stock in. Let op dit veld is hoofdlettergevoelig.
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                            <label
+                                for="STOCK_FRACTION_DIGITS"
+                                class="block text-sm font-medium text-gray-700"
+                            >
+                                Decimaal
+                            </label>
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <input
+                                type="text"
+                                v-model="results.STOCK_FRACTION_DIGITS"
+                                id="STOCK_FRACTION_DIGITS"
+                                class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                                
+                                />
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Cijfers achter de comma. Verschilt per stock.
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_MULTIPLIER_ABOVE_SELL"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Multiplier inkoop prijs
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_MULTIPLIER_ABOVE_SELL"
+                              id="STOCK_MULTIPLIER_ABOVE_SELL"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Multiplier voor inkoop prijs. Hoger is hogere inkoop prijs. Inkoop prijs berekening = verkoopprijs op website + (STOCK_MULTIPLIER_ABOVE_SELL * spread)
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                            <div class="col-span-3 sm:col-span-2">
+                            <label
+                                for="STOCK_AMOUNT"
+                                class="block text-sm font-medium text-gray-700"
+                            >
+                                Aantal
+                            </label>
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <input
+                                type="text"
+                                v-model="results.STOCK_AMOUNT"
+                                id="STOCK_AMOUNT"
+                                class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                                
+                                />
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Hoeveelheid aandelen dat de bot per trade inkoopt
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                            <label
+                                for="STOCK_PROFIT"
+                                class="block text-sm font-medium text-gray-700"
+                            >
+                                Winst
+                            </label>
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <input
+                                type="text"
+                                v-model="results.STOCK_PROFIT"
+                                id="STOCK_PROFIT"
+                                class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                                
+                                />
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Multiplier voor verkoop prijs. Hoger is hogere verkoop prijs. Verkoop prijs berekening = aanschafprijs + (STOCK_PROFIT * spread)
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                              <input
+                                id="STOCK_ROUND_TO_WHOLE"
+       
+                                type="checkbox"
+                                v-model="results.STOCK_ROUND_TO_WHOLE"
+                                true-value="true"
+                                false-value="false"
+                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                              />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label
+                                for="STOCK_ROUND_TO_WHOLE"
+                                class="font-medium text-gray-700"
+                                >Afronden naar geheel getal</label
+                              >
+                              <p class="text-gray-500">
+                                Toggle afronden naar heel getal (voor bitcoin)
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_BUY_UPPER_LIMIT"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Aankoop bovengrens
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_BUY_UPPER_LIMIT"
+                              id="STOCK_BUY_UPPER_LIMIT"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Multiplier die bepaald hoeveel de prijs mag stijgen voordat buy order geannuleerd wordt. Bij 0.1 mag de verkoopprijs 10% stijgen voordat de buy order wordt geannuleerd.
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_BUY_LOWER_LIMIT"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Aankoop ondergrens
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_BUY_LOWER_LIMIT"
+                              id="STOCK_BUY_LOWER_LIMIT"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Multiplier die bepaald hoeveel de prijs mag dalen voordat buy order geannuleerd wordt. Bij 0.1 mag de verkoopprijs 10% dalen voordat de buy order wordt geannuleerd.
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_BUY_FILL_WAIT"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Afwachten tot aanvullen aandelen (1000 = 1 sec)
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_BUY_FILL_WAIT"
+                              id="STOCK_BUY_FILL_WAIT"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Hoeveelheid miliseconden dat de bot moet wachten bij gedeeltelijke vulling van een order. 1000 = 1 sec
+                        </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_SELL_UPPER_LIMIT"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                          Multiplier tot winst modus
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_SELL_UPPER_LIMIT"
+                              id="STOCK_SELL_UPPER_LIMIT"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Multiplier die bapaald hoeveel de prijs mag stijgen voordat de bot in winst modus gaat. Bij 0.1 mag de verkoopprijs 10% stijgen voordat de bot in winst modus gaat.
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_SELL_LOWER_LIMIT_BREAK_EVEN"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                          Multiplier tot break-even
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_SELL_LOWER_LIMIT_BREAK_EVEN"
+                              id="STOCK_SELL_LOWER_LIMIT_BREAK_EVEN"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Multiplier die bapaald hoeveel de prijs mag dalen voordat de bot in winst break even modus gaat. Bij 0.1 mag de verkoopprijs 10% dalen voordat de bot in break even modus gaat.
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_SELL_LOWER_LIMIT_LOSS"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Verkoop lagere grensverlies
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_SELL_LOWER_LIMIT_LOSS"
+                              id="STOCK_SELL_LOWER_LIMIT_LOSS"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Multiplier die bapaald hoeveel de prijs mag dalen voordat de bot in verlies modus gaat. Bij 0.1 mag de verkoopprijs 10% dalen voordat de bot in verlies modus gaat.
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_EVALUATE_DELTA_UP"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                          Multiplier die bapaald hoeveel de prijs mag stijgen voordat de bot in verlies modus gaat
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_EVALUATE_DELTA_UP"
+                              id="STOCK_EVALUATE_DELTA_UP"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Multiplier die bepaald hoeveel de prijs mag stijgen voordat sell order geupdate wordt. Bij 0.1 mag de verkoopprijs 10% stijgen voordat de sell order wordt geupdate.
+                        </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_EVALUATE_DELTA_DOWN"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                          Multiplier die bepaald hoeveel de prijs mag dalen voordat sell order geupdate wordt
+                          </label>
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <input
+                                type="text"
+                                v-model="results.STOCK_EVALUATE_DELTA_DOWN"
+                                id="STOCK_EVALUATE_DELTA_DOWN"
+                                class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                                
+                                />
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Multiplier die bepaald hoeveel de prijs mag dalen voordat sell order geupdate wordt. Bij 0.1 mag de verkoopprijs 10% dalen voordat de sell order wordt geupdate.
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_LOSS_MULTIPLIER"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                          Multiplier voor verkoop prijs bij verlies modus.
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_LOSS_MULTIPLIER"
+                              id="STOCK_LOSS_MULTIPLIER"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Multiplier voor verkoop prijs bij verlies modus. Hoger is hogere verkoop prijs. Verkoop prijs berekening = verkoopprijs op website + (STOCK_PROFIT * spread)
+                        </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_PROBE_AMOUNT"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                          Aantal aandelen betreft lag test
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_PROBE_AMOUNT"
+                              id="STOCK_PROBE_AMOUNT"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Hoeveelheid aandelen die de bot ordert bij de lag test
+                        </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="FREEFALL_INDICATOR"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                          Mulitplier die bepaald hoeveel de prijs mag dalen tussen de initieele koopprijs bepaling en het moment van aankoop.
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.FREEFALL_INDICATOR"
+                              id="FREEFALL_INDICATOR"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Mulitplier die bepaald hoeveel de prijs mag dalen tussen de initieele koopprijs bepaling en het moment van aankoop. Bij 0.01 wordt de aankoop geannuleerd bij een dalen van meer dan 1%.
+                        </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="LAG_MAX_ORDER_DELAY"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                          Hoeveelheid miliseconden waarbinnen de lag van het platform acceptabel is
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.LAG_MAX_ORDER_DELAY"
+                              id="LAG_MAX_ORDER_DELAY"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Hoeveelheid miliseconden waarbinnen de lag van het platform acceptabel is. Bij 3000 wordt de bot tijdelijk gepauzeerd wanneer er meer dan 3 seconden vertraging is. 1000 = 1 sec
+                        </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                              <input
+                                id="FORCE_CLOSE_OPEN_POSITIONS"
+                      
+                                type="checkbox"
+                                v-model="results.FORCE_CLOSE_OPEN_POSITIONS"
+                                true-value="true"
+                                false-value="false"
+                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                              />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label
+                                for="FORCE_CLOSE_OPEN_POSITIONS"
+                                class="font-medium text-gray-700"
+                                >Forceer sluiten van open posities</label
+                              >
+                              <p class="text-gray-500">
+                                Toggle het automatisch sluiten van openstaande
+                                posities bij het starten van een nieuwe trade.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                              <input
+                                id="DEMO_MODE"
+                       
+                                type="checkbox"
+                                v-model="results.DEMO_MODE"
+                                true-value="true"
+                                false-value="false"
+                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                              />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label
+                                for="DEMO_MODE"
+                                class="font-medium text-gray-700"
+                                >Demo mode</label
+                              >
+                              <p class="text-gray-500">Het script zal draaien in de demo omgeving van Capital.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="LIVE_ACCOUNT_NUM"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Accountnummer
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.LIVE_ACCOUNT_NUM"
+                              id="LIVE_ACCOUNT_NUM"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                              
+                            />
+                          </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                Selecteer sub-account uit lijst. 1 = eerste account in lijst etc.
+                            </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                              <input
+                                id="DEBUG"
+                         
+                                type="checkbox"
+                                v-model="results.DEBUG"
+                                true-value="true"
+                                false-value="false"
+                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                              />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label
+                                for="DEBUG"
+                                class="font-medium text-gray-700"
+                                >Debug mode</label
+                              >
+                              <p class="text-gray-500">
+                                Toggle debug mode. Zichtbaar in console.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                              <input
+                                id="HEADLESS"
+                                type="checkbox"
+                                v-model="results.HEADLESS"
+                                true-value="true"
+                                false-value="false"
+                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                              />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label
+                                for="HEADLESS"
+                                class="font-medium text-gray-700"
+                                >Headless mode</label
+                              >
+                              <p class="text-gray-500">
+                                Toggle headless mode. Er zullen geen browser schermen geopend worden als deze optie geselecteerd is.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                              <input
+                                id="TWO_FACT_AUTH"
+                                type="checkbox"
+                                v-model="results.TWO_FACT_AUTH"
+                                true-value="true"
+                                false-value="false"
+                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                              />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label
+                                for="TWO_FACT_AUTH"
+                                class="font-medium text-gray-700"
+                                >Two factor authentication mode</label
+                              >
+                              <p class="text-gray-500">
+                                Two factor authentication (2FA) mode geeft je tijd om je 6-cijferige code in te voeren.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                      <button
+                        type="submit"
+                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        v-on:click="saveData"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

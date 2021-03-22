@@ -79,7 +79,7 @@ module.exports = {
     async trade(driver, stockElement) {
         utils.log.generic(`Starting trade`)
 
-        if ((Date.now() - this.driverStartDate) > 3600000) {
+        if ((Date.now() - this.driverStartDate) > 3600000 && !config.TWO_FACT_AUTH) {
             driver.quit()
             await this.execute(this.stockName, this.instance, 0, this.discordClientInstance)
         }

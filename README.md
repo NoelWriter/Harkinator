@@ -3,9 +3,11 @@
 1. npm install in root directory
 2. Install the firefox driver https://github.com/mozilla/geckodriver/releases
 3. Copy config.json.example to config.json and put in your login credentials
-4. Execute `npm start` in the root folder
-5. ???
-6. Profit
+4. Boot the script with one of the following commands.
+- npm start or node src/main.js 0
+- sh start.sh (multiple accounts)
+6. ???
+7. Profit
 
 ## config.json
 

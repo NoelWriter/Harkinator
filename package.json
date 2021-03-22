@@ -4,17 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "pre-install": "npm i http-server npm-run-all open-cli -g",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "init-backend": "node src/server.js 0",
+    "init-frontend": "http-server -a localhost -p 8080",
+    "open": "open-cli http://localhost:8080",
+    "dashboard": "npm-run-all -p init-backend init-frontend open",
     "start": "node src/main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "autoprefixer": "^10.2.5",
     "chalk": "^4.1.0"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "discord.js": "^12.5.1",
+    "express": "^4.17.1",
     "selenium-webdriver": "^4.0.0-beta.1",
     "webdriverjs": "^1.7.5"
   }
