@@ -234,3 +234,5 @@ config.json
 # End of https://www.toptal.com/developers/gitignore/api/webstorm,node
 
 src/config/config.json
+
+auth.json
