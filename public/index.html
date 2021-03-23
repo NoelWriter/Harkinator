@@ -55,7 +55,7 @@
                             @change="onConfigChange($event)"
                             v-model="currentConfig"
                           >
-                            <option value="default">Default</option>
+                            <option value="default">Current</option>
                             <option v-for="config in configs" v-bind:value="config.ID">{{ config.STOCK_PRIMARY }}</option>
                           </select>
                         </div>
