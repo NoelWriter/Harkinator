@@ -160,7 +160,7 @@ module.exports = {
         if (buy && sell) {
             return buy - sell
         } else {
-            getSpread(element)
+            await this.getSpread(element)
         }
     },
 
