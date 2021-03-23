@@ -78,6 +78,17 @@ module.exports = {
     async trade(driver, stockElement) {
         utils.log.generic(`Starting trade`)
 
+        // Clear all open orders
+        await utils.clearOpenOrders(driver)
+
+        // Clear any open positions
+        if (await utils.getPositionsTotal(driver) !== 0) {
+            utils.log.error("Positions are still open!")
+            
+            if (config.getConfigValue('FORCE_CLOSE_OPEN_POSITIONS'))
+                await utils.clearOpenPosition(driver)
+        }
+
         // Shutdown session when quit order is given
         if (config.getConfigValue("QUIT_INSTANCES")) {
             await driver.quit()
@@ -91,9 +102,6 @@ module.exports = {
             await this.execute(this.stockName, this.instance, 0, this.discordClientInstance)
         }
 
-        // Clear all open orders
-        await utils.clearOpenOrders(driver)
-
         // Close trading panel to prevent buying high
         try {
             await driver.findElement(By.xpath(locations.order_panel_close_button)).click()
@@ -101,14 +109,6 @@ module.exports = {
 
         // Check if pause has been called
         await utils.checkPause(driver)
-
-        // Clear any open positions
-        if (await utils.getPositionsTotal(driver) !== 0) {
-            utils.log.error("Positions are still open!")
-            
-            if (config.getConfigValue('FORCE_CLOSE_OPEN_POSITIONS'))
-                await utils.clearOpenPosition(driver)
-        }
 
         // Fetch current spread
         const initialSpread = await utils.getSpread(stockElement)
