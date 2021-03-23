@@ -78,8 +78,16 @@ module.exports = {
     async trade(driver, stockElement) {
         utils.log.generic(`Starting trade`)
 
+        // Shutdown session when quit order is given
+        if (config.getConfigValue("QUIT_INSTANCES")) {
+            await driver.quit()
+            utils.log.warning(`SHUTDOWN DONE`)
+            process.exit()
+        }
+
+        // Restart webdriver session to clear memory
         if ((Date.now() - this.driverStartDate) > 3600000 && !config.getConfigValue('TWO_FACT_AUTH')) {
-            driver.quit()
+            await driver.quit()
             await this.execute(this.stockName, this.instance, 0, this.discordClientInstance)
         }
 
