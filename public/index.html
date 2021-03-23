@@ -38,27 +38,26 @@
               <div class="mt-5 md:mt-0 md:col-span-2">
                 <form action="#" method="POST">
                   <div class="shadow sm:rounded-md sm:overflow-hidden">
+
                     <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                       <div class="grid grid-cols-3 gap-6">
                         <div class="col-span-3 sm:col-span-2">
-                            <label
-                                for="STOCK_PRIMARY"
-                                class="block text-sm font-medium text-gray-700"
-                            >
-                                Naam
-                            </label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <input
-                                type="text"
-                                v-model="results.STOCK_PRIMARY"
-                                id="STOCK_PRIMARY"
-                                class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                                
-                                />
-                            </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Vul hier de naam van de stock in. Let op dit veld is hoofdlettergevoelig.
-                            </p>
+                          <label
+                            for="country"
+                            class="block text-sm font-medium text-gray-700"
+                            >Predefined configurations</label
+                          >
+                          <select
+                            id="country"
+                            name="country"
+                            autocomplete="country"
+                            class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            @change="onConfigChange($event)"
+                            v-model="currentConfig"
+                          >
+                            <option value="default">Default</option>
+                            <option v-for="config in configs" v-bind:value="config.ID">{{ config.STOCK_PRIMARY }}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -66,24 +65,48 @@
                     <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                       <div class="grid grid-cols-3 gap-6">
                         <div class="col-span-3 sm:col-span-2">
-                            <label
-                                for="STOCK_FRACTION_DIGITS"
-                                class="block text-sm font-medium text-gray-700"
-                            >
-                                Decimaal
-                            </label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <input
-                                type="text"
-                                v-model="results.STOCK_FRACTION_DIGITS"
-                                id="STOCK_FRACTION_DIGITS"
-                                class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                                
-                                />
-                            </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Cijfers achter de comma. Verschilt per stock.
-                            </p>
+                          <label
+                            for="STOCK_PRIMARY"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Naam
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_PRIMARY"
+                              id="STOCK_PRIMARY"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                            />
+                          </div>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Vul hier de naam van de stock in. Let op dit veld is
+                            hoofdlettergevoelig.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_FRACTION_DIGITS"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Decimaal
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_FRACTION_DIGITS"
+                              id="STOCK_FRACTION_DIGITS"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                            />
+                          </div>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Cijfers achter de comma. Verschilt per stock.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -103,37 +126,13 @@
                               v-model="results.STOCK_MULTIPLIER_ABOVE_SELL"
                               id="STOCK_MULTIPLIER_ABOVE_SELL"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Multiplier voor inkoop prijs. Hoger is hogere inkoop prijs. Inkoop prijs berekening = verkoopprijs op website + (STOCK_MULTIPLIER_ABOVE_SELL * spread)
-                            </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-                      <div class="grid grid-cols-3 gap-6">
-                            <div class="col-span-3 sm:col-span-2">
-                            <label
-                                for="STOCK_AMOUNT"
-                                class="block text-sm font-medium text-gray-700"
-                            >
-                                Aantal
-                            </label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <input
-                                type="text"
-                                v-model="results.STOCK_AMOUNT"
-                                id="STOCK_AMOUNT"
-                                class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                                
-                                />
-                            </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Hoeveelheid aandelen dat de bot per trade inkoopt
-                            </p>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Multiplier voor inkoop prijs. Hoger is hogere inkoop
+                            prijs. Inkoop prijs berekening = verkoopprijs op
+                            website + (STOCK_MULTIPLIER_ABOVE_SELL * spread)
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -141,24 +140,49 @@
                     <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                       <div class="grid grid-cols-3 gap-6">
                         <div class="col-span-3 sm:col-span-2">
-                            <label
-                                for="STOCK_PROFIT"
-                                class="block text-sm font-medium text-gray-700"
-                            >
-                                Winst
-                            </label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <input
-                                type="text"
-                                v-model="results.STOCK_PROFIT"
-                                id="STOCK_PROFIT"
-                                class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                                
-                                />
-                            </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Multiplier voor verkoop prijs. Hoger is hogere verkoop prijs. Verkoop prijs berekening = aanschafprijs + (STOCK_PROFIT * spread)
-                            </p>
+                          <label
+                            for="STOCK_AMOUNT"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Aantal
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_AMOUNT"
+                              id="STOCK_AMOUNT"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                            />
+                          </div>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Hoeveelheid aandelen dat de bot per trade inkoopt
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="STOCK_PROFIT"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Winst
+                          </label>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_PROFIT"
+                              id="STOCK_PROFIT"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                            />
+                          </div>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Multiplier voor verkoop prijs. Hoger is hogere
+                            verkoop prijs. Verkoop prijs berekening =
+                            aanschafprijs + (STOCK_PROFIT * spread)
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -170,7 +194,6 @@
                             <div class="flex items-center h-5">
                               <input
                                 id="STOCK_ROUND_TO_WHOLE"
-       
                                 type="checkbox"
                                 v-model="results.STOCK_ROUND_TO_WHOLE"
                                 true-value="true"
@@ -208,12 +231,14 @@
                               v-model="results.STOCK_BUY_UPPER_LIMIT"
                               id="STOCK_BUY_UPPER_LIMIT"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Multiplier die bepaald hoeveel de prijs mag stijgen voordat buy order geannuleerd wordt. Bij 0.1 mag de verkoopprijs 10% stijgen voordat de buy order wordt geannuleerd.
-                            </p>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Multiplier die bepaald hoeveel de prijs mag stijgen
+                            voordat buy order geannuleerd wordt. Bij 0.1 mag de
+                            verkoopprijs 10% stijgen voordat de buy order wordt
+                            geannuleerd.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -233,12 +258,14 @@
                               v-model="results.STOCK_BUY_LOWER_LIMIT"
                               id="STOCK_BUY_LOWER_LIMIT"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Multiplier die bepaald hoeveel de prijs mag dalen voordat buy order geannuleerd wordt. Bij 0.1 mag de verkoopprijs 10% dalen voordat de buy order wordt geannuleerd.
-                            </p>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Multiplier die bepaald hoeveel de prijs mag dalen
+                            voordat buy order geannuleerd wordt. Bij 0.1 mag de
+                            verkoopprijs 10% dalen voordat de buy order wordt
+                            geannuleerd.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -258,12 +285,12 @@
                               v-model="results.STOCK_BUY_FILL_WAIT"
                               id="STOCK_BUY_FILL_WAIT"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
                           <p class="mt-2 text-xs text-gray-500">
-                            Hoeveelheid miliseconden dat de bot moet wachten bij gedeeltelijke vulling van een order. 1000 = 1 sec
-                        </p>
+                            Hoeveelheid miliseconden dat de bot moet wachten bij
+                            gedeeltelijke vulling van een order. 1000 = 1 sec
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -275,7 +302,7 @@
                             for="STOCK_SELL_UPPER_LIMIT"
                             class="block text-sm font-medium text-gray-700"
                           >
-                          Multiplier tot winst modus
+                            Multiplier tot winst modus
                           </label>
                           <div class="mt-1 flex rounded-md shadow-sm">
                             <input
@@ -283,12 +310,14 @@
                               v-model="results.STOCK_SELL_UPPER_LIMIT"
                               id="STOCK_SELL_UPPER_LIMIT"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Multiplier die bapaald hoeveel de prijs mag stijgen voordat de bot in winst modus gaat. Bij 0.1 mag de verkoopprijs 10% stijgen voordat de bot in winst modus gaat.
-                            </p>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Multiplier die bapaald hoeveel de prijs mag stijgen
+                            voordat de bot in winst modus gaat. Bij 0.1 mag de
+                            verkoopprijs 10% stijgen voordat de bot in winst
+                            modus gaat.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -300,7 +329,7 @@
                             for="STOCK_SELL_LOWER_LIMIT_BREAK_EVEN"
                             class="block text-sm font-medium text-gray-700"
                           >
-                          Multiplier tot break-even
+                            Multiplier tot break-even
                           </label>
                           <div class="mt-1 flex rounded-md shadow-sm">
                             <input
@@ -308,12 +337,14 @@
                               v-model="results.STOCK_SELL_LOWER_LIMIT_BREAK_EVEN"
                               id="STOCK_SELL_LOWER_LIMIT_BREAK_EVEN"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Multiplier die bapaald hoeveel de prijs mag dalen voordat de bot in winst break even modus gaat. Bij 0.1 mag de verkoopprijs 10% dalen voordat de bot in break even modus gaat.
-                            </p>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Multiplier die bapaald hoeveel de prijs mag dalen
+                            voordat de bot in winst break even modus gaat. Bij
+                            0.1 mag de verkoopprijs 10% dalen voordat de bot in
+                            break even modus gaat.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -333,12 +364,14 @@
                               v-model="results.STOCK_SELL_LOWER_LIMIT_LOSS"
                               id="STOCK_SELL_LOWER_LIMIT_LOSS"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Multiplier die bapaald hoeveel de prijs mag dalen voordat de bot in verlies modus gaat. Bij 0.1 mag de verkoopprijs 10% dalen voordat de bot in verlies modus gaat.
-                            </p>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Multiplier die bapaald hoeveel de prijs mag dalen
+                            voordat de bot in verlies modus gaat. Bij 0.1 mag de
+                            verkoopprijs 10% dalen voordat de bot in verlies
+                            modus gaat.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -350,7 +383,8 @@
                             for="STOCK_EVALUATE_DELTA_UP"
                             class="block text-sm font-medium text-gray-700"
                           >
-                          Multiplier die bapaald hoeveel de prijs mag stijgen voordat de bot in verlies modus gaat
+                            Multiplier die bapaald hoeveel de prijs mag stijgen
+                            voordat de bot in verlies modus gaat
                           </label>
                           <div class="mt-1 flex rounded-md shadow-sm">
                             <input
@@ -358,12 +392,14 @@
                               v-model="results.STOCK_EVALUATE_DELTA_UP"
                               id="STOCK_EVALUATE_DELTA_UP"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
                           <p class="mt-2 text-xs text-gray-500">
-                            Multiplier die bepaald hoeveel de prijs mag stijgen voordat sell order geupdate wordt. Bij 0.1 mag de verkoopprijs 10% stijgen voordat de sell order wordt geupdate.
-                        </p>
+                            Multiplier die bepaald hoeveel de prijs mag stijgen
+                            voordat sell order geupdate wordt. Bij 0.1 mag de
+                            verkoopprijs 10% stijgen voordat de sell order wordt
+                            geupdate.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -375,20 +411,23 @@
                             for="STOCK_EVALUATE_DELTA_DOWN"
                             class="block text-sm font-medium text-gray-700"
                           >
-                          Multiplier die bepaald hoeveel de prijs mag dalen voordat sell order geupdate wordt
+                            Multiplier die bepaald hoeveel de prijs mag dalen
+                            voordat sell order geupdate wordt
                           </label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <input
-                                type="text"
-                                v-model="results.STOCK_EVALUATE_DELTA_DOWN"
-                                id="STOCK_EVALUATE_DELTA_DOWN"
-                                class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                                
-                                />
-                            </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Multiplier die bepaald hoeveel de prijs mag dalen voordat sell order geupdate wordt. Bij 0.1 mag de verkoopprijs 10% dalen voordat de sell order wordt geupdate.
-                            </p>
+                          <div class="mt-1 flex rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              v-model="results.STOCK_EVALUATE_DELTA_DOWN"
+                              id="STOCK_EVALUATE_DELTA_DOWN"
+                              class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                            />
+                          </div>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Multiplier die bepaald hoeveel de prijs mag dalen
+                            voordat sell order geupdate wordt. Bij 0.1 mag de
+                            verkoopprijs 10% dalen voordat de sell order wordt
+                            geupdate.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -400,7 +439,7 @@
                             for="STOCK_LOSS_MULTIPLIER"
                             class="block text-sm font-medium text-gray-700"
                           >
-                          Multiplier voor verkoop prijs bij verlies modus.
+                            Multiplier voor verkoop prijs bij verlies modus.
                           </label>
                           <div class="mt-1 flex rounded-md shadow-sm">
                             <input
@@ -408,12 +447,14 @@
                               v-model="results.STOCK_LOSS_MULTIPLIER"
                               id="STOCK_LOSS_MULTIPLIER"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
                           <p class="mt-2 text-xs text-gray-500">
-                            Multiplier voor verkoop prijs bij verlies modus. Hoger is hogere verkoop prijs. Verkoop prijs berekening = verkoopprijs op website + (STOCK_PROFIT * spread)
-                        </p>
+                            Multiplier voor verkoop prijs bij verlies modus.
+                            Hoger is hogere verkoop prijs. Verkoop prijs
+                            berekening = verkoopprijs op website + (STOCK_PROFIT
+                            * spread)
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -425,7 +466,7 @@
                             for="STOCK_PROBE_AMOUNT"
                             class="block text-sm font-medium text-gray-700"
                           >
-                          Aantal aandelen betreft lag test
+                            Aantal aandelen betreft lag test
                           </label>
                           <div class="mt-1 flex rounded-md shadow-sm">
                             <input
@@ -433,12 +474,12 @@
                               v-model="results.STOCK_PROBE_AMOUNT"
                               id="STOCK_PROBE_AMOUNT"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
                           <p class="mt-2 text-xs text-gray-500">
-                            Hoeveelheid aandelen die de bot ordert bij de lag test
-                        </p>
+                            Hoeveelheid aandelen die de bot ordert bij de lag
+                            test
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -450,7 +491,9 @@
                             for="FREEFALL_INDICATOR"
                             class="block text-sm font-medium text-gray-700"
                           >
-                          Mulitplier die bepaald hoeveel de prijs mag dalen tussen de initieele koopprijs bepaling en het moment van aankoop.
+                            Mulitplier die bepaald hoeveel de prijs mag dalen
+                            tussen de initieele koopprijs bepaling en het moment
+                            van aankoop.
                           </label>
                           <div class="mt-1 flex rounded-md shadow-sm">
                             <input
@@ -458,12 +501,14 @@
                               v-model="results.FREEFALL_INDICATOR"
                               id="FREEFALL_INDICATOR"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
                           <p class="mt-2 text-xs text-gray-500">
-                            Mulitplier die bepaald hoeveel de prijs mag dalen tussen de initieele koopprijs bepaling en het moment van aankoop. Bij 0.01 wordt de aankoop geannuleerd bij een dalen van meer dan 1%.
-                        </p>
+                            Mulitplier die bepaald hoeveel de prijs mag dalen
+                            tussen de initieele koopprijs bepaling en het moment
+                            van aankoop. Bij 0.01 wordt de aankoop geannuleerd
+                            bij een dalen van meer dan 1%.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -475,7 +520,8 @@
                             for="LAG_MAX_ORDER_DELAY"
                             class="block text-sm font-medium text-gray-700"
                           >
-                          Hoeveelheid miliseconden waarbinnen de lag van het platform acceptabel is
+                            Hoeveelheid miliseconden waarbinnen de lag van het
+                            platform acceptabel is
                           </label>
                           <div class="mt-1 flex rounded-md shadow-sm">
                             <input
@@ -483,12 +529,14 @@
                               v-model="results.LAG_MAX_ORDER_DELAY"
                               id="LAG_MAX_ORDER_DELAY"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
                           <p class="mt-2 text-xs text-gray-500">
-                            Hoeveelheid miliseconden waarbinnen de lag van het platform acceptabel is. Bij 3000 wordt de bot tijdelijk gepauzeerd wanneer er meer dan 3 seconden vertraging is. 1000 = 1 sec
-                        </p>
+                            Hoeveelheid miliseconden waarbinnen de lag van het
+                            platform acceptabel is. Bij 3000 wordt de bot
+                            tijdelijk gepauzeerd wanneer er meer dan 3 seconden
+                            vertraging is. 1000 = 1 sec
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -500,7 +548,6 @@
                             <div class="flex items-center h-5">
                               <input
                                 id="FORCE_CLOSE_OPEN_POSITIONS"
-                      
                                 type="checkbox"
                                 v-model="results.FORCE_CLOSE_OPEN_POSITIONS"
                                 true-value="true"
@@ -531,7 +578,6 @@
                             <div class="flex items-center h-5">
                               <input
                                 id="DEMO_MODE"
-                       
                                 type="checkbox"
                                 v-model="results.DEMO_MODE"
                                 true-value="true"
@@ -545,7 +591,10 @@
                                 class="font-medium text-gray-700"
                                 >Demo mode</label
                               >
-                              <p class="text-gray-500">Het script zal draaien in de demo omgeving van Capital.</p>
+                              <p class="text-gray-500">
+                                Het script zal draaien in de demo omgeving van
+                                Capital.
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -567,12 +616,12 @@
                               v-model="results.LIVE_ACCOUNT_NUM"
                               id="LIVE_ACCOUNT_NUM"
                               class="border border-gray-300 py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-                              
                             />
                           </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Selecteer sub-account uit lijst. 1 = eerste account in lijst etc.
-                            </p>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Selecteer sub-account uit lijst. 1 = eerste account
+                            in lijst etc.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -584,7 +633,6 @@
                             <div class="flex items-center h-5">
                               <input
                                 id="DEBUG"
-                         
                                 type="checkbox"
                                 v-model="results.DEBUG"
                                 true-value="true"
@@ -628,7 +676,9 @@
                                 >Headless mode</label
                               >
                               <p class="text-gray-500">
-                                Toggle headless mode. Er zullen geen browser schermen geopend worden als deze optie geselecteerd is.
+                                Toggle headless mode. Er zullen geen browser
+                                schermen geopend worden als deze optie
+                                geselecteerd is.
                               </p>
                             </div>
                           </div>
@@ -657,7 +707,8 @@
                                 >Two factor authentication mode</label
                               >
                               <p class="text-gray-500">
-                                Two factor authentication (2FA) mode geeft je tijd om je 6-cijferige code in te voeren.
+                                Two factor authentication (2FA) mode geeft je
+                                tijd om je 6-cijferige code in te voeren.
                               </p>
                             </div>
                           </div>
