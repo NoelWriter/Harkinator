@@ -2,12 +2,21 @@
 
 1. npm install in root directory
 2. Install the firefox driver https://github.com/mozilla/geckodriver/releases
-3. Copy config.json.example to config.json and put in your login credentials
-4. Boot the script with one of the following commands.
+3. Craete a config.json file and fill in the preferred settings. There are examples in the config directory.
+4. Copy auth.json.example to your own created auth.json and put in your credentials.
+5. Boot the script with one of the following commands.
 - npm start or node src/main.js 0
-- sh start.sh (multiple accounts)
+- sh start.sh (for multiple accounts)
 6. ???
 7. Profit
+
+## Dashboard 
+You can use the dashboard to switch seamlessly between config settings. Follow the steps below:
+1. Execute to following command in the root folder: npm install
+2. Execute to following command in the root folder: npm run pre-install
+3. Execute to following command in the root folder: npm run dashboard
+4. The browser will open the dashboard in your default browser.
+5. Switch between predefined settings and make it your own. Click on the Save button below the page if you are ready to make some 💸..
 
 ## config.json
 
