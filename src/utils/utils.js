@@ -3,6 +3,7 @@ const location = require("./locations");
 const { By } = require("selenium-webdriver");
 const config = require("../../config.json");
 const discordClient = require("../client/discordClient");
+const fs = require('fs');
 
 module.exports = {
     async getStockBuyPrice(element) {
@@ -104,9 +105,13 @@ module.exports = {
 
     async clearOpenPosition(driver) {
         this.log.error("Force closing open positions in 60 seconds!")
-        await driver.sleep(60000)
+        await driver.sleep(5000)
         try {
-            await driver.findElement(By.xpath(location.position_close_button)).click()
+            stockList = await driver.findElement(By.xpath(location.list_of_stocks))
+            openPositions = await stockList.findElements(By.xpath("//*[contains(text(), 'Sluiten')]"))
+            for (i = 0; i < openPositions.length; i++) {
+                await openPositions[i].click()
+              }
         }catch (e){
             this.log.debug("clearOpenPosition(): " + e)
         }
@@ -155,6 +160,10 @@ module.exports = {
         this.log.instanceName = await driver.findElement(By.xpath(location.account_name)).getText()
     },
 
+    getConfigValue(key) {
+        jsonData = JSON.parse(fs.readFileSync("./config.json", "UTF-8"));
+        return jsonData[key]
+    },
     
     log: {
         instanceName: "",
