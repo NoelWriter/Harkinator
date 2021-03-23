@@ -30,6 +30,8 @@
   
     "DEBUG": false,
     "HEADLESS": false,
+	
+	"QUIT_INSTANCES": false,
   
     "DISCORD_TOKEN": "ODIwMzM3MzI5ODEzMzIzODQ2.YEzsrA.0Yu3lEYwobBWd0exKV2jUMdPpyA",
     "DISCORD_USERID": "128993406742560768",
