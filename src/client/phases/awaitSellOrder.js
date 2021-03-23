@@ -31,7 +31,7 @@ module.exports = {
                     let sellPrice = await utils.getStockSellPrice(stockElement)
                     return sellPrice += spread * config.STOCK_LOSS_MULTIPLIER
                 case modes.PROFIT:
-                    return await findPrice.sell(driver, stockElement, config.STOCK_PROFIT * 2.5)
+                    return await findPrice.sell(driver, stockElement, curSellPrice + (0.2 * await utils.getSpread()))
                 case modes.BREAK_EVEN:
                     return await findPrice.sell(driver, stockElement, 0)
             }
