@@ -27,5 +27,5 @@
   "DEMO_MODE": false,
   "DEBUG": false,
   "HEADLESS": false,
-  "TWO_FACT_AUTH": true
+  "TWO_FACT_AUTH": false
 }
