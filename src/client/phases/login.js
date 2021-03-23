@@ -24,6 +24,5 @@ module.exports = {
         } catch (e) {
             return false
         }
-        
     }
 }

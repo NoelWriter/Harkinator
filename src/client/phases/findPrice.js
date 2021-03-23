@@ -2,15 +2,15 @@ const chalk = require("chalk");
 const {By, until} = require("selenium-webdriver");
 const location = require("../../utils/locations")
 const utils = require("../../utils/utils");
-const config = require("../../../config.json");
+const config = require("../../utils/config");
 
 module.exports = {
     async buy(driver, element, percentageAboveSell) {
         let priceArray = []
         let spreadArray = []
 
-        while (priceArray.length < config.STOCK_AVERAGE_ITERATIONS) {
-            await driver.sleep(config.STOCK_AVERAGE_TIME_DELAY)
+        while (priceArray.length < config.getConfigValue('STOCK_AVERAGE_ITERATIONS')) {
+            await driver.sleep(config.getConfigValue('STOCK_AVERAGE_TIME_DELAY'))
             const sellPrice = await utils.getStockSellPrice(element)
             const spreadAmount = await utils.getSpread(element)
             priceArray.push(sellPrice)

@@ -1,6 +1,6 @@
 const {By, until, Key} = require("selenium-webdriver");
 const location = require("../../utils/locations")
-const config = require("../../../config.json");
+const config = require("../../utils/config");
 const utils = require("../../utils/utils");
 const findPrice = require("./findPrice")
 
@@ -24,19 +24,19 @@ module.exports = {
 
             switch (await getSellMode(driver, stockElement, boughtSellLevel)) {
                 case modes.NORMAL:
-                    return await findPrice.sell(driver, stockElement, config.STOCK_PROFIT)
+                    return await findPrice.sell(driver, stockElement, config.getConfigValue('STOCK_PROFIT'))
                 case modes.LOSS:
                     utils.log.warning(`Sell order is in loss mode`)
                     const spread = await utils.getSpread(stockElement)
                     let sellPrice = await utils.getStockSellPrice(stockElement)
-                    return sellPrice += spread * config.STOCK_LOSS_MULTIPLIER
+                    return sellPrice += spread * config.getConfigValue('STOCK_LOSS_MULTIPLIER')
                 case modes.PROFIT:
-                    return await findPrice.sell(driver, stockElement, config.STOCK_PROFIT * 2.5)
+                    return await findPrice.sell(driver, stockElement, config.getConfigValue('STOCK_PROFIT') * 2.5)
                 case modes.BREAK_EVEN:
                     return await findPrice.sell(driver, stockElement, 0)
             }
         }
-        utils.log.generic("Order fulfilled 🐻🌈")
+        utils.log.generic("Order fulfilled")
 
         if (await utils.getPositionsTotal(driver) < amount)
             await utils.clearOpenOrders(driver)
@@ -47,9 +47,9 @@ module.exports = {
 
 async function getSellMode(driver, stockElement, boughtSellLevel) {
     const spread = await utils.getSpread(stockElement)
-    const upperLimitAmount = spread * config.STOCK_SELL_UPPER_LIMIT
-    const lowerLimitAmountBreakEven = spread * config.STOCK_SELL_LOWER_LIMIT_BREAK_EVEN
-    const lowerLimitAmountLoss = spread * config.STOCK_SELL_LOWER_LIMIT_LOSS
+    const upperLimitAmount = spread * config.getConfigValue('STOCK_SELL_UPPER_LIMIT')
+    const lowerLimitAmountBreakEven = spread * config.getConfigValue('STOCK_SELL_LOWER_LIMIT_BREAK_EVEN')
+    const lowerLimitAmountLoss = spread * config.getConfigValue('STOCK_SELL_LOWER_LIMIT_LOSS')
     const upperLimit = boughtSellLevel + upperLimitAmount
     const lowerLimitBreakEven = boughtSellLevel - lowerLimitAmountBreakEven
     const lowerLimitLoss = boughtSellLevel - lowerLimitAmountLoss
@@ -71,8 +71,8 @@ async function isSellPriceDelta(driver, stockElement, curSellPriceLevel) {
     const curStockSellPrice = await utils.getStockSellPrice(stockElement)
 
     const spread = await utils.getSpread(stockElement)
-    const LimitAmountUp = spread * config.STOCK_EVALUATE_DELTA_UP
-    const LimitAmountDown = spread * config.STOCK_EVALUATE_DELTA_DOWN
+    const LimitAmountUp = spread * config.getConfigValue('STOCK_EVALUATE_DELTA_UP')
+    const LimitAmountDown = spread * config.getConfigValue('STOCK_EVALUATE_DELTA_DOWN')
     const upperLimit = curSellPriceLevel + LimitAmountUp
     const lowerLimit = curSellPriceLevel - LimitAmountDown
 

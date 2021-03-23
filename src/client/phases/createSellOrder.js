@@ -1,11 +1,11 @@
 const {By, until, Key} = require("selenium-webdriver");
 const location = require("../../utils/locations")
-const config = require("../../../config.json");
+const config = require("../../utils/config");
 const utils = require("../../utils/utils");
 
 module.exports = {
     async execute(driver, stockElement, amount = 1, price) {
-        const amountString = amount.toFixed(config.STOCK_FRACTION_DIGITS).toString().replace('.', ',')
+        const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
 
         if (amount === 0)
             return false
@@ -13,7 +13,7 @@ module.exports = {
         if (config.STOCK_ROUND_TO_WHOLE)
             price = Math.round(price)
 
-        const priceString = price.toFixed(config.STOCK_FRACTION_DIGITS).toString().replace('.', ',')
+        const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
 
         utils.log.generic(`Selling ${amountString} stocks with the price ${priceString}`)
         await stockElement.findElement(By.className("sell")).findElement(By.className("btn")).click()
