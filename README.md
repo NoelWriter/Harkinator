@@ -18,7 +18,8 @@ You can use the dashboard to switch seamlessly between config settings. Follow t
 4. The browser will open the dashboard in your default browser.
 5. Switch between predefined settings and make it your own. Click on the Save button below the page if you are ready to make some 💸..
 
-## config.json
+## Settings
+Variables are explained below
 
 #### STOCK_PRIMARY
 Vul hier de naam van de stock in. Let op dit veld is hoofdlettergevoelig.
