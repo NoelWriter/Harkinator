@@ -7,13 +7,24 @@ const fs = require('fs');
 
 module.exports = {
     async getStockBuyPrice(element) {
-        const priceList = await element.findElement(By.className("buy")).getText()
-        return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',', '.'))
+        try {
+            const priceList = await element.findElement(By.className("buy")).getText()
+            return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',', '.'))
+        } catch (e) {
+            this.log.warning("Error getting buyprice. Trying again..")
+            return false
+        }
+
     },
 
     async getStockSellPrice(element) {
-        const priceList = await element.findElement(By.className("sell")).getText()
-        return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',', '.'))
+        try {
+            const priceList = await element.findElement(By.className("sell")).getText()
+            return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',', '.'))
+        } catch (e) {
+            this.log.warning("Error getting sellprice. Trying again..")
+            return false
+        }
     },
 
     async getBalance(driver) {
@@ -144,7 +155,13 @@ module.exports = {
     },
 
     async getSpread(element) {
-        return await this.getStockBuyPrice(element) - await this.getStockSellPrice(element)
+        buy = await this.getStockBuyPrice(element)
+        sell = await this.getStockSellPrice(element)
+        if (buy && sell) {
+            return buy - sell
+        } else {
+            getSpread(element)
+        }
     },
 
     getOs() {
