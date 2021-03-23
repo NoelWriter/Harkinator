@@ -200,7 +200,13 @@ async function init(driver, instance) {
 
 async function probePlatformLatency(driver, stockElement) {
     let t0 = Date.now()
-    await createBuyOrder.execute(driver, stockElement, config.getConfigValue('STOCK_PROBE_AMOUNT'), await utils.getStockSellPrice(stockElement) * 0.8)
+    buyOrderResponse = await createBuyOrder.execute(driver, stockElement, config.getConfigValue('STOCK_PROBE_AMOUNT'), await utils.getStockSellPrice(stockElement) * 0.8)
+
+    if (!buyOrderResponse) {
+        utils.log.warning('Probe order failed. Trying again..')
+        await probePlatformLatency(driver, stockElement)
+    }
+
     let t1 = Date.now()
     await utils.clearOpenOrders(driver)
     return t1 - t0

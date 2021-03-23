@@ -30,7 +30,12 @@ module.exports = {
             return false
         }
         
-        await stockElement.findElement(By.xpath(location.buy_order_button)).click()
+        try {
+            await stockElement.findElement(By.xpath(location.buy_order_button)).click()
+        } catch (e) {
+            return false
+        }
+        
 
         while (!(await utils.getOrdersTotal(driver) > 0) && !(await utils.getPositionsTotal(driver) > 0)) {
             if (await isInvalidBalance(driver)) {
