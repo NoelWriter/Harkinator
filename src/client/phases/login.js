@@ -19,7 +19,7 @@ module.exports = {
                 await driver.sleep(10000)
                 await driver.wait(until.elementLocated(By.xpath(location.login_button_2fa)), 60000).click()
             }
-
+            
             return true
         } catch (e) {
             return false

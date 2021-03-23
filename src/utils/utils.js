@@ -3,6 +3,7 @@ const location = require("./locations");
 const { By } = require("selenium-webdriver");
 const config = require("../../config.json");
 const discordClient = require("../client/discordClient");
+const fs = require('fs');
 
 module.exports = {
     async getStockBuyPrice(element) {
@@ -159,6 +160,10 @@ module.exports = {
         this.log.instanceName = await driver.findElement(By.xpath(location.account_name)).getText()
     },
 
+    getConfigValue(key) {
+        jsonData = JSON.parse(fs.readFileSync("./config.json", "UTF-8"));
+        return jsonData[key]
+    },
     
     log: {
         instanceName: "",
