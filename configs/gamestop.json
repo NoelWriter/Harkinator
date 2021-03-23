@@ -1,4 +1,5 @@
 {
+  "ID": "gamestop",
   "QUIT_INSTANCES": false,
   "STOCK_PRIMARY": "GameStop",
   "STOCK_FRACTION_DIGITS": 1,
