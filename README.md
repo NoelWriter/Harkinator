@@ -11,6 +11,8 @@
 7. Profit
 
 ## Dashboard 
+![image](https://user-images.githubusercontent.com/7000976/112220435-8bfa1380-8c26-11eb-807b-0295c5f241d0.png)
+
 You can use the dashboard to switch seamlessly between config settings. Follow the steps below:
 1. Execute to following command in the root folder: npm install
 2. Execute to following command in the root folder: npm run pre-install
