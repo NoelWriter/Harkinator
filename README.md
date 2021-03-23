@@ -17,7 +17,7 @@ You can use the dashboard to switch seamlessly between config settings. Follow t
 1. Execute to following command in the root folder: npm install
 2. Execute to following command in the root folder: npm run pre-install
 3. Execute to following command in the root folder: npm run dashboard
-4. The browser will open the dashboard in your default browser.
+4. The browser will open the dashboard in your default browser. Or go to http://localhost:8080
 5. Switch between predefined settings and make it your own. Click on the Save button below the page if you are ready to make some 💸..
 
 ## Settings
