@@ -1,7 +1,7 @@
 const chalk = require("chalk");
 const location = require("./locations");
 const { By } = require("selenium-webdriver");
-const config = require("../../config.json");
+const config = require("../utils/config");
 const discordClient = require("../client/discordClient");
 const fs = require('fs');
 
@@ -159,11 +159,6 @@ module.exports = {
     async setInstanceName(driver) {
         this.log.instanceName = await driver.findElement(By.xpath(location.account_name)).getText()
     },
-
-    getConfigValue(key) {
-        jsonData = JSON.parse(fs.readFileSync("./config.json", "UTF-8"));
-        return jsonData[key]
-    },
     
     log: {
         instanceName: "",
@@ -182,7 +177,7 @@ module.exports = {
             discordClient.sendMessage(`[${timestamp}] `+ this.instanceName + " - " + message)
         },
         debug(message) {
-            if (config.DEBUG) {
+            if (config.getConfigValue('DEBUG')) {
                 const timestamp = this.getTimeStamp()
                 console.log(chalk.whiteBright(`[${timestamp}] `+ this.instanceName + " - " + message))
             }

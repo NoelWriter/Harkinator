@@ -9,8 +9,8 @@ const awaitSellOrder = require("./phases/awaitSellOrder")
 
 const webdriver = require("../client/webdriver")
 const locations = require("../utils/locations")
-const config = require("../../config.json");
-const utils = require("../utils/utils")
+const config = require("../utils/config");
+const utils = require("../utils/utils");
 const {By} = require("selenium-webdriver");
 
 module.exports = {
@@ -43,9 +43,8 @@ module.exports = {
         
         let driver = await getDriver()
         
-
         discordClientInstance.on("message", msg => {
-            if (msg.content.toLowerCase() === 's' && msg.author.id === config.DISCORD_USERID) {
+            if (msg.content.toLowerCase() === 's' && msg.author.id === config.getAuthValue('DISCORD_USERID')) {
                 utils.sendScreenshot(driver, msg)
             }
         })
@@ -79,13 +78,29 @@ module.exports = {
     async trade(driver, stockElement) {
         utils.log.generic(`Starting trade`)
 
-        if ((Date.now() - this.driverStartDate) > 3600000 && !config.TWO_FACT_AUTH) {
-            driver.quit()
-            await this.execute(this.stockName, this.instance, 0, this.discordClientInstance)
-        }
-
         // Clear all open orders
         await utils.clearOpenOrders(driver)
+
+        // Clear any open positions
+        if (await utils.getPositionsTotal(driver) !== 0) {
+            utils.log.error("Positions are still open!")
+            
+            if (config.getConfigValue('FORCE_CLOSE_OPEN_POSITIONS'))
+                await utils.clearOpenPosition(driver)
+        }
+
+        // Shutdown session when quit order is given
+        if (config.getConfigValue("QUIT_INSTANCES")) {
+            await driver.quit()
+            utils.log.warning(`SHUTDOWN DONE`)
+            process.exit()
+        }
+
+        // Restart webdriver session to clear memory
+        if ((Date.now() - this.driverStartDate) > 3600000 && !config.getConfigValue('TWO_FACT_AUTH')) {
+            await driver.quit()
+            await this.execute(this.stockName, this.instance, 0, this.discordClientInstance)
+        }
 
         // Close trading panel to prevent buying high
         try {
@@ -94,15 +109,6 @@ module.exports = {
 
         // Check if pause has been called
         await utils.checkPause(driver)
-
-        // Clear any open positions
-        if (await utils.getPositionsTotal(driver) !== 0) {
-            utils.log.error("Positions are still open!")
-            
-            if (config.FORCE_CLOSE_OPEN_POSITIONS)
-                await utils.clearOpenPosition(driver)
-                
-        }
 
         // Fetch current spread
         const initialSpread = await utils.getSpread(stockElement)
@@ -113,7 +119,7 @@ module.exports = {
         const platformLag = await probePlatformLatency(driver, stockElement)
         utils.log.generic(`Buy order delay is currently ${platformLag}ms`)
 
-        if (platformLag > config.LAG_MAX_ORDER_DELAY) {
+        if (platformLag > config.getConfigValue('LAG_MAX_ORDER_DELAY')) {
             const sleepAmount = config.DELAY_PLATFORM_LAG
             utils.log.warning(`Platform lag detected, buy order delay is currently ${platformLag}ms. Hibernating for ${sleepAmount/1000} seconds`)
             await driver.sleep(sleepAmount)
@@ -121,22 +127,22 @@ module.exports = {
         }
 
         // Find buy price
-        const price = await findPrice.buy(driver, stockElement, config.STOCK_MULTIPLIER_ABOVE_SELL)
+        const price = await findPrice.buy(driver, stockElement, config.getConfigValue('STOCK_MULTIPLIER_ABOVE_SELL'))
         const curSellLevel = await utils.getStockSellPrice(stockElement)
         utils.log.generic(`Found price at ${price}`)
 
         // Create buy order
-        const sellLevel = await createBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, price, curSellLevel)
+        const sellLevel = await createBuyOrder.execute(driver, stockElement, config.getConfigValue('STOCK_AMOUNT'), price, curSellLevel)
         if (!sellLevel)
             return
 
         // Wait for buy order to be filled
-        const boughtSellLevel = await awaitBuyOrder.execute(driver, stockElement, config.STOCK_AMOUNT, sellLevel)
+        const boughtSellLevel = await awaitBuyOrder.execute(driver, stockElement, config.getConfigValue('STOCK_AMOUNT'), sellLevel)
         if (!boughtSellLevel)
             return
 
         // Find the sell price for the positions held
-        let curSellPrice = await findPrice.sell(driver, stockElement, config.STOCK_PROFIT)
+        let curSellPrice = await findPrice.sell(driver, stockElement, config.getConfigValue('STOCK_PROFIT'))
         utils.log.debug("Sell price : " + curSellPrice.toString())
 
         // Loop to keep updating sell position
@@ -171,16 +177,16 @@ module.exports = {
 async function init(driver, instance) {
     // Log in user
     try {
-        const loginSucces = await login.execute(driver, config.USERNAME, config.PASSWORD, config.TWO_FACT_AUTH)
+        const loginSucces = await login.execute(driver, config.getAuthValue('USERNAME'), config.getAuthValue('PASSWORD'), config.getConfigValue('TWO_FACT_AUTH'))
 
         if(!loginSucces)
             return false
 
         // Enter specified mode
-        await enterMode.execute(driver, config.DEMO_MODE, instance)
+        await enterMode.execute(driver, config.getConfigValue('DEMO_MODE'), instance)
 
         // Find stock
-        const stockElement = await findStock.execute(driver, config.STOCK_PRIMARY)
+        const stockElement = await findStock.execute(driver, config.getConfigValue('STOCK_PRIMARY'))
 
         if (!stockElement)
             throw 'stockElement not found';
@@ -194,7 +200,7 @@ async function init(driver, instance) {
 
 async function probePlatformLatency(driver, stockElement) {
     let t0 = Date.now()
-    await createBuyOrder.execute(driver, stockElement, config.STOCK_PROBE_AMOUNT, await utils.getStockSellPrice(stockElement) * 0.8)
+    await createBuyOrder.execute(driver, stockElement, config.getConfigValue('STOCK_PROBE_AMOUNT'), await utils.getStockSellPrice(stockElement) * 0.8)
     let t1 = Date.now()
     await utils.clearOpenOrders(driver)
     return t1 - t0

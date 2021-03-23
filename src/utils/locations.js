@@ -33,5 +33,4 @@ module.exports = {
     list_of_stocks: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div[1]/div/trade-watchlist-wishlist-list",
     buy_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div[1]/div/trade-watchlist-wishlist-list/scroll-pane/div[1]/trade-watchlist-instruments-list/trade-instrument-order-list/trade-instrument-list-order-item-renderer/div/div/div/div[4]",
     sell_cancel_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/div/div/div/trade-watchlist-wishlist-list/scroll-pane/div[1]/trade-watchlist-instruments-list/trade-instrument-order-list/trade-instrument-list-order-item-renderer/div/div/div/div[4]"
-
 }

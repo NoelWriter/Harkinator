@@ -1,18 +1,18 @@
 const {By, until, Key} = require("selenium-webdriver");
-const location = require("../../utils/locations")
-const config = require("../../../config.json");
-const utils = require("../../utils/utils")
+const location = require("../../utils/locations");
+const config = require("../../utils/config");
+const utils = require("../../utils/utils");
 
 module.exports = {
     async execute(driver, stockElement, amount = 1, price, curSellLevel) {
 
         await stockElement.findElement(By.className("buy")).findElement(By.className("btn")).click()
 
-        const amountString = amount.toFixed(config.STOCK_FRACTION_DIGITS).toString().replace('.', ',')
-        if (config.STOCK_ROUND_TO_WHOLE)
+        const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
+        if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
             price = Math.round(price)
 
-        const priceString = price.toFixed(config.STOCK_FRACTION_DIGITS).toString().replace('.', ',')
+        const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
 
         await setAmount(stockElement, amountString)
         await setPrice(driver, stockElement, priceString)
@@ -24,9 +24,9 @@ module.exports = {
             return false
         }
 
-        if (await utils.getStockSellPrice(stockElement) < (curSellLevel - await utils.getSpread(stockElement) * config.FREEFALL_INDICATOR)) {
+        if (await utils.getStockSellPrice(stockElement) < (curSellLevel - await utils.getSpread(stockElement) * config.getConfigValue('FREEFALL_INDICATOR'))) {
             utils.log.warning("Freefall detected")
-            await driver.sleep(config.DELAY_FREEFALL_DETECTED)
+            await driver.sleep(config.getConfigValue('DELAY_FREEFALL_DETECTED'))
             return false
         }
         

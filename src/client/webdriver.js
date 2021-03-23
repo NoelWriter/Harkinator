@@ -1,13 +1,12 @@
 const webdriver = require("selenium-webdriver");
 const chrome = require('selenium-webdriver/chrome');
-const config = require("../../config.json");
+const config = require('../utils/config');
 const firefox = require('selenium-webdriver/firefox')
 const { Builder } = require('selenium-webdriver');
-//const phantomjs = require("phantomjs")npm 
 
 module.exports = {
     start(URL = "https://capital.com/trading/platform/") {
-        if (config.HEADLESS) {
+        if (config.getConfigValue('HEADLESS')) {
             var options = new firefox.Options();
             options.setPreference("intl.accept_languages", "nl,nl");
             options.addArguments("-headless");
