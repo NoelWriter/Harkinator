@@ -65,6 +65,8 @@ app.get("/configs", (req, res) => {
 
 // post config
 app.post("/config", function (req, res) {
+  req.body.ID = "default";
+
   if (req.body.hasOwnProperty("STOCK_FRACTION_DIGITS")) {
     req.body.STOCK_FRACTION_DIGITS = parseInt(req.body.STOCK_FRACTION_DIGITS);
   }
@@ -165,10 +167,6 @@ app.post("/config", function (req, res) {
 
   if (req.body.hasOwnProperty("LAG_MAX_ORDER_DELAY")) {
     req.body.LAG_MAX_ORDER_DELAY = parseInt(req.body.LAG_MAX_ORDER_DELAY);
-  }
-
-  if (req.body.hasOwnProperty("LIVE_ACCOUNT_NUM")) {
-    req.body.LIVE_ACCOUNT_NUM = parseInt(req.body.LIVE_ACCOUNT_NUM);
   }
 
   if (req.body.hasOwnProperty("STOCK_ROUND_TO_WHOLE")) {

@@ -85,10 +85,6 @@ Toggle het automatisch sluiten van openstaande posities bij het starten van een 
 #### DEMO_MODE
 Het script zal draaien in de demo omgeving van Capital.
 
-#### LIVE_ACCOUNT_NUM
-Selecteer sub-account uit lijst.
-1 = eerste account in lijst etc.
-
 #### DEBUG
 Toggle debug mode. Zichtbaar in console.
 
