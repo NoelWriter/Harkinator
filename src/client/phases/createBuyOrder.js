@@ -35,6 +35,15 @@ module.exports = {
         } catch (e) {
             return false
         }
+
+        try {
+            const priceErrorText = await stockElement.findElement(By.className("error-input error-input--offset-bottom")).getText()
+            if (priceErrorText)
+                utils.log.error('================ ' + priceErrorText + ' ================')
+                return false
+        } catch (e) {
+            
+        }
         
 
         while (!(await utils.getOrdersTotal(driver) > 0) && !(await utils.getPositionsTotal(driver) > 0)) {
