@@ -72,9 +72,7 @@ app.post("/config", function (req, res) {
   }
 
   if (req.body.hasOwnProperty("STOCK_MULTIPLIER_ABOVE_SELL")) {
-    req.body.STOCK_MULTIPLIER_ABOVE_SELL = parseFloat(
-      req.body.STOCK_MULTIPLIER_ABOVE_SELL
-    );
+    req.body.STOCK_MULTIPLIER_ABOVE_SELL = parseFloat(req.body.STOCK_MULTIPLIER_ABOVE_SELL);
   }
 
   if (req.body.hasOwnProperty("STOCK_AMOUNT")) {
@@ -106,33 +104,23 @@ app.post("/config", function (req, res) {
   }
 
   if (req.body.hasOwnProperty("STOCK_SELL_UPPER_LIMIT")) {
-    req.body.STOCK_SELL_UPPER_LIMIT = parseFloat(
-      req.body.STOCK_SELL_UPPER_LIMIT
-    );
+    req.body.STOCK_SELL_UPPER_LIMIT = parseFloat(req.body.STOCK_SELL_UPPER_LIMIT);
   }
 
   if (req.body.hasOwnProperty("STOCK_SELL_LOWER_LIMIT_BREAK_EVEN")) {
-    req.body.STOCK_SELL_LOWER_LIMIT_BREAK_EVEN = parseFloat(
-      req.body.STOCK_SELL_LOWER_LIMIT_BREAK_EVEN
-    );
+    req.body.STOCK_SELL_LOWER_LIMIT_BREAK_EVEN = parseFloat(req.body.STOCK_SELL_LOWER_LIMIT_BREAK_EVEN);
   }
 
   if (req.body.hasOwnProperty("STOCK_SELL_LOWER_LIMIT_LOSS")) {
-    req.body.STOCK_SELL_LOWER_LIMIT_LOSS = parseFloat(
-      req.body.STOCK_SELL_LOWER_LIMIT_LOSS
-    );
+    req.body.STOCK_SELL_LOWER_LIMIT_LOSS = parseFloat(req.body.STOCK_SELL_LOWER_LIMIT_LOSS);
   }
 
   if (req.body.hasOwnProperty("STOCK_EVALUATE_DELTA_UP")) {
-    req.body.STOCK_EVALUATE_DELTA_UP = parseFloat(
-      req.body.STOCK_EVALUATE_DELTA_UP
-    );
+    req.body.STOCK_EVALUATE_DELTA_UP = parseFloat(req.body.STOCK_EVALUATE_DELTA_UP);
   }
 
   if (req.body.hasOwnProperty("STOCK_EVALUATE_DELTA_DOWN")) {
-    req.body.STOCK_EVALUATE_DELTA_DOWN = parseFloat(
-      req.body.STOCK_EVALUATE_DELTA_DOWN
-    );
+    req.body.STOCK_EVALUATE_DELTA_DOWN = parseFloat(req.body.STOCK_EVALUATE_DELTA_DOWN);
   }
 
   if (req.body.hasOwnProperty("STOCK_LOSS_MULTIPLIER")) {
@@ -144,15 +132,11 @@ app.post("/config", function (req, res) {
   }
 
   if (req.body.hasOwnProperty("STOCK_AVERAGE_ITERATIONS")) {
-    req.body.STOCK_AVERAGE_ITERATIONS = parseInt(
-      req.body.STOCK_AVERAGE_ITERATIONS
-    );
+    req.body.STOCK_AVERAGE_ITERATIONS = parseInt(req.body.STOCK_AVERAGE_ITERATIONS);
   }
 
   if (req.body.hasOwnProperty("STOCK_AVERAGE_TIME_DELAY")) {
-    req.body.STOCK_AVERAGE_TIME_DELAY = parseInt(
-      req.body.STOCK_AVERAGE_TIME_DELAY
-    );
+    req.body.STOCK_AVERAGE_TIME_DELAY = parseInt(req.body.STOCK_AVERAGE_TIME_DELAY);
   }
 
   if (req.body.hasOwnProperty("DELAY_PLATFORM_LAG")) {
@@ -160,9 +144,7 @@ app.post("/config", function (req, res) {
   }
 
   if (req.body.hasOwnProperty("DELAY_FREEFALL_DETECTED")) {
-    req.body.DELAY_FREEFALL_DETECTED = parseInt(
-      req.body.DELAY_FREEFALL_DETECTED
-    );
+    req.body.DELAY_FREEFALL_DETECTED = parseInt(req.body.DELAY_FREEFALL_DETECTED);
   }
 
   if (req.body.hasOwnProperty("LAG_MAX_ORDER_DELAY")) {
@@ -170,13 +152,11 @@ app.post("/config", function (req, res) {
   }
 
   if (req.body.hasOwnProperty("STOCK_ROUND_TO_WHOLE")) {
-    req.body.STOCK_ROUND_TO_WHOLE =
-      req.body.STOCK_ROUND_TO_WHOLE === "true" ? true : false;
+    req.body.STOCK_ROUND_TO_WHOLE = req.body.STOCK_ROUND_TO_WHOLE === "true" ? true : false;
   }
 
   if (req.body.hasOwnProperty("FORCE_CLOSE_OPEN_POSITIONS")) {
-    req.body.FORCE_CLOSE_OPEN_POSITIONS =
-      req.body.FORCE_CLOSE_OPEN_POSITIONS === "true" ? true : false;
+    req.body.FORCE_CLOSE_OPEN_POSITIONS = req.body.FORCE_CLOSE_OPEN_POSITIONS === "true" ? true : false;
   }
 
   if (req.body.hasOwnProperty("DEMO_MODE")) {
