@@ -112,15 +112,21 @@ module.exports = {
 
         // Fetch current spread
         const initialSpread = await utils.getSpread(stockElement)
+        
+        // Start new trade when getspread returns false
+        if (!initialSpread)
+            return
+
         utils.log.generic(`Initial spread: ${initialSpread}`)
 
         // Probe lag to maintain bot functionality
         utils.log.generic(`Probing platform lag...`)
         const platformLag = await probePlatformLatency(driver, stockElement)
+        
         utils.log.generic(`Buy order delay is currently ${platformLag}ms`)
 
         if (platformLag > config.getConfigValue('LAG_MAX_ORDER_DELAY')) {
-            const sleepAmount = config.DELAY_PLATFORM_LAG
+            const sleepAmount = config.getConfigValue('DELAY_PLATFORM_LAG')
             utils.log.warning(`Platform lag detected, buy order delay is currently ${platformLag}ms. Hibernating for ${sleepAmount/1000} seconds`)
             await driver.sleep(sleepAmount)
             return
