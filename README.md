@@ -1,15 +1,26 @@
-# Harkinator 
+# Harkinator 👨‍🌾🐻🌈💰
 
 1. npm install in root directory
 2. Install the firefox driver https://github.com/mozilla/geckodriver/releases
-3. Copy config.json.example to config.json and put in your login credentials
-4. Boot the script with one of the following commands.
-- npm start or node src/main.js 0
-- sh start.sh (multiple accounts)
+3. Craete a config.json file and fill in the preferred settings. There are examples in the config directory.
+4. Copy auth.json.example to your own created auth.json and put in your credentials.
+5. Boot the script with one of the following commands.
+- `npm start or node src/main.js 0`
+- `sh start.sh (for multiple accounts)`
 6. ???
 7. Profit
 
-## config.json
+## Dashboard 
+![image](https://user-images.githubusercontent.com/7000976/112220435-8bfa1380-8c26-11eb-807b-0295c5f241d0.png)
+
+You can use the dashboard to switch seamlessly between config settings. Follow the steps below to install the dashboard.
+1. Execute to following command in the root folder: `npm install`
+2. Execute to following command in the root folder: `npm run pre-install`
+
+Execute the command `npm run dashboard` to bootup the dashboard. The command will try open the dashboard in your default browser. If nothing happens you can go to http://localhost:8080. When the dashboard is ready you can switch between predefined settings. Click on the Save button below the page if you are ready to make some 💸.. You can add new .json files in the config directory if you want to add more stocks.
+
+## Settings
+Variables are explained below
 
 #### STOCK_PRIMARY
 Vul hier de naam van de stock in. Let op dit veld is hoofdlettergevoelig.
