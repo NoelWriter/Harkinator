@@ -36,6 +36,16 @@ module.exports = {
             return false
         }
 
+        // Check if buy button is disabled
+        try {
+            await stockElement.findElement(By.className("buy disabled"))
+            utils.log.error("Buy disabled!")
+            return false
+        } catch (e) {
+            
+        }
+
+        // Check for price error
         try {
             const priceErrorText = await stockElement.findElement(By.className("error-input error-input--offset-bottom")).getText()
             if (priceErrorText)
@@ -45,12 +55,15 @@ module.exports = {
             
         }
         
-
+        let t0 = Date.now()
         while (!(await utils.getOrdersTotal(driver) > 0) && !(await utils.getPositionsTotal(driver) > 0)) {
             if (await isInvalidBalance(driver)) {
                 await driver.sleep(10000)
                 return false
             }
+
+            if ((Date.now() - t0) > 120000)
+                return false
         }
 
         utils.log.generic(`Order placed successfully`)

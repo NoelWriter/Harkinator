@@ -21,7 +21,9 @@ module.exports = {
         await setAmount(stockElement, amountString)
         await setPrice(driver, stockElement, priceString)
 
-        if (await utils.getPositionsTotal(driver) !== amount)
+        // Check if selling is still needed
+        totalPos = await utils.getPositionsTotal(driver)
+        if (totalPos !== amount || await utils.getOrdersTotal(driver) !== 0 || totalPos === 0)
             return false
 
         try {
