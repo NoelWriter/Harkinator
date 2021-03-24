@@ -116,7 +116,7 @@ module.exports = {
 
     async clearOpenPosition(driver) {
         this.log.error("Force closing open positions in 60 seconds!")
-        await driver.sleep(5000)
+        await driver.sleep(60000)
         try {
             stockList = await driver.findElement(By.xpath(location.list_of_stocks))
             openPositions = await stockList.findElements(By.xpath("//*[contains(text(), 'Sluiten')]"))
