@@ -195,6 +195,10 @@ app.post("/config", function (req, res) {
     req.body.DEBUG = req.body.DEBUG === "true" ? true : false;
   }
 
+  if (req.body.hasOwnProperty("QUIT_INSTANCES")) {
+    req.body.QUIT_INSTANCES = req.body.QUIT_INSTANCES === "true" ? true : false;
+  }
+
   fs.writeFile(
     configFile,
     JSON.stringify(req.body, null, 2),

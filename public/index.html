@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <link href="/tailwind.css" rel="stylesheet" /> -->
 
     <link
       href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
@@ -12,6 +11,23 @@
     />
 
     <title>Harkinator</title>
+
+    <style>
+      .toggle-path {
+        transition: background 0.3s ease-in-out;
+      }
+      .toggle-circle {
+        top: 0.2rem;
+        left: 0.25rem;
+        transition: all 0.3s ease-in-out;
+      }
+      input:checked ~ .toggle-circle {
+        transform: translateX(100%);
+      }
+      input:checked ~ .toggle-path {
+        background-color: #4f46e5;
+      }
+    </style>
   </head>
   <body>
     <!-- This example requires Tailwind CSS v2.0+ -->
@@ -45,7 +61,7 @@
                           <label
                             for="country"
                             class="block text-sm font-medium text-gray-700"
-                            >Predefined configurations</label
+                            >Stock templates</label
                           >
                           <select
                             id="country"
@@ -55,9 +71,49 @@
                             @change="onConfigChange($event)"
                             v-model="currentConfig"
                           >
-                            <option value="default">Current</option>
-                            <option v-for="config in configs" v-bind:value="config.ID">{{ config.STOCK_PRIMARY }}</option>
+                            <option value="default">Huidige</option>
+                            <option
+                              v-for="config in configs"
+                              v-bind:value="config.ID"
+                            >
+                              {{ config.STOCK_PRIMARY }}
+                            </option>
                           </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-3 sm:col-span-2">
+                          <label
+                            for="toogleButton"
+                            class="flex items-center cursor-pointer"
+                          >
+                            <div class="block text-sm font-medium text-gray-700 pr-3">Stop de bot(s)</div>
+                            <!-- toggle -->
+                            <div class="relative">
+                              <input
+                                id="toogleButton"
+                                type="checkbox"
+                                class="hidden"
+                                v-model="results.QUIT_INSTANCES"
+                                true-value="true"
+                                false-value="false"
+                              />
+                              <!-- path -->
+                              <div
+                                class="toggle-path bg-gray-200 w-9 h-5 rounded-full shadow-inner"
+                              ></div>
+                              <!-- crcle -->
+                              <div
+                                class="toggle-circle absolute w-3.5 h-3.5 bg-white rounded-full shadow inset-y-0 left-0"
+                              ></div>
+                            </div>
+                          </label>
+                          <p class="mt-2 text-xs text-gray-500">
+                            Deze optie wacht totdat alle posities verkocht zijn en zal daarna alle bots afsluiten.
+                          </p>
                         </div>
                       </div>
                     </div>
