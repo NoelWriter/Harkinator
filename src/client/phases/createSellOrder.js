@@ -10,7 +10,7 @@ module.exports = {
         if (amount === 0)
             return false
 
-        if (config.STOCK_ROUND_TO_WHOLE)
+        if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
             price = Math.round(price)
 
         const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
