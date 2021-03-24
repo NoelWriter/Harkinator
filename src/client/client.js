@@ -122,6 +122,9 @@ module.exports = {
         // Probe lag to maintain bot functionality
         utils.log.generic(`Probing platform lag...`)
         const platformLag = await probePlatformLatency(driver, stockElement)
+
+        if (!platformLag)
+            return
         
         utils.log.generic(`Buy order delay is currently ${platformLag}ms`)
 
@@ -210,7 +213,7 @@ async function probePlatformLatency(driver, stockElement) {
 
     if (!buyOrderResponse) {
         utils.log.warning('Probe order failed. Trying again..')
-        await probePlatformLatency(driver, stockElement)
+        return false
     }
 
     let t1 = Date.now()
