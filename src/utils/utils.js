@@ -11,7 +11,7 @@ module.exports = {
             const priceList = await element.findElement(By.className("buy")).getText()
             return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',', '.'))
         } catch (e) {
-            this.log.warning("Error getting buyprice. Trying again..")
+            this.log.warning("Error getting buyprice.")
             return false
         }
 
@@ -22,7 +22,7 @@ module.exports = {
             const priceList = await element.findElement(By.className("sell")).getText()
             return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',', '.'))
         } catch (e) {
-            this.log.warning("Error getting sellprice. Trying again..")
+            this.log.warning("Error getting sellprice.")
             return false
         }
     },
