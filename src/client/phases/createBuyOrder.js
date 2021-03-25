@@ -93,16 +93,8 @@ async function isInvalidBalance(driver) {
     }
 
     try {
-        const popuptextarray = await driver.findElements(By.className("popover-notification__title")).getText()
-        for (i = 0; i < popuptextarray.length; i++) {
-            if (popuptextarray[i] === "Order geweigerd") {
-                utils.log.warning("Account financing error found")
-                return true
-            }
-        }
-        return false
-
-        
+        await driver.findElement(By.className("popover-notification--negative"))
+        return true 
     } catch (e) {
         return false
     }

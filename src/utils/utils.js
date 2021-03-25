@@ -77,25 +77,21 @@ module.exports = {
 
     async clearOpenOrders(driver) {
         try {
-            const orderTotal = await this.getOrdersTotal(driver);
+            const orderTotal = await this.getOrdersTotal(driver)
             if (orderTotal === 0) {
                 this.log.debug("Could not find any orders to close")
                 return
             }
 
             const executeOrderCancelation = async (driver) => {
-                const stockListElements = await driver.findElements(By.tagName("trade-instrument-order-list"))
-                for (const stockListElement of stockListElements) {
-                    const stockOrderElements = await stockListElement.findElements(By.tagName("trade-instrument-list-order-item-renderer"))
-                    for (const stockOrderElement of stockOrderElements) {
-                        try {
-                            await driver.findElement(By.xpath(location.buy_cancel_button)).click()
-                            await driver.findElement(By.xpath(location.sell_cancel_button)).click()
-                        } catch (e) {
-                            this.log.debug("executeOrderCancelation(): " + e)
-                        }
-
-                    }
+                try {
+                    stockList = await driver.findElement(By.xpath(location.list_of_stocks))
+                    openOrders = await stockList.findElements(By.xpath("//*[contains(text(), 'Annuleren')]"))
+                    for (i = 0; i < openOrders.length; i++) {
+                        await openOrders[i].click()
+                      }
+                }catch (e){
+                    this.log.debug("executeOrderCancelation(): " + e)
                 }
             }
 
