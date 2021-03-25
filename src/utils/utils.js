@@ -104,7 +104,7 @@ module.exports = {
                 await executeOrderCancelation(driver)
                 waitingCycles++
 
-                if (waitingCycles > 20) {
+                if (waitingCycles > 50) {
                     waitingCycles = 0
                     this.log.warning("Platform lag detected")
                 }
