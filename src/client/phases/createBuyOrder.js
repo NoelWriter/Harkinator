@@ -61,9 +61,6 @@ module.exports = {
                 await driver.sleep(10000)
                 return false
             }
-
-            if ((Date.now() - t0) > 120000)
-                return false
         }
 
         utils.log.generic(`Order placed successfully`)
@@ -96,12 +93,16 @@ async function isInvalidBalance(driver) {
     }
 
     try {
-        const popuptext = await driver.findElement(By.className("popover-notification__title")).getText()
-        if (popuptext === "Order geweigerd") {
-            utils.log.warning("Account financing error found")
-            return true
+        const popuptextarray = await driver.findElements(By.className("popover-notification__title")).getText()
+        for (i = 0; i < popuptextarray.length; i++) {
+            if (popuptextarray[i] === "Order geweigerd") {
+                utils.log.warning("Account financing error found")
+                return true
+            }
         }
-            return false
+        return false
+
+        
     } catch (e) {
         return false
     }
