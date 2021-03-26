@@ -12,7 +12,7 @@ const modes = {
 }
 
 module.exports = {
-    async execute(driver, stockElement, amount = 1, boughtSellLevel, curSellPrice, curSellPriceLevel) {
+    async execute(driver, stockElement, amount = 1, boughtSellLevel, curSellPriceLevel) {
         utils.log.generic("Awaiting sell order fulfillment")
 
         while (await utils.getPositionsTotal(driver) > 0) {

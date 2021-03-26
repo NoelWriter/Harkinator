@@ -145,10 +145,12 @@ module.exports = {
         if (!sellLevel)
             return
 
+
         // Wait for buy order to be filled
         const boughtSellLevel = await awaitBuyOrder.execute(driver, stockElement, config.getConfigValue('STOCK_AMOUNT'), sellLevel)
         if (!boughtSellLevel)
             return
+    
 
         // Find the sell price for the positions held
         let curSellPrice = await findPrice.sell(driver, stockElement, config.getConfigValue('STOCK_PROFIT'))
@@ -158,21 +160,43 @@ module.exports = {
         while (await utils.getPositionsTotal(driver) > 0) {
             // Clear open orders
             await utils.clearOpenOrders(driver)
-            await utils.checkPause(driver)
 
             // Get amount of positions to create orders for
             let positions = await utils.getPositionsTotal(driver)
-
-            // Create an order for current position
-            const curSellPriceLevel = await createSellOrder.execute(driver, stockElement, positions, curSellPrice)
+            
+            // Create an initial order for current position
+            var curSellPriceLevel = await createSellOrder.execute(driver, stockElement, positions, curSellPrice)
             if (!curSellPriceLevel)
                 continue
+            
+            while (await utils.getPositionsTotal(driver) > 0) {
+                await utils.checkPause(driver)
 
-            // Check for changes in price or fulfillment
-            const newSellPrice = await awaitSellOrder.execute(driver, stockElement, positions, boughtSellLevel, curSellPrice, curSellPriceLevel)
-            utils.log.debug("New sell price : " + newSellPrice.toString())
-            if (newSellPrice)
-                curSellPrice = newSellPrice
+                // Check for changes in price or fulfillment
+                positions = await utils.getPositionsTotal(driver)
+                const newSellPrice = await awaitSellOrder.execute(driver, stockElement, positions, boughtSellLevel, curSellPriceLevel)
+                utils.log.debug("New sell price : " + newSellPrice.toString())
+                if (newSellPrice)
+                    curSellPrice = newSellPrice
+                
+                // Check for unexpected difference in positions and orders (when positions fails to update in sync with sell)
+                while (await utils.getPositionsTotal(driver) !== await utils.getOrdersTotal(driver)) {
+                    continue
+                }
+
+                // Clear open orders
+                await utils.clearOpenOrders(driver)
+
+                // Create an updated order
+                positions = await utils.getPositionsTotal(driver)
+            
+                pricelevel = await createSellOrder.execute(driver, stockElement, positions, curSellPrice)
+                if (pricelevel)
+                    curSellPriceLevel = pricelevel
+            
+            }
+
+            
         }
 
         utils.log.discord(`:moneybag: ${await utils.getBalance(driver)} :moneybag:`)

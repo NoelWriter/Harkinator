@@ -7,8 +7,10 @@ module.exports = {
     async execute(driver, stockElement, amount = 1, price) {
         const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
 
-        if (amount === 0)
+        if (amount === 0) {
             return false
+        }
+
 
         if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
             price = Math.round(price)
@@ -23,18 +25,30 @@ module.exports = {
 
         // Check if selling is still needed
         totalPos = await utils.getPositionsTotal(driver)
-        if (totalPos !== amount || await utils.getOrdersTotal(driver) !== 0 || totalPos === 0)
+        if (totalPos !== amount || await utils.getOrdersTotal(driver) !== 0 || totalPos === 0) {
             return false
+        }
+
 
         try {
             await stockElement.findElement(By.xpath(location.buy_order_button)).click()
         }catch {
             return false
         }
-        
 
-        if (await isInvalidBalance(driver))
-            return false
+        let t0 = Date.now()
+        while (!(await utils.getOrdersTotal(driver) > 0) && (await utils.getPositionsTotal(driver) > 0)) {
+            if (await isInvalidBalance(driver)) {
+                await driver.sleep(5000)
+                return false
+            }
+
+            if (Date.now() - t0 > 120000) {
+                utils.log.error("Wait for sell order reached 2 min. Trying again..")
+                return false
+            }
+
+        }
 
         return utils.getStockSellPrice(stockElement)
     }
