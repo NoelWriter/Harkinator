@@ -39,7 +39,7 @@ module.exports = {
         let t0 = Date.now()
         while (!(await utils.getOrdersTotal(driver) > 0) && !(await utils.getPositionsTotal(driver) > 0)) {
             if (await isInvalidBalance(driver)) {
-                await driver.sleep(1000)
+                await driver.sleep(5000)
                 return false
             }
 
