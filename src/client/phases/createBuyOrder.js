@@ -24,7 +24,7 @@ module.exports = {
             return false
         }
 
-        if (await utils.getStockSellPrice(stockElement) < (curSellLevel - await utils.getSpread(stockElement) * config.getConfigValue('FREEFALL_INDICATOR'))) {
+        if (await utils.getStockSellPrice(stockElement) < (curSellLevel - (await utils.getSpread(stockElement) * config.getConfigValue('FREEFALL_INDICATOR')))) {
             utils.log.warning("Freefall detected")
             await driver.sleep(config.getConfigValue('DELAY_FREEFALL_DETECTED'))
             return false
@@ -36,31 +36,18 @@ module.exports = {
             return false
         }
 
-        // Check if buy button is disabled
-        try {
-            await stockElement.findElement(By.className("buy disabled"))
-            utils.log.error("Buy disabled!")
-            return false
-        } catch (e) {
-            
-        }
-
-        // Check for price error
-        try {
-            const priceErrorText = await stockElement.findElement(By.className("error-input error-input--offset-bottom")).getText()
-            if (priceErrorText)
-                utils.log.error('================ ' + priceErrorText + ' ================')
-                return false
-        } catch (e) {
-            
-        }
-        
         let t0 = Date.now()
         while (!(await utils.getOrdersTotal(driver) > 0) && !(await utils.getPositionsTotal(driver) > 0)) {
             if (await isInvalidBalance(driver)) {
-                await driver.sleep(10000)
+                await driver.sleep(1000)
                 return false
             }
+
+            if (Date.now() - t0 > 120000) {
+                utils.log.error("Wait for order reached 2 min. Trying again..")
+                return false
+            }
+
         }
 
         utils.log.generic(`Order placed successfully`)
@@ -94,6 +81,7 @@ async function isInvalidBalance(driver) {
 
     try {
         await driver.findElement(By.className("popover-notification--negative"))
+        utils.log.warning("Popover negative notification found")
         return true 
     } catch (e) {
         return false
