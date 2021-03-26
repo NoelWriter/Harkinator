@@ -32,7 +32,9 @@ module.exports = {
                     return sellPrice += spread * config.getConfigValue('STOCK_LOSS_MULTIPLIER')
                 case modes.PROFIT:
                     utils.log.warning(`Sell order is in profit mode`)
-                    return await findPrice.sell(driver, stockElement, curSellPrice + (0.2 * await utils.getSpread()))
+                    const spread = await utils.getSpread(stockElement)
+                    let sellPrice = await utils.getStockSellPrice(stockElement)
+                    return sellPrice += spread * 0.2
                 case modes.BREAK_EVEN:
                     utils.log.warning(`Sell order is in break even mode`)
                     return await findPrice.sell(driver, stockElement, 0)
