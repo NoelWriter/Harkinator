@@ -6,6 +6,7 @@ const awaitBuyOrder = require("./phases/awaitBuyOrder")
 const findPrice = require("./phases/findPrice")
 const createSellOrder = require("./phases/createSellOrder")
 const awaitSellOrder = require("./phases/awaitSellOrder")
+const chalk = require("chalk");
 
 const webdriver = require("../client/webdriver")
 const locations = require("../utils/locations")
@@ -19,6 +20,7 @@ module.exports = {
     intance: 0,
     discordClientInstance: "",
     driverStartDate: Date.now(),
+    balance: 0.0,
 
     /**
      * Execute client instance
@@ -65,6 +67,8 @@ module.exports = {
         const positions = await utils.getPositionsTotal(driver)
         utils.log.debug("POSITIONS : " + positions)
 
+        this.balance = await utils.getBalance(driver)
+
         while (true) {
             await utils.checkPause(driver)
             await this.trade(driver, stockElement)
@@ -77,6 +81,7 @@ module.exports = {
      */
     async trade(driver, stockElement) {
         utils.log.generic(`Starting trade`)
+        this.balance = await utils.getBalance(driver)
 
         // Clear all open orders
         await utils.clearOpenOrders(driver)
@@ -197,8 +202,23 @@ module.exports = {
 
             
         }
+        var newBalance = await utils.getBalance(driver)
+        newBalance = newBalance.replace("€", "").replace('.', '').replace(',', '.')
+        this.balance = this.balance.replace("€", "").replace('.', '').replace(',', '.')
+        var balDifference = parseFloat(newBalance) - parseFloat(this.balance)
+        balDifference = balDifference.toFixed(2)
+        if (balDifference > 0) {
+            utils.log.generic(`====PROFIT: €${balDifference} balance is now at €${newBalance}====`, chalk.greenBright)
+            utils.log.discord(`PROFIT: €${balDifference} balance is now at €${newBalance}`)
+        } else if (balDifference == 0) {
+            utils.log.generic(`====PROFIT: €${balDifference} balance is now at €${newBalance}====`, chalk.greenBright)
+            utils.log.discord(`PROFIT: €${balDifference} balance is now at €${newBalance}`)
+        } else if (balDifference < 0) {
+            utils.log.generic(`====LOSS: €${balDifference} balance is now at €${newBalance}====`, chalk.greenBright)
+            utils.log.discord(`LOSS: €${balDifference} balance is now at €${newBalance}`)
+        }
 
-        utils.log.discord(`:moneybag: ${await utils.getBalance(driver)} :moneybag:`)
+
     }
 }
 

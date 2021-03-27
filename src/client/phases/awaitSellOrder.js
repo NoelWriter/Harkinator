@@ -1,8 +1,9 @@
 const {By, until, Key} = require("selenium-webdriver");
-const location = require("../../utils/locations")
+const location = require("../../utils/locations");
 const config = require("../../utils/config");
 const utils = require("../../utils/utils");
-const findPrice = require("./findPrice")
+const findPrice = require("./findPrice");
+const chalk = require("chalk");
 
 const modes = {
     LOSS: 0,
@@ -38,7 +39,7 @@ module.exports = {
                     return await findPrice.sell(driver, stockElement, 0)
             }
         }
-        utils.log.generic("Order fulfilled")
+        utils.log.generic("Sell order fulfilled", chalk.greenBright)
 
         if (await utils.getPositionsTotal(driver) < amount)
             await utils.clearOpenOrders(driver)

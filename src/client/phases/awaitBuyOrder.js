@@ -2,6 +2,7 @@ const {By, until, Key} = require("selenium-webdriver");
 const location = require("../../utils/locations")
 const config = require("../../utils/config");
 const utils = require("../../utils/utils");
+const chalk = require("chalk");
 
 module.exports = {
     async execute(driver, stockElement, amount = 1, sellLevel) {
@@ -37,7 +38,7 @@ module.exports = {
         
         
         const boughtSellLevel = await utils.getStockSellPrice(stockElement)
-        utils.log.generic("Order fulfilled")
+        utils.log.generic("Buy order fulfilled", chalk.greenBright)
         return boughtSellLevel
     }
 }

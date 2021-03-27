@@ -176,9 +176,9 @@ module.exports = {
     log: {
         instanceName: "",
         
-        generic(message) {
+        generic(message, color = chalk.white) {
             const timestamp = this.getTimeStamp()
-            console.log(chalk.greenBright(`[${timestamp}] `+ this.instanceName + " - " + message))
+            console.log(color(`[${timestamp}] `+ this.instanceName + " - " + message))
         },
         warning(message) {
             const timestamp = this.getTimeStamp()
