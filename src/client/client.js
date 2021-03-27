@@ -184,15 +184,14 @@ module.exports = {
                     continue
                 }
 
-                // Clear open orders
-                await utils.clearOpenOrders(driver)
-
                 // Create an updated order
                 positions = await utils.getPositionsTotal(driver)
-            
                 pricelevel = await createSellOrder.execute(driver, stockElement, positions, curSellPrice)
-                if (pricelevel)
+                if (pricelevel) {
                     curSellPriceLevel = pricelevel
+                } else {
+                    break
+                }
             
             }
 
