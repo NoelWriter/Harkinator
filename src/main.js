@@ -7,7 +7,7 @@ const discordClient = require("./client/discordClient")
 
 discordClient.init(config.getAuthValue('DISCORD_TOKEN')).then((discordClientInstance) => {
     const instance = parseInt(process.argv[2])
-    client.execute(config.getConfigValue('STOCK_PRIMARY'), instance+1, 10000*instance, discordClientInstance)
+    client.execute(config.getConfigValue('STOCK_PRIMARY'), instance+1, 5000*instance, discordClientInstance)
 })
 
 // Error handling

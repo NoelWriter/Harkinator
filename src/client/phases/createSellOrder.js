@@ -42,7 +42,6 @@ module.exports = {
         let t0 = Date.now()
         while (!(await utils.getOrdersTotal(driver) > 0) && (await utils.getPositionsTotal(driver) > 0)) {
             if (await isInvalidBalance(driver)) {
-                await driver.sleep(5000)
                 return false
             }
 
@@ -77,6 +76,7 @@ async function setPrice(driver, stockElement, priceString) {
 async function isInvalidBalance(driver) {
     try {
         await driver.findElement(By.xpath(location.popup_close_button)).click()
+        await driver.findElement(By.xpath(location.order_panel_close_button)).click()
         utils.log.warning("Account financing fullscreen error found")
         return true
     } catch (e) {
@@ -87,6 +87,7 @@ async function isInvalidBalance(driver) {
         const popuptext = await driver.findElement(By.className("popover-notification__title")).getText()
         if (popuptext === "Order geweigerd") {
             utils.log.warning("Account financing error found")
+            await driver.sleep(5000)
             return true
         }
             return false

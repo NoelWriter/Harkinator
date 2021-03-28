@@ -177,26 +177,21 @@ module.exports = {
             while (await utils.getPositionsTotal(driver) > 0) {
                 await utils.checkPause(driver)
 
-                // Check for changes in price or fulfillment
-                positions = await utils.getPositionsTotal(driver)
-                const newSellPrice = await awaitSellOrder.execute(driver, stockElement, positions, boughtSellLevel, curSellPriceLevel)
-                utils.log.debug("New sell price : " + newSellPrice.toString())
-                if (newSellPrice)
-                    curSellPrice = newSellPrice
-                
-                // Check for unexpected difference in positions and orders (when positions fails to update in sync with sell)
-                while (await utils.getPositionsTotal(driver) !== await utils.getOrdersTotal(driver)) {
-                    continue
+                if (await utils.getOrdersTotal(driver) > 0) {
+                    // Check for changes in price or fulfillment
+                    positions = await utils.getPositionsTotal(driver)
+                    const newSellPrice = await awaitSellOrder.execute(driver, stockElement, positions, boughtSellLevel, curSellPriceLevel)
+                    utils.log.debug("New sell price : " + newSellPrice.toString())
+                    if (newSellPrice)
+                        curSellPrice = newSellPrice
                 }
 
                 // Create an updated order
                 positions = await utils.getPositionsTotal(driver)
                 pricelevel = await createSellOrder.execute(driver, stockElement, positions, curSellPrice)
-                if (pricelevel) {
+                
+                if (pricelevel)
                     curSellPriceLevel = pricelevel
-                } else {
-                    break
-                }
             
             }
 
@@ -210,7 +205,7 @@ module.exports = {
         if (balDifference > 0) {
             utils.log.generic(`====PROFIT: €${balDifference} balance is now at €${newBalance}====`, chalk.greenBright)
             utils.log.discord(`PROFIT: €${balDifference} balance is now at €${newBalance}`)
-        } else if (balDifference == 0) {
+        } else if (balDifference == 0.0) {
             utils.log.generic(`====PROFIT: €${balDifference} balance is now at €${newBalance}====`, chalk.greenBright)
             utils.log.discord(`PROFIT: €${balDifference} balance is now at €${newBalance}`)
         } else if (balDifference < 0) {
