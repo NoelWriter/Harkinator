@@ -298,7 +298,7 @@ async function probeBitcoinPrice(driver, stockElement) {
         deltaArray.push(curMultiplier)
     }
 
-    const newMultiplierAboveSell = calculateAverage(deltaArray) - (config.getConfigValue("STOCK_PROFIT"))
+    let newMultiplierAboveSell = calculateAverage(deltaArray) - (config.getConfigValue("STOCK_PROFIT"))
     if (newMultiplierAboveSell < 0.05)
         newMultiplierAboveSell = 0.05
     if (newMultiplierAboveSell > 0.5)
