@@ -273,7 +273,7 @@ async function probePlatformLatency(driver, stockElement) {
 async function probeBitcoinPrice(driver, stockElement) {
     let deltaArray = []
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 5; i++) {
         let latestTimeStamp = 0
         let latestPrice = 0
         while ((((Date.now() / 1000) - latestTimeStamp) > 1.5)) {
