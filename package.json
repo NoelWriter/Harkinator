@@ -17,12 +17,16 @@
   "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^10.2.5",
-    "chalk": "^4.1.0"
+    "chalk": "^4.1.0",
+    "npm-run-all": "^4.1.5"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "discord.js": "^12.5.1",
     "express": "^4.17.1",
+    "http-server": "^0.12.3",
+    "node-fetch": "^2.6.1",
+    "open-cli": "^6.0.1",
     "selenium-webdriver": "^4.0.0-beta.1",
     "webdriverjs": "^1.7.5"
   }

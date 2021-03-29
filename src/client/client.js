@@ -12,7 +12,10 @@ const webdriver = require("../client/webdriver")
 const locations = require("../utils/locations")
 const config = require("../utils/config");
 const utils = require("../utils/utils");
+const {getConfigValue} = require("../utils/config");
+const {setConfigValue} = require("../utils/config");
 const {By} = require("selenium-webdriver");
+const fetch = require('node-fetch');
 
 module.exports = {
     instanceName: "",
@@ -69,9 +72,17 @@ module.exports = {
 
         this.balance = await utils.getBalance(driver)
 
+        let tradeCounter = 0
         while (true) {
             await utils.checkPause(driver)
             await this.trade(driver, stockElement)
+
+            tradeCounter++
+            if ((tradeCounter % 50 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD") {
+                utils.log.generic("Starting Bitcoin Multiplier Probe")
+                let newMultiplier = await probeBitcoinPrice(driver, stockElement)
+                utils.log.generic("New Multiplier set at " + newMultiplier)
+            }
         }
     },
 
@@ -257,6 +268,41 @@ async function probePlatformLatency(driver, stockElement) {
     let t1 = Date.now()
     await utils.clearOpenOrders(driver)
     return t1 - t0
+}
+
+async function probeBitcoinPrice(driver, stockElement) {
+    let deltaArray = []
+
+    for (let i = 0; i < 20; i++) {
+        let latestTimeStamp = 0
+        let latestPrice = 0
+        while ((((Date.now() / 1000) - latestTimeStamp) > 1.5)) {
+            await driver.sleep(750)
+            let res = await fetch('http://api.bitcoincharts.com/v1/trades.csv?symbol=bitstampUSD');
+            res = await res.text()
+            const resPoint = res.split(' ')[0].split(',')
+            latestTimeStamp = parseInt(resPoint[0])
+            latestPrice = resPoint[1]
+        }
+
+        const curSellPrice = await utils.getStockSellPrice(stockElement)
+        const curSpread = await utils.getSpread(stockElement)
+        const curMultiplier = (latestPrice - curSellPrice) / curSpread
+        utils.log.debug(curMultiplier)
+        deltaArray.push(curMultiplier)
+    }
+
+    const newMultiplierAboveSell = calculateAverage(deltaArray) - config.getConfigValue("STOCK_PROFIT")
+    config.setConfigValue("STOCK_MULTIPLIER_ABOVE_SELL", newMultiplierAboveSell)
+    return newMultiplierAboveSell
+}
+
+function calculateAverage(array) {
+    let i = 0, sum = 0, len = array.length;
+    while (i < len) {
+        sum = sum + array[i++];
+    }
+    return sum / len;
 }
 
 async function getDriver() {
