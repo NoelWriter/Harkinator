@@ -276,7 +276,7 @@ async function probeBitcoinPrice(driver, stockElement) {
     for (let i = 0; i < 5; i++) {
         let latestTimeStamp = 0
         let latestPrice = 0
-        while ((((Date.now() / 1000) - latestTimeStamp) > 1.5)) {
+        while ((((Date.now() / 1000) - latestTimeStamp) > 2)) {
             await driver.sleep(1000)
             try {
                 let res = await fetch('http://api.bitcoincharts.com/v1/trades.csv?symbol=bitstampUSD');
