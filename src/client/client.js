@@ -209,7 +209,7 @@ module.exports = {
             utils.log.generic(`====PROFIT: €${balDifference} balance is now at €${newBalance}====`, chalk.greenBright)
             utils.log.discord(`PROFIT: €${balDifference} balance is now at €${newBalance}`)
         } else if (balDifference < 0) {
-            utils.log.generic(`====LOSS: €${balDifference} balance is now at €${newBalance}====`, chalk.greenBright)
+            utils.log.generic(`====LOSS: €${balDifference} balance is now at €${newBalance}====`, chalk.redBright)
             utils.log.discord(`LOSS: €${balDifference} balance is now at €${newBalance}`)
         }
 
