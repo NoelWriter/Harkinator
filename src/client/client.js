@@ -74,15 +74,15 @@ module.exports = {
 
         let tradeCounter = 0
         while (true) {
-            await utils.checkPause(driver)
-            await this.trade(driver, stockElement)
-
             tradeCounter++
             if ((tradeCounter % 50 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD") {
                 utils.log.generic("Starting Bitcoin Multiplier Probe")
                 let newMultiplier = await probeBitcoinPrice(driver, stockElement)
                 utils.log.generic("New Multiplier set at " + newMultiplier)
             }
+
+            await utils.checkPause(driver)
+            await this.trade(driver, stockElement)
         }
     },
 
@@ -273,16 +273,22 @@ async function probePlatformLatency(driver, stockElement) {
 async function probeBitcoinPrice(driver, stockElement) {
     let deltaArray = []
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 15; i++) {
         let latestTimeStamp = 0
         let latestPrice = 0
         while ((((Date.now() / 1000) - latestTimeStamp) > 1.5)) {
-            await driver.sleep(750)
-            let res = await fetch('http://api.bitcoincharts.com/v1/trades.csv?symbol=bitstampUSD');
-            res = await res.text()
-            const resPoint = res.split(' ')[0].split(',')
-            latestTimeStamp = parseInt(resPoint[0])
-            latestPrice = resPoint[1]
+            await driver.sleep(1000)
+            try {
+                let res = await fetch('http://api.bitcoincharts.com/v1/trades.csv?symbol=bitstampUSD', timeout=5000);
+                res = await res.text()
+                const resPoint = res.split(' ')[0].split(',')
+                latestTimeStamp = parseInt(resPoint[0])
+                latestPrice = resPoint[1]
+            } catch (e) {
+                
+            }
+            
+
         }
 
         const curSellPrice = await utils.getStockSellPrice(stockElement)
@@ -292,7 +298,13 @@ async function probeBitcoinPrice(driver, stockElement) {
         deltaArray.push(curMultiplier)
     }
 
-    const newMultiplierAboveSell = calculateAverage(deltaArray) - (config.getConfigValue("STOCK_PROFIT") + 0.05)
+    const newMultiplierAboveSell = calculateAverage(deltaArray) - (config.getConfigValue("STOCK_PROFIT"))
+    if (newMultiplierAboveSell < 0.05)
+        newMultiplierAboveSell = 0.05
+    if (newMultiplierAboveSell > 0.5)
+        newMultiplierAboveSell = 0.5
+
+
     config.setConfigValue("STOCK_MULTIPLIER_ABOVE_SELL", newMultiplierAboveSell)
     return newMultiplierAboveSell
 }
