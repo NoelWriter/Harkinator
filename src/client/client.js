@@ -273,10 +273,11 @@ async function probePlatformLatency(driver, stockElement) {
 async function probeBitcoinPrice(driver, stockElement) {
     let deltaArray = []
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
         let latestTimeStamp = 0
         let latestPrice = 0
-        while ((((Date.now() / 1000) - latestTimeStamp) > 3)) {
+		
+        while ((((Date.now() / 1000) - latestTimeStamp) > 5)) {
             await driver.sleep(1000)
             try {
                 let res = await fetch('http://api.bitcoincharts.com/v1/trades.csv?symbol=bitstampUSD');
@@ -298,7 +299,7 @@ async function probeBitcoinPrice(driver, stockElement) {
         deltaArray.push(curMultiplier)
     }
 
-    let newMultiplierAboveSell = calculateAverage(deltaArray) - ((config.getConfigValue("STOCK_PROFIT") + 0.12))
+    let newMultiplierAboveSell = calculateAverage(deltaArray) - ((config.getConfigValue("STOCK_PROFIT") + 0.05))
     if (newMultiplierAboveSell < 0.05)
         newMultiplierAboveSell = 0.05
     if (newMultiplierAboveSell > 0.4)
