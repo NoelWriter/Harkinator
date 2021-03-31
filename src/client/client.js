@@ -273,11 +273,14 @@ async function probePlatformLatency(driver, stockElement) {
 async function probeBitcoinPrice(driver, stockElement) {
     let deltaArray = []
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 8; i++) {
         let latestTimeStamp = 0
         let latestPrice = 0
 		
-        while ((((Date.now() / 1000) - latestTimeStamp) > 5)) {
+		let latestSellPrice = 0
+        let latestSpread = 0
+        
+        while ((((Date.now() / 1000) - latestTimeStamp) > 4)) {
             await driver.sleep(1000)
             try {
                 let res = await fetch('http://api.bitcoincharts.com/v1/trades.csv?symbol=bitstampUSD');
@@ -285,25 +288,23 @@ async function probeBitcoinPrice(driver, stockElement) {
                 const resPoint = res.split(' ')[0].split(',')
                 latestTimeStamp = parseInt(resPoint[0])
                 latestPrice = resPoint[1]
+				latestSellPrice = await utils.getStockSellPrice(stockElement)
+				latestSpread = await utils.getSpread(stockElement)
             } catch (e) {
                 utils.log.debug(e)
             }
-            
-
         }
 
-        const curSellPrice = await utils.getStockSellPrice(stockElement)
-        const curSpread = await utils.getSpread(stockElement)
-        const curMultiplier = (latestPrice - curSellPrice) / curSpread
+        const curMultiplier = (latestPrice - latestSellPrice) / latestSpread
         utils.log.debug(curMultiplier)
         deltaArray.push(curMultiplier)
     }
 
-    let newMultiplierAboveSell = calculateAverage(deltaArray) - ((config.getConfigValue("STOCK_PROFIT") + 0.05))
+    let newMultiplierAboveSell = calculateAverage(deltaArray) - ((config.getConfigValue("STOCK_PROFIT") + 0.01))
     if (newMultiplierAboveSell < 0.05)
         newMultiplierAboveSell = 0.05
-    if (newMultiplierAboveSell > 0.4)
-        newMultiplierAboveSell = 0.4
+    if (newMultiplierAboveSell > 0.35)
+        newMultiplierAboveSell = 0.3
 
 
     config.setConfigValue("STOCK_MULTIPLIER_ABOVE_SELL", newMultiplierAboveSell)
