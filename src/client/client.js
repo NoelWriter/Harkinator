@@ -20,7 +20,7 @@ const fetch = require('node-fetch');
 module.exports = {
     instanceName: "",
     stockName: "",
-    intance: 0,
+    instance: 0,
     discordClientInstance: "",
     driverStartDate: Date.now(),
     balance: 0.0,
@@ -75,7 +75,7 @@ module.exports = {
         let tradeCounter = 0
         while (true) {
             tradeCounter++
-            if ((tradeCounter % 50 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD") {
+            if ((tradeCounter % 50 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD" && instance === 2 ) {
                 utils.log.generic("Starting Bitcoin Multiplier Probe")
                 let newMultiplier = await probeBitcoinPrice(driver, stockElement)
                 utils.log.generic("New Multiplier set at " + newMultiplier)
