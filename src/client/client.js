@@ -94,7 +94,17 @@ module.exports = {
      */
     async trade(driver, stockElement) {
         utils.log.generic(`Starting trade`)
+
+        // Get balance and prepare it for comparison
         this.balance = await utils.getBalance(driver)
+        this.balance = this.balance.replace("€", "").replace('.', '').replace(',', '.')
+
+        // Pauses instance when stock limit stop is reached
+		if (this.balance < config.getConfigValue("STOCK_LIMIT_STOP") ){
+			utils.log.error("Trading suspended because the stock_limit_stop was reached")
+			while (true)
+				await driver.sleep(500)
+		}
 
         // Clear all open orders
         await utils.clearOpenOrders(driver)
@@ -207,15 +217,15 @@ module.exports = {
 
         let newBalance = await utils.getBalance(driver)
         newBalance = newBalance.replace("€", "").replace('.', '').replace(',', '.')
-        this.balance = this.balance.replace("€", "").replace('.', '').replace(',', '.')
-        const balDifference = (parseFloat(newBalance) - parseFloat(this.balance)).toFixed(2)
 
+        var balDifference = parseFloat(newBalance) - parseFloat(this.balance)
+        balDifference = balDifference.toFixed(2)
         if (balDifference > 0) {
             utils.log.generic(`====PROFIT: €${balDifference} balance is now at €${newBalance}====`, chalk.greenBright)
             utils.log.discord(`PROFIT: €${balDifference} balance is now at €${newBalance}`)
-        } else if (balDifference === 0.0) {
-            utils.log.generic(`====PROFIT: €${balDifference} balance is now at €${newBalance}====`, chalk.greenBright)
-            utils.log.discord(`PROFIT: €${balDifference} balance is now at €${newBalance}`)
+        } else if (balDifference == 0.0) {
+            utils.log.generic(`====BREAK-EVEN: €${balDifference} balance is now at €${newBalance}====`, chalk.greenBright)
+            utils.log.discord(`BREAK-EVEN: €${balDifference} balance is now at €${newBalance}`)
         } else if (balDifference < 0) {
             utils.log.generic(`====LOSS: €${balDifference} balance is now at €${newBalance}====`, chalk.redBright)
             utils.log.discord(`LOSS: €${balDifference} balance is now at €${newBalance}`)
