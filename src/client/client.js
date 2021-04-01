@@ -125,9 +125,6 @@ module.exports = {
             await driver.findElement(By.xpath(locations.order_panel_close_button)).click()
         } catch (e) { }
 
-        // Check if pause has been called
-        await utils.checkPause(driver)
-
         // Fetch current spread
         const initialSpread = await utils.getSpread(stockElement)
         
@@ -188,7 +185,6 @@ module.exports = {
                 continue
             
             while (await utils.getPositionsTotal(driver) > 0) {
-                await utils.checkPause(driver)
 
                 if (await utils.getOrdersTotal(driver) > 0) {
                     // Check for changes in price or fulfillment

@@ -16,7 +16,7 @@ module.exports = {
         }
 
         while(await utils.getPositionsTotal(driver) <= 0 && await utils.getOrdersTotal(driver) <= 0) {
-            await utils.checkPause(driver)
+            continue
         }
 
         while (await utils.getPositionsTotal(driver) <= 0) {
