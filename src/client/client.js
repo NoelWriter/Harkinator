@@ -16,6 +16,8 @@ const {getConfigValue} = require("../utils/config");
 const {setConfigValue} = require("../utils/config");
 const {By} = require("selenium-webdriver");
 const fetch = require('node-fetch');
+const timeoutSignal = require("timeout-signal");
+
 
 module.exports = {
     instanceName: "",
@@ -75,7 +77,7 @@ module.exports = {
         let tradeCounter = 0
         while (true) {
             tradeCounter++
-            if ((tradeCounter % 50 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD" && instance === 2 ) {
+            if ((tradeCounter % 10 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD" && instance === 2 ) {
                 utils.log.generic("Starting Bitcoin Multiplier Probe")
                 let newMultiplier = await probeBitcoinPrice(driver, stockElement)
                 utils.log.generic("New Multiplier set at " + newMultiplier)
@@ -273,31 +275,30 @@ async function probePlatformLatency(driver, stockElement) {
 async function probeBitcoinPrice(driver, stockElement) {
     let deltaArray = []
 
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 5; i++) {
         let latestTimeStamp = 0
         let latestPrice = 0
-		
 		let latestSellPrice = 0
         let latestSpread = 0
         
         while ((((Date.now() / 1000) - latestTimeStamp) > 4)) {
-            await driver.sleep(1000)
+            await driver.sleep(3000)
             try {
-                let res = await fetch('http://api.bitcoincharts.com/v1/trades.csv?symbol=bitstampUSD');
+                let res = await fetch('http://api.bitcoincharts.com/v1/trades.csv?symbol=bitstampUSD', { signal: timeoutSignal(15000) });
                 res = await res.text()
                 const resPoint = res.split(' ')[0].split(',')
                 latestTimeStamp = parseInt(resPoint[0])
                 latestPrice = resPoint[1]
-				latestSellPrice = await utils.getStockSellPrice(stockElement)
-				latestSpread = await utils.getSpread(stockElement)
-            } catch (e) {
-                utils.log.debug(e)
+                latestSellPrice = await utils.getStockSellPrice(stockElement)
+                latestSpread = await utils.getSpread(stockElement)
+            } catch (error) {
+                utils.log.error('API request was aborted with error: ' + error);
             }
-        }
 
-        const curMultiplier = (latestPrice - latestSellPrice) / latestSpread
-        utils.log.debug(curMultiplier)
-        deltaArray.push(curMultiplier)
+            const curMultiplier = (latestPrice - latestSellPrice) / latestSpread
+            utils.log.debug(curMultiplier)
+            deltaArray.push(curMultiplier)
+        }
     }
 
     let newMultiplierAboveSell = calculateAverage(deltaArray) - ((config.getConfigValue("STOCK_PROFIT") + 0.01))
@@ -305,6 +306,8 @@ async function probeBitcoinPrice(driver, stockElement) {
         newMultiplierAboveSell = 0.05
     if (newMultiplierAboveSell > 0.35)
         newMultiplierAboveSell = 0.3
+    if (isNaN(newMultiplierAboveSell))
+        newMultiplierAboveSell = 0.2
 
 
     config.setConfigValue("STOCK_MULTIPLIER_ABOVE_SELL", newMultiplierAboveSell)
