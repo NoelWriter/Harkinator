@@ -17,7 +17,6 @@ module.exports = {
         utils.log.generic("Awaiting sell order fulfillment")
 
         while (await utils.getPositionsTotal(driver) > 0) {
-            await utils.checkPause(driver, true)
 
             // On change of stock sell price
             if (!await isSellPriceDelta(driver, stockElement, curSellPriceLevel))
