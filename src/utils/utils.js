@@ -9,7 +9,7 @@ module.exports = {
     async getStockBuyPrice(element) {
         try {
             const priceList = await element.findElement(By.className("buy")).getText()
-            return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',', '.'))
+            return parseFloat(priceList.split('\n')[0].replace(',', ''))
         } catch (e) {
             this.log.warning("Error getting buyprice.")
             return false
@@ -20,7 +20,7 @@ module.exports = {
     async getStockSellPrice(element) {
         try {
             const priceList = await element.findElement(By.className("sell")).getText()
-            return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',', '.'))
+            return parseFloat(priceList.split('\n')[0].replace(',', ''))
         } catch (e) {
             this.log.warning("Error getting sellprice.")
             return false
@@ -65,7 +65,7 @@ module.exports = {
         for (const stockListElement of stockListElements) {
             try {
                 const positionAmountString = await stockListElement.findElement(By.className("entry")).getText()
-                const positionAmount = parseFloat(positionAmountString.split(" ")[1].replace('.', '').replace(',', '.'))
+                const positionAmount = parseFloat(positionAmountString.split(" ")[1].replace(',', ''))
                 if (positionAmount > highestPositionAmount)
                     highestPositionAmount = positionAmount
             } catch (e) {
@@ -86,7 +86,7 @@ module.exports = {
             const executeOrderCancelation = async (driver) => {
                 try {
                     stockList = await driver.findElement(By.xpath(location.list_of_stocks))
-                    openOrders = await stockList.findElements(By.xpath("//*[contains(text(), 'Annuleren')]"))
+                    openOrders = await stockList.findElements(By.xpath("//*[contains(text(), 'Cancel')]"))
                     for (i = 0; i < openOrders.length; i++) {
                         await openOrders[i].click()
                       }
@@ -115,7 +115,7 @@ module.exports = {
         await driver.sleep(60000)
         try {
             stockList = await driver.findElement(By.xpath(location.list_of_stocks))
-            openPositions = await stockList.findElements(By.xpath("//*[contains(text(), 'Sluiten')]"))
+            openPositions = await stockList.findElements(By.xpath("//*[contains(text(), 'Close')]"))
             for (i = 0; i < openPositions.length; i++) {
                 await openPositions[i].click()
               }
