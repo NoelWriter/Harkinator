@@ -86,7 +86,7 @@ module.exports = {
             const executeOrderCancelation = async (driver) => {
                 try {
                     stockList = await driver.findElement(By.xpath(location.list_of_stocks))
-                    openOrders = await stockList.findElements(By.xpath("//*[contains(text(), 'Cancel')]"))
+                    openOrders = await stockList.findElements(By.xpath("//*[contains(text(), 'Annuleren')]"))
                     for (i = 0; i < openOrders.length; i++) {
                         await openOrders[i].click()
                       }
@@ -115,7 +115,7 @@ module.exports = {
         await driver.sleep(60000)
         try {
             stockList = await driver.findElement(By.xpath(location.list_of_stocks))
-            openPositions = await stockList.findElements(By.xpath("//*[contains(text(), 'Close')]"))
+            openPositions = await stockList.findElements(By.xpath("//*[contains(text(), 'Sluiten')]"))
             for (i = 0; i < openPositions.length; i++) {
                 await openPositions[i].click()
               }
