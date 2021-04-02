@@ -9,7 +9,7 @@ module.exports = {
     async getStockBuyPrice(element) {
         try {
             const priceList = await element.findElement(By.className("buy")).getText()
-            return parseFloat(priceList.split('\n')[0].replace(',', ''))
+            return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',','.'))
         } catch (e) {
             this.log.warning("Error getting buyprice.")
             return false
@@ -20,7 +20,7 @@ module.exports = {
     async getStockSellPrice(element) {
         try {
             const priceList = await element.findElement(By.className("sell")).getText()
-            return parseFloat(priceList.split('\n')[0].replace(',', ''))
+            return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',','.'))
         } catch (e) {
             this.log.warning("Error getting sellprice.")
             return false
@@ -65,7 +65,7 @@ module.exports = {
         for (const stockListElement of stockListElements) {
             try {
                 const positionAmountString = await stockListElement.findElement(By.className("entry")).getText()
-                const positionAmount = parseFloat(positionAmountString.split(" ")[1].replace(',', ''))
+                const positionAmount = parseFloat(positionAmountString.split(" ")[1].replace('.', '').replace(',','.'))
                 if (positionAmount > highestPositionAmount)
                     highestPositionAmount = positionAmount
             } catch (e) {

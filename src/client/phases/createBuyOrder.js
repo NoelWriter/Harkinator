@@ -8,11 +8,11 @@ module.exports = {
 
         await stockElement.findElement(By.className("buy")).findElement(By.className("btn")).click()
 
-        const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace(',', '')
+        const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', '').replace(',','.')
         if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
             price = Math.round(price)
 
-        const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace(',', '')
+        const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', '').replace(',','.')
 
         await setAmount(stockElement, amountString)
         await setPrice(driver, stockElement, priceString)
