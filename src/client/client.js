@@ -98,7 +98,7 @@ module.exports = {
 
         // Get balance and prepare it for comparison
         this.balance = await utils.getBalance(driver)
-        this.balance = this.balance.replace("€", "").replace('.', '').replace(',', '.')
+        this.balance = this.balance.replace("€", "").replace(',','') 
 
         // Pauses instance when stock limit stop is reached
 		if (this.balance < config.getConfigValue("STOCK_LIMIT_STOP") ){
@@ -217,7 +217,7 @@ module.exports = {
         }
 
         let newBalance = await utils.getBalance(driver)
-        newBalance = newBalance.replace("€", "").replace('.', '').replace(',', '.')
+        newBalance = newBalance.replace("€", "").replace(',', '')
 
         var balDifference = parseFloat(newBalance) - parseFloat(this.balance)
         balDifference = balDifference.toFixed(2)
