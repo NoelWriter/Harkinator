@@ -4,6 +4,8 @@
 const client = require("./client/client")
 const config = require("./utils/config")
 const discordClient = require("./client/discordClient")
+const utils = require("../src/utils/utils");
+const { driverStartDate } = require("./client/client")
 
 discordClient.init(config.getAuthValue('DISCORD_TOKEN')).then((discordClientInstance) => {
     const instance = parseInt(process.argv[2])
@@ -11,22 +13,34 @@ discordClient.init(config.getAuthValue('DISCORD_TOKEN')).then((discordClientInst
 })
 
 // Error handling
-// process.on('SIGINT', () => {
-//     process.exit();
-// });
+process.on('SIGINT', () => {
+    process.exit()
+});
 
-// process.on("unhandledRejection", (error) => {
-//     utils.log.error(`Uncaught Error: ${error}`)
-// });
+process.on("unhandledRejection", async(error) => {
+    utils.log.error(`UnhandledRejection Error: ${error}`)
+    await client.driver.quit()
+    process.exit()
+});
 
-// process.on("TypeError", (error) => {
-//     utils.log.error(`Uncaught Error: ${error}`)
-// });
+process.on("TypeError", async(error) => {
+    utils.log.error(`TypeError: ${error}`)
+    await client.driver.quit()
+    process.exit()
+});
 
-// process.on("uncaughtExceptionMonitor", (error) => {
-//     utils.log.error(`Uncaught Exception: ${error}`)
-// });
+process.on("uncaughtException", async(error) => {
+    utils.log.error(`UncaughtException: ${error}`)
+    await client.driver.quit()
+    process.exit()
+});
 
-// process.on("warning", (warning) => {
-//     utils.log.warning(`Warning ${warning}`)
-// });
+process.on("uncaughtExceptionMonitor", async(error) => {
+    utils.log.error(`UncaughtExceptionMonitor: ${error}`)
+    await client.driver.quit()
+    process.exit()
+});
+
+process.on("warning", (warning) => {
+    utils.log.warning(`Warning ${warning}`)
+});

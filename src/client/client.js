@@ -26,6 +26,7 @@ module.exports = {
     discordClientInstance: "",
     driverStartDate: Date.now(),
     balance: 0.0,
+    driver: '',
 
     /**
      * Execute client instance
@@ -48,48 +49,48 @@ module.exports = {
         // Initialize webdriver
         utils.log.generic(`Initialising Harkinator: ` + instance)
         
-        let driver = await getDriver()
+        this.driver = await getDriver()
         
         discordClientInstance.on("message", msg => {
             if (msg.content.toLowerCase() === 's' && msg.author.id === config.getAuthValue('DISCORD_USERID')) {
-                utils.sendScreenshot(driver, msg)
+                utils.sendScreenshot(this.driver, msg)
             }
         })
 
         // Initialize client login and account
-        const stockElement = await init(driver, instance)
+        const stockElement = await init(this.driver, instance)
 
         if (!stockElement) {
-            driver.quit()
+            this.driver.quit()
             await this.execute(this.stockName, this.instance, 0, this.discordClientInstance)
         }
 
-        await utils.setInstanceName(driver)
+        await utils.setInstanceName(this.driver)
 
         utils.log.generic(`Starting trading sequence`)
         utils.log.generic(`Probing buy and sell price = ${await utils.getStockBuyPrice(stockElement)} | ${await utils.getStockSellPrice(stockElement)}`)
 
-        const positions = await utils.getPositionsTotal(driver)
+        const positions = await utils.getPositionsTotal(this.driver)
         utils.log.debug("POSITIONS : " + positions)
 
-        this.balance = await utils.getBalance(driver)
+        this.balance = await utils.getBalance(this.driver)
 
         let tradeCounter = 0
         while (true) {
             tradeCounter++
             if ((tradeCounter % 10 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD" && instance === 2 ) {
                 utils.log.generic("Starting Bitcoin Multiplier Probe")
-                let newMultiplier = await probeBitcoinPrice(driver, stockElement)
+                let newMultiplier = await probeBitcoinPrice(this.driver, stockElement)
                 utils.log.generic("New Multiplier set at " + newMultiplier)
             }
 
-            await utils.checkPause(driver)
-            await this.trade(driver, stockElement)
+            await utils.checkPause(this.driver)
+            await this.trade(this.driver, stockElement)
         }
     },
 
     /**
-     * @param {*} driver
+     * @param {*} this.driver
      * @param {*} stockElement
      */
     async trade(driver, stockElement) {
@@ -97,7 +98,7 @@ module.exports = {
 
         // Get balance and prepare it for comparison
         this.balance = await utils.getBalance(driver)
-        this.balance = this.balance.replace("€", "").replace(',', '')
+        this.balance = this.balance.replace("€", "").replace('.', '').replace(',', '.')
 
         // Pauses instance when stock limit stop is reached
 		if (this.balance < config.getConfigValue("STOCK_LIMIT_STOP") ){
@@ -156,7 +157,7 @@ module.exports = {
         if (platformLag > config.getConfigValue('LAG_MAX_ORDER_DELAY')) {
             const sleepAmount = config.getConfigValue('DELAY_PLATFORM_LAG')
             utils.log.warning(`Platform lag detected, buy order delay is currently ${platformLag}ms. Hibernating for ${sleepAmount/1000} seconds`)
-            await driver.sleep(sleepAmount)
+            await this.driver.sleep(sleepAmount)
             return
         }
 
@@ -216,7 +217,7 @@ module.exports = {
         }
 
         let newBalance = await utils.getBalance(driver)
-        newBalance = newBalance.replace("€", "").replace(',', '')
+        newBalance = newBalance.replace("€", "").replace('.', '').replace(',', '.')
 
         var balDifference = parseFloat(newBalance) - parseFloat(this.balance)
         balDifference = balDifference.toFixed(2)
@@ -234,7 +235,7 @@ module.exports = {
 }
 
 /**
- * @param {*} driver
+ * @param {*} this.driver
  * @param instance
  */
 async function init(driver, instance) {
@@ -278,7 +279,7 @@ async function probePlatformLatency(driver, stockElement) {
 async function probeBitcoinPrice(driver, stockElement) {
     let deltaArray = []
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 1; i++) {
         let latestTimeStamp = 0
         let latestPrice = 0
 		let latestSellPrice = 0
