@@ -172,7 +172,48 @@ module.exports = {
     async setInstanceName(driver) {
         this.log.instanceName = await driver.findElement(By.xpath(location.account_name)).getText()
     },
+
+    async getClosingHours(stockElement, driver) {
+        await stockElement.findElement(By.className("market")).click()
+
+        closingHours = await driver.findElements(By.className('trading-close'))
+        date = new Date()
+
+        if (date.getDay() === 0) {
+            console.log('Het is zondag')
+            return await closingHours[2].getText()
+        } else {
+            console.log('Het is maandag t/m zaterdag')
+            return await closingHours[0].getText()
+        }
+    },
     
+    async allowedToTrade(stockElement, driver) {
+        closingtime = await this.getClosingHours(stockElement, driver)
+        closingtime = closingtime.split(':')
+
+        now = new Date()
+        date = new Date(now.getFullYear(), now.getMonth(), now.getDate(), (parseInt(closingtime[0])) + 2, parseInt(closingtime[1]))
+        
+        now = now.getTime() / 1000
+        date = date.getTime() / 1000
+
+        console.log(now)
+        console.log(date)
+
+        console.log(date - now) // Dit getal is veels te hoog, hoger dan onze berekeningen 
+
+        if ((date - now) < 28625) {
+            if (now.getDay() === 0) {
+                this.log.warning("Pauzing for 1 hour and 20 minutes")
+                await driver.sleep(4800000)
+            } else {
+                this.log.warning("Pauzing for 2 minutes")
+                await driver.sleep(120000)
+            }
+        }
+    },
+
     log: {
         instanceName: "",
         

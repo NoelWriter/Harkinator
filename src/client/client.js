@@ -76,12 +76,12 @@ module.exports = {
 
         let tradeCounter = 0
         while (true) {
-            tradeCounter++
-            if ((tradeCounter % 10 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD" && instance === 2 ) {
-                utils.log.generic("Starting Bitcoin Multiplier Probe")
-                let newMultiplier = await probeBitcoinPrice(driver, stockElement)
-                utils.log.generic("New Multiplier set at " + newMultiplier)
-            }
+            // tradeCounter++
+            // if ((tradeCounter % 10 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD" && instance === 2 ) {
+            //     utils.log.generic("Starting Bitcoin Multiplier Probe")
+            //     let newMultiplier = await probeBitcoinPrice(driver, stockElement)
+            //     utils.log.generic("New Multiplier set at " + newMultiplier)
+            // }
 
             await utils.checkPause(driver)
             await this.trade(driver, stockElement)
@@ -93,6 +93,8 @@ module.exports = {
      * @param {*} stockElement
      */
     async trade(driver, stockElement) {
+
+        await utils.allowedToTrade(stockElement, driver)
         utils.log.generic(`Starting trade`)
 
         // Get balance and prepare it for comparison
