@@ -17,7 +17,6 @@ module.exports = {
         utils.log.generic("Awaiting sell order fulfillment")
 
         while (await utils.getPositionsTotal(driver) > 0) {
-            await utils.checkPause(driver, true)
 
             // On change of stock sell price
             if (!await isSellPriceDelta(driver, stockElement, curSellPriceLevel))
@@ -33,7 +32,7 @@ module.exports = {
                     return sellPrice += spread * config.getConfigValue('STOCK_LOSS_MULTIPLIER')
                 case modes.PROFIT:
                     utils.log.warning(`Sell order is in profit mode`)
-                    return (await utils.getStockSellPrice(stockElement)) + (await utils.getSpread(stockElement) * 0.2)
+                    return (await utils.getStockSellPrice(stockElement)) + (await utils.getSpread(stockElement) * 0.4)
                 case modes.BREAK_EVEN:
                     utils.log.warning(`Sell order is in break even mode`)
                     return await findPrice.sell(driver, stockElement, 0)
