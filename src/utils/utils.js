@@ -199,7 +199,7 @@ module.exports = {
         now = newdate.getTime() / 1000
         date = date.getTime() / 1000
 
-        if ((date - now) < 600) {
+        if ((date - now) < 600 && (date - now) > 0) {
             if (newdate.getDay() === 0) {
                 this.log.warning("Pausing for 1 hour and 20 minutes")
                 await driver.sleep(4800000)
