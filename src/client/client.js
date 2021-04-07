@@ -94,6 +94,10 @@ module.exports = {
      * @param {*} stockElement
      */
     async trade(driver, stockElement) {
+        if (config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD") {
+            await utils.allowedToTrade(stockElement, driver)
+        }
+        
         utils.log.generic(`Starting trade`)
 
         // Get balance and prepare it for comparison
