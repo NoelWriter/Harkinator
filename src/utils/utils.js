@@ -181,10 +181,8 @@ module.exports = {
         date = new Date()
 
         if (date.getDay() === 0) {
-            console.log('Het is zondag')
             return await closingHours[2].getText()
         } else {
-            console.log('Het is maandag t/m zaterdag')
             return await closingHours[0].getText()
         }
     },
@@ -199,7 +197,8 @@ module.exports = {
         now = newdate.getTime() / 1000
         date = date.getTime() / 1000
 
-        if ((date - now) < 600 && (date - now) > 0) {
+        var timediff = date - now
+        if (timediff < 600 && timediff > 0) {
             if (newdate.getDay() === 0) {
                 this.log.warning("Pausing for 1 hour and 20 minutes")
                 await driver.sleep(4800000)
