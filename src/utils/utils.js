@@ -8,8 +8,9 @@ const fs = require('fs');
 module.exports = {
     async getStockBuyPrice(element) {
         try {
-            const priceList = await element.findElement(By.className("buy")).getText()
-            return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',', '.'))
+            let prices = await element.findElements(By.className("price-ticker-value2"))
+            let price = await prices[1].findElement(By.className("price-ticker-number")).getAttribute("innerHTML")
+            return parseFloat(price.replace('.', '').replace(',', '.'))
         } catch (e) {
             this.log.warning("Error getting buyprice.")
             return false
@@ -19,8 +20,9 @@ module.exports = {
 
     async getStockSellPrice(element) {
         try {
-            const priceList = await element.findElement(By.className("sell")).getText()
-            return parseFloat(priceList.split('\n')[0].replace('.', '').replace(',', '.'))
+            let prices = await element.findElements(By.className("price-ticker-value2"))
+            let price = await prices[0].findElement(By.className("price-ticker-number")).getAttribute("innerHTML")
+            return parseFloat(price.replace('.', '').replace(',', '.'))
         } catch (e) {
             this.log.warning("Error getting sellprice.")
             return false
