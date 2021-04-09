@@ -18,7 +18,7 @@ module.exports = {
     buy_input_amount: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[3]/trade-deal-ticket/place-order/div/scroll-pane/div[1]/div[1]/input-number2/input",
     buy_input_price_toggle: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[3]/trade-deal-ticket/place-order/div/scroll-pane/div[1]/div[2]/div[1]/radio-button2/div",
     buy_input_price_amount: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[3]/trade-deal-ticket/place-order/div/scroll-pane/div[1]/div[2]/div[2]/input-number2/input",
-    buy_order_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[3]/trade-deal-ticket/place-order/div/div[1]/div/ml-text",
+    buy_order_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[3]/trade-deal-ticket/place-order/div/div[1]/div/button",
 
     information_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[3]/trade-deal-ticket/place-order/div/scroll-pane/div[1]/div[1]/div[2]/popup-button/font-icon",
     information_exit_button: "/html/body/app-root/div/left-side-panel/div[1]/div/div[2]/trade-view/trade-side-panel/div/div/div[3]/trade-deal-ticket/place-order/margin-info-popup/div[1]/div[2]/font-icon",
