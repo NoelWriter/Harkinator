@@ -6,7 +6,8 @@ const utils = require("../../utils/utils");
 module.exports = {
     async execute(driver, stockElement, amount = 1, price, curSellLevel) {
 
-        await stockElement.findElements(By.className("button-outlined"))[1].click()
+        let buttons = await stockElement.findElements(By.className("button-outlined"))
+        await buttons[1].click()
 
         const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString()
         if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
