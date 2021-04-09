@@ -18,7 +18,9 @@ module.exports = {
         const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString()
 
         utils.log.generic(`Selling ${amountString} stocks with the price ${priceString}`)
-        await stockElement.findElements(By.className("button-outlined"))[0].click()
+        
+        let buttons = await stockElement.findElements(By.className("button-outlined"))
+        await buttons[0].click()
 
         await setAmount(stockElement, amountString)
         await setPrice(driver, stockElement, priceString)
