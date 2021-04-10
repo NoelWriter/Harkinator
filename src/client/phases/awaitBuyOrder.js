@@ -10,7 +10,7 @@ module.exports = {
         utils.log.generic("Awaiting buy order fulfillment")
 
         // Check for open positions 
-        if (await getPositionsTotal(driver) !== 0)
+        if (await utils.getPositionsTotal(driver) !== 0)
             return false
 
         utils.log.generic("Checking if placed order is still at right price level")
