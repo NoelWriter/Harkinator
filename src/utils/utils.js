@@ -39,9 +39,10 @@ module.exports = {
         for (const stockListElement of stockListElements) {
             try {
                 const stockAmountString = await stockListElement.findElement(By.className("quantity-badge")).getText()
-                openOrderTotal += parseFloat(stockAmountString.replace("+", "").replace("-", ""))
+                const stockAmountParsedString = stockAmountString.replace("+", "").replace("-", "")
+                openOrderTotal += parseFloat(stockAmountParsedString)
             } catch (e) {
-
+                this.log.warning("getOrdersTotal(): " + e)
             }
         }
         return openOrderTotal

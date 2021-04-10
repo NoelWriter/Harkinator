@@ -15,8 +15,13 @@ module.exports = {
 
         const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
 
-        await setAmount(stockElement, amountString)
-        await setPrice(driver, stockElement, priceString)
+        utils.log.generic(`Setting amount and price`)
+        try {
+            await setAmount(stockElement, amountString)
+            await setPrice(driver, stockElement, priceString)
+        } catch (e) {
+            utils.log.error(e)
+        }
 
         utils.log.generic(`Buying ${amountString} stocks with the price ${priceString}`)
 
@@ -30,13 +35,15 @@ module.exports = {
             await driver.sleep(config.getConfigValue('DELAY_FREEFALL_DETECTED'))
             return false
         }
-        
+
+        utils.log.generic(`Clicking buy button`)
         try {
             await stockElement.findElement(By.xpath(location.buy_order_button)).click()
         } catch (e) {
             return false
         }
 
+        utils.log.generic(`Awaiting order placed`)
         let t0 = Date.now()
         while (!(await utils.getOrdersTotal(driver) > 0) && !(await utils.getPositionsTotal(driver) > 0)) {
             if (await isInvalidBalance(driver)) {
@@ -48,7 +55,6 @@ module.exports = {
                 utils.log.error("Wait for order reached 2 min. Trying again..")
                 return false
             }
-
         }
 
         utils.log.generic(`Order placed successfully`)

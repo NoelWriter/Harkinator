@@ -16,6 +16,14 @@ module.exports = {
     async execute(driver, stockElement, amount = 1, boughtSellLevel, curSellPriceLevel) {
         utils.log.generic("Awaiting sell order fulfillment")
 
+        // Clear any open positions
+        if (await utils.getPositionsTotal(driver) < 0) {
+            utils.log.error("Short positions are open!")
+
+            if (config.getConfigValue('FORCE_CLOSE_OPEN_POSITIONS'))
+                await utils.clearOpenPosition(driver)
+        }
+
         while (await utils.getPositionsTotal(driver) > 0) {
 
             // On change of stock sell price
