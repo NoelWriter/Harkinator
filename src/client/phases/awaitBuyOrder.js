@@ -3,29 +3,21 @@ const location = require("../../utils/locations")
 const config = require("../../utils/config");
 const utils = require("../../utils/utils");
 const chalk = require("chalk");
+const { getPositionsTotal } = require("../../utils/utils");
 
 module.exports = {
     async execute(driver, stockElement, amount = 1, sellLevel) {
         utils.log.generic("Awaiting buy order fulfillment")
 
-        // Clear any open positions
-        if (await utils.getPositionsTotal(driver) < 0) {
-            utils.log.error("Short positions are open!")
-
-            if (config.getConfigValue('FORCE_CLOSE_OPEN_POSITIONS'))
-                await utils.clearOpenPosition(driver)
-        }
+        // Check for open positions 
+        if (await utils.getPositionsTotal(driver) < 0)
+            return false
 
         utils.log.generic("Checking if placed order is still at right price level")
         if (await isDeltaTooHigh(stockElement, sellLevel) && await utils.getPositionsTotal(driver) <= 0) {
             await utils.clearOpenOrders(driver)
             if (!await utils.getPositionsTotal(driver))
                 return false
-        }
-
-        utils.log.generic("Awaiting position or order status")
-        while (await utils.getPositionsTotal(driver) <= 0 && await utils.getOrdersTotal(driver) <= 0) {
-            continue
         }
 
         utils.log.generic("Waiting for positions")
