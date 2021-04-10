@@ -38,14 +38,13 @@ module.exports = {
                 
                 if (!await utils.getPositionsTotal(driver))
                     return false
-                
+
             }
         }
 
         if (await utils.getPositionsTotal(driver) !== config.getConfigValue('STOCK_AMOUNT')) {
             await driver.sleep(config.getConfigValue('STOCK_BUY_FILL_WAIT'))
         }
-        
         
         const boughtSellLevel = await utils.getStockSellPrice(stockElement)
         utils.log.generic("Buy order fulfilled", chalk.greenBright)

@@ -43,6 +43,12 @@ process.on("uncaughtExceptionMonitor", async(error) => {
     process.exit()
 });
 
+process.on("MaxListenersExceededWarning", async(error) => {
+    utils.log.error(`MaxListenersExceededWarning: ${error}`)
+    await client.driver.quit()
+    process.exit()
+});
+
 process.on("warning", (warning) => {
     utils.log.warning(`Warning ${warning}`)
 });
