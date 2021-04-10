@@ -6,23 +6,18 @@ const utils = require("../../utils/utils");
 module.exports = {
     async execute(driver, stockElement, amount = 1, price, curSellLevel) {
 
-        try {
-            let buttons = await stockElement.findElements(By.className("button-outlined"))
-            await buttons[1].click()
+        let buttons = await stockElement.findElements(By.className("button-outlined"))
+        await buttons[1].click()
 
-            const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
-            if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
-                price = Math.round(price)
+        const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
+        if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
+            price = Math.round(price)
 
-            const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
+        const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
 
-            utils.log.generic(`Setting amount and price`)
-            await setAmount(stockElement, amountString)
-            await setPrice(driver, stockElement, priceString)
-        } catch (e) {
-            utils.log.error(e)
-            return false
-        }
+        utils.log.generic(`Setting amount and price`)
+        await setAmount(stockElement, amountString)
+        await setPrice(driver, stockElement, priceString)
 
         utils.log.generic(`Buying ${amountString} stocks with the price ${priceString}`)
 
