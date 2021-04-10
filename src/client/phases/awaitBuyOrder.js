@@ -9,17 +9,18 @@ module.exports = {
     async execute(driver, stockElement, amount = 1, sellLevel) {
         utils.log.generic("Awaiting buy order fulfillment")
 
-        // Quick response system
+        // Check for open positions 
+        if (await getPositionsTotal(driver) !== 0)
+            return false
+
+        utils.log.generic("Checking if placed order is still at right price level")
         if (await isDeltaTooHigh(stockElement, sellLevel) && await utils.getPositionsTotal(driver) <= 0) {
             await utils.clearOpenOrders(driver)
             if (!await utils.getPositionsTotal(driver))
                 return false
         }
 
-        // Check for open positions 
-        if (await getPositionsTotal(driver) !== 0)
-            return false
-
+        utils.log.generic("Waiting for positions")
         while (await utils.getPositionsTotal(driver) <= 0) {
             if (await utils.checkPause(driver, true))
                 return false
@@ -29,14 +30,13 @@ module.exports = {
                 
                 if (!await utils.getPositionsTotal(driver))
                     return false
-                
+
             }
         }
 
         if (await utils.getPositionsTotal(driver) !== config.getConfigValue('STOCK_AMOUNT')) {
             await driver.sleep(config.getConfigValue('STOCK_BUY_FILL_WAIT'))
         }
-        
         
         const boughtSellLevel = await utils.getStockSellPrice(stockElement)
         utils.log.generic("Buy order fulfilled", chalk.greenBright)

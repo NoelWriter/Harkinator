@@ -6,17 +6,23 @@ const utils = require("../../utils/utils");
 module.exports = {
     async execute(driver, stockElement, amount = 1, price, curSellLevel) {
 
-        let buttons = await stockElement.findElements(By.className("button-outlined"))
-        await buttons[1].click()
-        
-        const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
-        if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
-            price = Math.round(price)
+        try {
+            let buttons = await stockElement.findElements(By.className("button-outlined"))
+            await buttons[1].click()
 
-        const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
+            const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
+            if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
+                price = Math.round(price)
 
-        await setAmount(stockElement, amountString)
-        await setPrice(driver, stockElement, priceString)
+            const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
+
+            utils.log.generic(`Setting amount and price`)
+            await setAmount(stockElement, amountString)
+            await setPrice(driver, stockElement, priceString)
+        } catch (e) {
+            utils.log.error(e)
+            return false
+        }
 
         utils.log.generic(`Buying ${amountString} stocks with the price ${priceString}`)
 
@@ -30,13 +36,15 @@ module.exports = {
             await driver.sleep(config.getConfigValue('DELAY_FREEFALL_DETECTED'))
             return false
         }
-        
+
+        utils.log.generic(`Clicking buy button`)
         try {
             await stockElement.findElement(By.xpath(location.buy_order_button)).click()
         } catch (e) {
             return false
         }
 
+        utils.log.generic(`Awaiting order placed`)
         let t0 = Date.now()
         while (!(await utils.getOrdersTotal(driver) > 0) && !(await utils.getPositionsTotal(driver) > 0)) {
             if (await isInvalidBalance(driver)) {
@@ -48,7 +56,6 @@ module.exports = {
                 utils.log.error("Wait for order reached 2 min. Trying again..")
                 return false
             }
-
         }
 
         utils.log.generic(`Order placed successfully`)
