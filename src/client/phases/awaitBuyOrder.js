@@ -3,6 +3,7 @@ const location = require("../../utils/locations")
 const config = require("../../utils/config");
 const utils = require("../../utils/utils");
 const chalk = require("chalk");
+const { getPositionsTotal } = require("../../utils/utils");
 
 module.exports = {
     async execute(driver, stockElement, amount = 1, sellLevel) {
@@ -15,9 +16,9 @@ module.exports = {
                 return false
         }
 
-        while(await utils.getPositionsTotal(driver) <= 0 && await utils.getOrdersTotal(driver) <= 0) {
-            continue
-        }
+        // Check for open positions 
+        if (await getPositionsTotal(driver) !== 0)
+            return false
 
         while (await utils.getPositionsTotal(driver) <= 0) {
             if (await utils.checkPause(driver, true))
