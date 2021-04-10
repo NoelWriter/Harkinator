@@ -174,6 +174,41 @@ module.exports = {
     async setInstanceName(driver) {
         this.log.instanceName = await driver.findElement(By.xpath(location.account_name)).getText()
     },
+
+    async getClosingHours(stockElement, driver) {
+        await stockElement.findElement(By.className("market")).click()
+
+        closingHours = await driver.findElements(By.className('trading-close'))
+        date = new Date()
+
+        if (date.getDay() === 0) {
+            return await closingHours[2].getText()
+        } else {
+            return await closingHours[0].getText()
+        }
+    },
+    
+    async allowedToTrade(stockElement, driver) {
+        closingtime = await this.getClosingHours(stockElement, driver)
+        closingtime = closingtime.split(':')
+
+        newdate = new Date()
+        date = new Date(newdate.getFullYear(), newdate.getMonth(), newdate.getDate(), parseInt(closingtime[0]), parseInt(closingtime[1]))
+        
+        now = newdate.getTime() / 1000
+        date = date.getTime() / 1000
+
+        var timediff = date - now
+        if (timediff < 600 && timediff > 0) {
+            if (newdate.getDay() === 0) {
+                this.log.warning("Pausing for 1 hour and 20 minutes")
+                await driver.sleep(4800000)
+            } else {
+                this.log.warning("Pausing for 20 minutes")
+                await driver.sleep(1200000)
+            }
+        }
+    },
     
     log: {
         instanceName: "",
