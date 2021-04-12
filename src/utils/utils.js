@@ -138,7 +138,7 @@ module.exports = {
 
     async sendBalance(driver, msg) {
         const timestamp = this.log.getTimeStamp()
-        await msg.channel.send(`[${timestamp}] ` + this.instanceName + " - " + `Current balance is ${await this.getBalance(driver)}`)
+        await msg.channel.send(`[${timestamp}] ` + this.log.instanceName + " - " + `Current balance is ${await this.getBalance(driver)}`)
     },
 
     async checkPause(driver, clearOrders = false) {
