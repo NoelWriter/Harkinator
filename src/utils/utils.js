@@ -136,6 +136,10 @@ module.exports = {
         await msg.channel.send(`Screenshot of ${timestamp}`, { files: ['./src/temp/out.png'] })
     },
 
+    async sendBalance(driver, msg) {
+        await msg.channel.send(`Current balance is ${await this.getBalance(driver)}`)
+    },
+
     async checkPause(driver, clearOrders = false) {
         let isPaused = false
 
