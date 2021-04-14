@@ -42,7 +42,7 @@ module.exports = {
                 const stockAmountParsedString = stockAmountString.replace("+", "").replace("-", "")
                 openOrderTotal += parseFloat(stockAmountParsedString)
             } catch (e) {
-                this.log.warning("getOrdersTotal(): " + e)
+                
             }
         }
         return openOrderTotal

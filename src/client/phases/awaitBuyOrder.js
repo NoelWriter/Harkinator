@@ -9,14 +9,14 @@ module.exports = {
     async execute(driver, stockElement, amount = 1, sellLevel) {
         utils.log.generic("Awaiting buy order fulfillment")
 
-        // Check for open positions 
+        // Check for open short positions 
         if (await utils.getPositionsTotal(driver) < 0)
             return false
 
         utils.log.generic("Checking if placed order is still at right price level")
         if (await isDeltaTooHigh(stockElement, sellLevel) && await utils.getPositionsTotal(driver) <= 0) {
             await utils.clearOpenOrders(driver)
-            if (!await utils.getPositionsTotal(driver))
+            if (await utils.getPositionsTotal(driver) == 0)
                 return false
         }
 
@@ -28,7 +28,7 @@ module.exports = {
             if (await isDeltaTooHigh(stockElement, sellLevel)) {
                 await utils.clearOpenOrders(driver)
                 
-                if (!await utils.getPositionsTotal(driver))
+                if (await utils.getPositionsTotal(driver) == 0)
                     return false
 
             }

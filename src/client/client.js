@@ -179,8 +179,19 @@ module.exports = {
 
         // Wait for buy order to be filled
         const boughtSellLevel = await awaitBuyOrder.execute(driver, stockElement, config.getConfigValue('STOCK_AMOUNT'), sellLevel)
-        if (!boughtSellLevel)
-            return
+
+        if (!boughtSellLevel) {
+            // Clear any open positions
+            var curpos = await utils.getPositionsTotal(driver)
+            if (curpos < 0 || curpos == 0) {
+                return
+            } else {
+                boughtSellLevel = await utils.getStockSellPrice(stockElement)
+            }
+        }
+
+
+            
     
 
         // Find the sell price for the positions held
