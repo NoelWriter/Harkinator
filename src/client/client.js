@@ -185,7 +185,7 @@ module.exports = {
         if (!boughtSellLevel) {
             // Clear any open positions
             var curpos = await utils.getPositionsTotal(driver)
-            if (curpos < 0 || curpos == 0) {
+            if (curpos <= 0) {
                 return
             } else {
                 boughtSellLevel = await utils.getStockSellPrice(stockElement)

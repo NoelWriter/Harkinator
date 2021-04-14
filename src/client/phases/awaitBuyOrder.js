@@ -9,24 +9,19 @@ module.exports = {
         utils.log.generic("Awaiting buy order fulfillment")
 
         // Check for open short positions 
-        if (await utils.getPositionsTotal(driver) < 0)
-            return false
-
-        // Quick response system
-        if (await isDeltaTooHigh(stockElement, sellLevel) && await utils.getPositionsTotal(driver) <= 0) {
+        if (await utils.getPositionsTotal(driver) < 0) {
+            utils.log.warning('Short position detected!')
             await utils.clearOpenOrders(driver)
-            if (await utils.getPositionsTotal(driver) == 0)
-                return false
+            return false
         }
 
-        while (await utils.getPositionsTotal(driver) <= 0) {
-            if (await utils.checkPause(driver, true))
-                return false
+        while (await utils.getPositionsTotal(driver) == 0) {
 
             if (await isDeltaTooHigh(stockElement, sellLevel)) {
                 await utils.clearOpenOrders(driver)
+                await driver.sleep(1000)
                 
-                if (await utils.getPositionsTotal(driver) == 0)
+                if (await utils.getPositionsTotal(driver) <= 0)
                     return false
                 
             }
