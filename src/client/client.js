@@ -55,6 +55,9 @@ module.exports = {
             if (msg.content.toLowerCase() === 's' && msg.author.id === config.getAuthValue('DISCORD_USERID')) {
                 utils.sendScreenshot(this.driver, msg)
             }
+            if (msg.content.toLowerCase() === 'b' && msg.author.id === config.getAuthValue('DISCORD_USERID')) {
+                utils.sendBalance(this.driver, msg)
+            }
         })
 
         // Initialize client login and account
