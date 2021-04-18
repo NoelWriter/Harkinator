@@ -17,32 +17,32 @@ discordClient.init(config.getAuthValue('DISCORD_TOKEN')).then((discordClientInst
 })
 
 // Error handling
-process.on('SIGINT', () => {
-    process.exit()
-});
-
-process.on("unhandledRejection", async(error) => {
-    utils.log.error(`UnhandledRejection Error: ${error}`)
-});
-
-process.on("TypeError", async(error) => {
-    utils.log.error(`TypeError: ${error}`)
-    await client.driver.quit()
-    process.exit()
-});
-
-process.on("uncaughtException", async(error) => {
-    utils.log.error(`UncaughtException: ${error}`)
-    await client.driver.quit()
-    process.exit()
-});
-
-process.on("uncaughtExceptionMonitor", async(error) => {
-    utils.log.error(`UncaughtExceptionMonitor: ${error}`)
-    await client.driver.quit()
-    process.exit()
-});
-
-process.on("warning", (warning) => {
-    utils.log.warning(`Warning ${warning}`)
-});
+// process.on('SIGINT', () => {
+//     process.exit()
+// });
+//
+// process.on("unhandledRejection", async(error) => {
+//     utils.log.error(`UnhandledRejection Error: ${error}`)
+// });
+//
+// process.on("TypeError", async(error) => {
+//     utils.log.error(`TypeError: ${error}`)
+//     await client.driver.quit()
+//     process.exit()
+// });
+//
+// process.on("uncaughtException", async(error) => {
+//     utils.log.error(`UncaughtException: ${error}`)
+//     await client.driver.quit()
+//     process.exit()
+// });
+//
+// process.on("uncaughtExceptionMonitor", async(error) => {
+//     utils.log.error(`UncaughtExceptionMonitor: ${error}`)
+//     await client.driver.quit()
+//     process.exit()
+// });
+//
+// process.on("warning", (warning) => {
+//     utils.log.warning(`Warning ${warning}`)
+// });

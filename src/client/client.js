@@ -252,6 +252,7 @@ module.exports = {
 
 /**
  * @param {*} this.driver
+ * @param driver
  * @param instance
  */
 async function init(driver, instance) {
