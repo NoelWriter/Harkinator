@@ -5,7 +5,7 @@ const utils = require("../../utils/utils");
 
 module.exports = {
     async execute(driver, stockElement, amount = 1, price) {
-        const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString()
+        const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
 
         if (amount === 0) {
             return false
@@ -14,7 +14,7 @@ module.exports = {
         if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
             price = Math.round(price)
 
-        const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString()
+        const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', ',')
 
         utils.log.generic(`Selling ${amountString} stocks with the price ${priceString}`)
         
