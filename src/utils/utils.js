@@ -68,7 +68,7 @@ module.exports = {
         for (const stockListElement of stockListElements) {
             try {
                 const positionAmountString = await stockListElement.findElement(By.className("entry")).getText()
-                const positionAmount = parseFloat(positionAmountString.split(" ")[1].replace('.', '').replace(',', '.'))
+                const positionAmount = parseFloat(positionAmountString.split(" ")[1].replace('.', '').replace(',','.'))
                 if (positionAmount > highestPositionAmount)
                     highestPositionAmount = positionAmount
             } catch (e) {
@@ -135,6 +135,11 @@ module.exports = {
                 this.log.error(err)
         });
         await msg.channel.send(`Screenshot of ${timestamp}`, { files: ['./src/temp/out.png'] })
+    },
+
+    async sendBalance(driver, msg) {
+        const timestamp = this.log.getTimeStamp()
+        await msg.channel.send(`[${timestamp}] ` + this.log.instanceName + " - " + `Current balance is ${await this.getBalance(driver)}`)
     },
 
     async checkPause(driver, clearOrders = false) {

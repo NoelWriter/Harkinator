@@ -26,6 +26,7 @@ module.exports = {
     discordClientInstance: "",
     driverStartDate: Date.now(),
     balance: 0.0,
+    driver: '',
 
     /**
      * Execute client instance
@@ -48,49 +49,52 @@ module.exports = {
         // Initialize webdriver
         utils.log.generic(`Initialising Harkinator: ` + instance)
         
-        let driver = await getDriver()
+        this.driver = await getDriver()
         
         discordClientInstance.on("message", msg => {
             if (msg.content.toLowerCase() === 's' && msg.author.id === config.getAuthValue('DISCORD_USERID')) {
-                utils.sendScreenshot(driver, msg)
+                utils.sendScreenshot(this.driver, msg)
+            }
+            if (msg.content.toLowerCase() === 'b' && msg.author.id === config.getAuthValue('DISCORD_USERID')) {
+                utils.sendBalance(this.driver, msg)
             }
         })
 
         // Initialize client login and account
-        const stockElement = await init(driver, instance)
+        const stockElement = await init(this.driver, instance)
 
         if (!stockElement) {
-            driver.quit()
+            this.driver.quit()
             await this.execute(this.stockName, this.instance, 0, this.discordClientInstance)
         }
 
-        await utils.setInstanceName(driver)
+        await utils.setInstanceName(this.driver)
 
         utils.log.generic(`Starting trading sequence`)
         await driver.sleep(2000)
         utils.log.generic(`Probing buy and sell price = ${await utils.getStockBuyPrice(stockElement)} | ${await utils.getStockSellPrice(stockElement)}`)
 
-        const positions = await utils.getPositionsTotal(driver)
+        const positions = await utils.getPositionsTotal(this.driver)
         utils.log.debug("POSITIONS : " + positions)
 
-        this.balance = await utils.getBalance(driver)
+        this.balance = await utils.getBalance(this.driver)
 
         let tradeCounter = 0
         while (true) {
             tradeCounter++
             if ((tradeCounter % 10 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD" && instance === 2 ) {
                 utils.log.generic("Starting Bitcoin Multiplier Probe")
-                let newMultiplier = await probeBitcoinPrice(driver, stockElement)
+                let newMultiplier = await probeBitcoinPrice(this.driver, stockElement)
                 utils.log.generic("New Multiplier set at " + newMultiplier)
             }
 
-            await utils.checkPause(driver)
-            await this.trade(driver, stockElement)
+            await utils.checkPause(this.driver)
+            await this.trade(this.driver, stockElement)
         }
     },
 
     /**
-     * @param {*} driver
+     * @param {*} this.driver
      * @param {*} stockElement
      */
     async trade(driver, stockElement) {
@@ -98,7 +102,6 @@ module.exports = {
         if (config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD") {
             await utils.allowedToTrade(stockElement, driver)
         }
-
         utils.log.generic(`Starting trade`)
 
         // Get balance and prepare it for comparison
@@ -162,7 +165,7 @@ module.exports = {
         if (platformLag > config.getConfigValue('LAG_MAX_ORDER_DELAY')) {
             const sleepAmount = config.getConfigValue('DELAY_PLATFORM_LAG')
             utils.log.warning(`Platform lag detected, buy order delay is currently ${platformLag}ms. Hibernating for ${sleepAmount/1000} seconds`)
-            await driver.sleep(sleepAmount)
+            await this.driver.sleep(sleepAmount)
             return
         }
 
@@ -183,16 +186,13 @@ module.exports = {
         if (!boughtSellLevel) {
             // Clear any open positions
             var curpos = await utils.getPositionsTotal(driver)
-            if (curpos < 0 || curpos == 0) {
+
+            if (curpos <= 0) {
                 return
             } else {
                 boughtSellLevel = await utils.getStockSellPrice(stockElement)
             }
         }
-
-
-            
-    
 
         // Find the sell price for the positions held
         let curSellPrice = await findPrice.sell(driver, stockElement, config.getConfigValue('STOCK_PROFIT'))
@@ -251,7 +251,7 @@ module.exports = {
 }
 
 /**
- * @param {*} driver
+ * @param {*} this.driver
  * @param instance
  */
 async function init(driver, instance) {
@@ -302,7 +302,6 @@ async function probeBitcoinPrice(driver, stockElement) {
         let curSpread = await utils.getSpread(stockElement)
         let curSellprice = await utils.getStockSellPrice(stockElement)
         let curTimestamp = Date.now() / 1000
-
         if (i % 20 === 0)
             utils.log.generic(`Probing has ${probeSeconds - i} seconds left`)
 

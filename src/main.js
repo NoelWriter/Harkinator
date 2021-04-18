@@ -5,6 +5,8 @@ console.log("Initializing main")
 const client = require("./client/client")
 const config = require("./utils/config")
 const discordClient = require("./client/discordClient")
+const utils = require("../src/utils/utils");
+const { driverStartDate } = require("./client/client")
 
 process.setMaxListeners(100)
 
@@ -21,8 +23,6 @@ process.on('SIGINT', () => {
 
 process.on("unhandledRejection", async(error) => {
     utils.log.error(`UnhandledRejection Error: ${error}`)
-    await client.driver.quit()
-    process.exit()
 });
 
 process.on("TypeError", async(error) => {
@@ -39,12 +39,6 @@ process.on("uncaughtException", async(error) => {
 
 process.on("uncaughtExceptionMonitor", async(error) => {
     utils.log.error(`UncaughtExceptionMonitor: ${error}`)
-    await client.driver.quit()
-    process.exit()
-});
-
-process.on("MaxListenersExceededWarning", async(error) => {
-    utils.log.error(`MaxListenersExceededWarning: ${error}`)
     await client.driver.quit()
     process.exit()
 });
