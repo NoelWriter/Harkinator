@@ -7,7 +7,7 @@ const { Builder } = require('selenium-webdriver');
 module.exports = {
     start(URL = "https://capital.com/trading/platform/") {
         if (config.getConfigValue('HEADLESS')) {
-            var options = new firefox.Options();
+            let options = new firefox.Options();
             options.setPreference("intl.accept_languages", "nl,NL");
             options.addArguments("-headless");
             options.addArguments("start-maximized")
@@ -25,7 +25,7 @@ module.exports = {
             driver.get(URL)
         return driver
         } else {
-            var options = new firefox.Options();
+            let options = new firefox.Options();
             options.setPreference("intl.accept_languages", "nl,NL");
             options.addArguments("start-maximized")
             options.addArguments("--disable-extensions")

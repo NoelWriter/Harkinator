@@ -181,7 +181,7 @@ module.exports = {
 
 
         // Wait for buy order to be filled
-        const boughtSellLevel = await awaitBuyOrder.execute(driver, stockElement, config.getConfigValue('STOCK_AMOUNT'), sellLevel)
+        let boughtSellLevel = await awaitBuyOrder.execute(driver, stockElement, config.getConfigValue('STOCK_AMOUNT'), sellLevel)
 
         if (!boughtSellLevel) {
             // Clear any open positions
