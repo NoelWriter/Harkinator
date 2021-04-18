@@ -3,6 +3,7 @@ const location = require("../../utils/locations")
 const config = require("../../utils/config");
 const utils = require("../../utils/utils");
 const chalk = require("chalk");
+const { getPositionsTotal } = require("../../utils/utils");
 
 module.exports = {
     async execute(driver, stockElement, amount = 1, sellLevel) {
@@ -23,14 +24,13 @@ module.exports = {
                 
                 if (await utils.getPositionsTotal(driver) <= 0)
                     return false
-                
+
             }
         }
 
         if (await utils.getPositionsTotal(driver) !== config.getConfigValue('STOCK_AMOUNT')) {
             await driver.sleep(config.getConfigValue('STOCK_BUY_FILL_WAIT'))
         }
-        
         
         const boughtSellLevel = await utils.getStockSellPrice(stockElement)
         utils.log.generic("Buy order fulfilled", chalk.greenBright)

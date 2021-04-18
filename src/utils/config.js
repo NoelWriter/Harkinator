@@ -19,7 +19,7 @@ module.exports = {
         } catch {
             this.setConfigValue(key, value)
         }
-        
+
     },
 
     getAuthValue(key) {

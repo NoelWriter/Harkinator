@@ -71,6 +71,7 @@ module.exports = {
         await utils.setInstanceName(this.driver)
 
         utils.log.generic(`Starting trading sequence`)
+        await driver.sleep(2000)
         utils.log.generic(`Probing buy and sell price = ${await utils.getStockBuyPrice(stockElement)} | ${await utils.getStockSellPrice(stockElement)}`)
 
         const positions = await utils.getPositionsTotal(this.driver)
@@ -97,10 +98,10 @@ module.exports = {
      * @param {*} stockElement
      */
     async trade(driver, stockElement) {
+        // Check for market pauses
         if (config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD") {
             await utils.allowedToTrade(stockElement, driver)
         }
-        
         utils.log.generic(`Starting trade`)
 
         // Get balance and prepare it for comparison
@@ -185,13 +186,13 @@ module.exports = {
         if (!boughtSellLevel) {
             // Clear any open positions
             var curpos = await utils.getPositionsTotal(driver)
+
             if (curpos <= 0) {
                 return
             } else {
                 boughtSellLevel = await utils.getStockSellPrice(stockElement)
             }
         }
-    
 
         // Find the sell price for the positions held
         let curSellPrice = await findPrice.sell(driver, stockElement, config.getConfigValue('STOCK_PROFIT'))
@@ -301,7 +302,6 @@ async function probeBitcoinPrice(driver, stockElement) {
         let curSpread = await utils.getSpread(stockElement)
         let curSellprice = await utils.getStockSellPrice(stockElement)
         let curTimestamp = Date.now() / 1000
-
         if (i % 20 === 0)
             utils.log.generic(`Probing has ${probeSeconds - i} seconds left`)
 

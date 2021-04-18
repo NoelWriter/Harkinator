@@ -10,7 +10,7 @@ module.exports = {
         try {
             let prices = await element.findElements(By.className("price-ticker-value2"))
             let price = await prices[1].findElement(By.className("price-ticker-number")).getAttribute("innerHTML")
-            return parseFloat(price.replace(',', ''))
+            return parseFloat(price.replace('.', '').replace(',', '.'))
         } catch (e) {
             this.log.warning("Error getting buyprice.")
             return false
@@ -22,7 +22,7 @@ module.exports = {
         try {
             let prices = await element.findElements(By.className("price-ticker-value2"))
             let price = await prices[0].findElement(By.className("price-ticker-number")).getAttribute("innerHTML")
-            return parseFloat(price.replace(',', ''))
+            return parseFloat(price.replace('.', '').replace(',', '.'))
         } catch (e) {
             this.log.warning("Error getting sellprice.")
             return false
@@ -39,9 +39,10 @@ module.exports = {
         for (const stockListElement of stockListElements) {
             try {
                 const stockAmountString = await stockListElement.findElement(By.className("quantity-badge")).getText()
-                openOrderTotal += parseFloat(stockAmountString.replace("+", "").replace("-", ""))
+                const stockAmountParsedString = stockAmountString.replace("+", "").replace("-", "")
+                openOrderTotal += parseFloat(stockAmountParsedString)
             } catch (e) {
-
+                
             }
         }
         return openOrderTotal
@@ -180,7 +181,6 @@ module.exports = {
         this.log.instanceName = await driver.findElement(By.xpath(location.account_name)).getText()
     },
 
-    
     async getClosingHours(stockElement, driver) {
         await stockElement.findElement(By.className("market")).click()
 
@@ -215,7 +215,6 @@ module.exports = {
             }
         }
     },
-
     
     log: {
         instanceName: "",

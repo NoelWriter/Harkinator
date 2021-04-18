@@ -11,7 +11,6 @@ module.exports = {
             return false
         }
 
-
         if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
             price = Math.round(price)
 
@@ -33,7 +32,6 @@ module.exports = {
         if (totalPos !== amount || await utils.getOrdersTotal(driver) !== 0 || totalPos === 0) {
             return false
         }
-
 
         try {
             await stockElement.findElement(By.xpath(location.buy_order_button)).click()
