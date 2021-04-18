@@ -71,7 +71,6 @@ module.exports = {
         await utils.setInstanceName(this.driver)
 
         utils.log.generic(`Starting trading sequence`)
-        await driver.sleep(2000)
         utils.log.generic(`Probing buy and sell price = ${await utils.getStockBuyPrice(stockElement)} | ${await utils.getStockSellPrice(stockElement)}`)
 
         const positions = await utils.getPositionsTotal(this.driver)
