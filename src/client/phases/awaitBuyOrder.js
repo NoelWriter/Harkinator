@@ -3,39 +3,34 @@ const location = require("../../utils/locations")
 const config = require("../../utils/config");
 const utils = require("../../utils/utils");
 const chalk = require("chalk");
+const { getPositionsTotal } = require("../../utils/utils");
 
 module.exports = {
     async execute(driver, stockElement, amount = 1, sellLevel) {
         utils.log.generic("Awaiting buy order fulfillment")
 
-        // Check for open positions 
-        if (await utils.getPositionsTotal(driver) < 0)
-            return false
-
-        // Quick response system
-        if (await isDeltaTooHigh(stockElement, sellLevel) && await utils.getPositionsTotal(driver) <= 0) {
+        // Check for open short positions 
+        if (await utils.getPositionsTotal(driver) < 0) {
+            utils.log.warning('Short position detected!')
             await utils.clearOpenOrders(driver)
-            if (!await utils.getPositionsTotal(driver))
-                return false
+            return false
         }
 
-        while (await utils.getPositionsTotal(driver) <= 0) {
-            if (await utils.checkPause(driver, true))
-                return false
+        while (await utils.getPositionsTotal(driver) == 0) {
 
             if (await isDeltaTooHigh(stockElement, sellLevel)) {
                 await utils.clearOpenOrders(driver)
+                await driver.sleep(1000)
                 
-                if (!await utils.getPositionsTotal(driver))
+                if (await utils.getPositionsTotal(driver) <= 0)
                     return false
-                
+
             }
         }
 
         if (await utils.getPositionsTotal(driver) !== config.getConfigValue('STOCK_AMOUNT')) {
             await driver.sleep(config.getConfigValue('STOCK_BUY_FILL_WAIT'))
         }
-        
         
         const boughtSellLevel = await utils.getStockSellPrice(stockElement)
         utils.log.generic("Buy order fulfilled", chalk.greenBright)

@@ -1,12 +1,16 @@
 // ----------------------------------------------------------------
 //                           HARKINATOR
 // ----------------------------------------------------------------
+console.log("Initializing main")
 const client = require("./client/client")
 const config = require("./utils/config")
 const discordClient = require("./client/discordClient")
 const utils = require("../src/utils/utils");
 const { driverStartDate } = require("./client/client")
 
+process.setMaxListeners(100)
+
+console.log("Initializing Discord Client")
 discordClient.init(config.getAuthValue('DISCORD_TOKEN')).then((discordClientInstance) => {
     const instance = parseInt(process.argv[2])
     client.execute(config.getConfigValue('STOCK_PRIMARY'), instance+1, 5000*instance, discordClientInstance)
@@ -19,8 +23,6 @@ process.on('SIGINT', () => {
 
 process.on("unhandledRejection", async(error) => {
     utils.log.error(`UnhandledRejection Error: ${error}`)
-    await client.driver.quit()
-    process.exit()
 });
 
 process.on("TypeError", async(error) => {

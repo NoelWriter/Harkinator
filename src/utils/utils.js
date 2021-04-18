@@ -39,9 +39,10 @@ module.exports = {
         for (const stockListElement of stockListElements) {
             try {
                 const stockAmountString = await stockListElement.findElement(By.className("quantity-badge")).getText()
-                openOrderTotal += parseFloat(stockAmountString.replace("+", "").replace("-", ""))
+                const stockAmountParsedString = stockAmountString.replace("+", "").replace("-", "")
+                openOrderTotal += parseFloat(stockAmountParsedString)
             } catch (e) {
-
+                
             }
         }
         return openOrderTotal
@@ -180,7 +181,6 @@ module.exports = {
         this.log.instanceName = await driver.findElement(By.xpath(location.account_name)).getText()
     },
 
-    
     async getClosingHours(stockElement, driver) {
         await stockElement.findElement(By.className("market")).click()
 
@@ -215,7 +215,6 @@ module.exports = {
             }
         }
     },
-
     
     log: {
         instanceName: "",
