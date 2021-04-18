@@ -9,11 +9,11 @@ module.exports = {
         let buttons = await stockElement.findElements(By.className("button-outlined"))
         await buttons[1].click()
 
-        const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', '').replace(',','.')
+        const amountString = amount.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString()
         if (config.getConfigValue('STOCK_ROUND_TO_WHOLE'))
             price = Math.round(price)
 
-        const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString().replace('.', '').replace(',','.')
+        const priceString = price.toFixed(config.getConfigValue('STOCK_FRACTION_DIGITS')).toString()
 
         utils.log.generic(`Setting amount and price`)
         await setAmount(stockElement, amountString)
