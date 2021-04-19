@@ -81,14 +81,14 @@ module.exports = {
         let tradeCounter = 0
         while (true) {
             tradeCounter++
-            if ((tradeCounter % 10 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD" && instance === 2 ) {
+            if ((tradeCounter % 15 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD" && instance === 2 ) {
                 utils.log.generic("Starting Bitcoin Multiplier Probe")
                 let newMultiplier = await probeBitcoinPrice(this.driver, stockElement)
                 utils.log.generic("New Multiplier set at " + newMultiplier)
             }
 
             await utils.checkPause(this.driver)
-            await this.trade(this.driver, stockElement)
+            await this.trade(this.driver, stockElement, tradeCounter)
         }
     },
 
@@ -96,7 +96,7 @@ module.exports = {
      * @param {*} this.driver
      * @param {*} stockElement
      */
-    async trade(driver, stockElement) {
+    async trade(driver, stockElement, tradeCounter) {
         if (config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD") {
             await utils.allowedToTrade(stockElement, driver)
         }
@@ -153,20 +153,22 @@ module.exports = {
         utils.log.generic(`Initial spread: ${initialSpread}`)
 
         // Probe lag to maintain bot functionality
-        utils.log.generic(`Probing platform lag...`)
-        const platformLag = await probePlatformLatency(driver, stockElement)
+	if (tradeCounter % 4 === 0 || tradeCounter === 1) {
+        	utils.log.generic(`Probing platform lag...`)
+        	const platformLag = await probePlatformLatency(driver, stockElement)
 
-        if (!platformLag)
-            return
+        	if (!platformLag)
+            		return
         
-        utils.log.generic(`Buy order delay is currently ${platformLag}ms`)
+        	utils.log.generic(`Buy order delay is currently ${platformLag}ms`)
 
-        if (platformLag > config.getConfigValue('LAG_MAX_ORDER_DELAY')) {
-            const sleepAmount = config.getConfigValue('DELAY_PLATFORM_LAG')
-            utils.log.warning(`Platform lag detected, buy order delay is currently ${platformLag}ms. Hibernating for ${sleepAmount/1000} seconds`)
-            await this.driver.sleep(sleepAmount)
-            return
-        }
+        	if (platformLag > config.getConfigValue('LAG_MAX_ORDER_DELAY')) {
+            		const sleepAmount = config.getConfigValue('DELAY_PLATFORM_LAG')
+            		utils.log.warning(`Platform lag detected, buy order delay is currently ${platformLag}ms. Hibernating for ${sleepAmount/1000} seconds`)
+            		await this.driver.sleep(sleepAmount)
+            		return
+        	}
+	}
 
         // Find buy price
         const price = await findPrice.buy(driver, stockElement, config.getConfigValue('STOCK_MULTIPLIER_ABOVE_SELL'))
@@ -332,11 +334,11 @@ async function probeBitcoinPrice(driver, stockElement) {
         }
     }
 
-    let newMultiplierAboveSell = calculateAverage(deltaArray) - ((config.getConfigValue("STOCK_PROFIT") + 0.01))
+    let newMultiplierAboveSell = calculateAverage(deltaArray) - ((config.getConfigValue("STOCK_PROFIT") + 0.02))
     if (newMultiplierAboveSell < 0.05)
         newMultiplierAboveSell = 0.05
     if (newMultiplierAboveSell > 0.35)
-        newMultiplierAboveSell = 0.3
+        newMultiplierAboveSell = 0.30
     if (isNaN(newMultiplierAboveSell))
         newMultiplierAboveSell = 0.2
 
