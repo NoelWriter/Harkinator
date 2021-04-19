@@ -8,7 +8,7 @@ module.exports = {
     start(URL = "https://capital.com/trading/platform/") {
         if (config.getConfigValue('HEADLESS')) {
             var options = new firefox.Options();
-            options.setPreference("intl.accept_languages", "en,US");
+            options.setPreference("intl.accept_languages", "nl, NL");
             options.addArguments("-headless");
             options.addArguments("--disable-extensions")
             options.addArguments('--no-sandbox')
@@ -25,7 +25,7 @@ module.exports = {
         return driver
         } else {
             var options = new firefox.Options();
-            options.setPreference("intl.accept_languages", "en,US");
+            options.setPreference("intl.accept_languages", "nl, NL");
             options.addArguments("--disable-extensions")
             options.addArguments('--no-sandbox')
             options.addArguments('--disable-application-cache')
