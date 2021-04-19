@@ -34,7 +34,7 @@ async function main() {
     while (true) {
         let deltaArray = []
         let timestampArray = []
-        const probeSeconds = 30
+        const probeSeconds = 60
         utils.log.generic(`Probing new multiplier for +/- ${probeSeconds} seconds`)
 
         for (let i = 0; i < probeSeconds; i++) {
@@ -54,7 +54,7 @@ async function main() {
         const resPointArray = res.split('\n')
 
         for (const timestampArrayItem of timestampArray) {
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 60; i++) {
                 const pointTimestamp = parseInt(resPointArray[i].split(',')[0])
                 const arrayTimestamp = Math.round(timestampArrayItem[2])
 
@@ -64,7 +64,6 @@ async function main() {
                     const arraySpread = timestampArrayItem[0]
                     const curMultiplier = (pointSellPrice - arraySellPrice) / arraySpread
 
-                    utils.log.warning(`${pointTimestamp} | ${arrayTimestamp} : ${pointSellPrice} | ${arraySellPrice} | ${arraySpread}`)
                     if (curMultiplier < 0)
                         utils.log.warning(`${pointTimestamp} | ${arrayTimestamp} : ${pointSellPrice} | ${arraySellPrice} | ${arraySpread}`)
                     else
@@ -74,20 +73,20 @@ async function main() {
         }
 
         console.log(deltaArray)
-        let multiplierAboveSell = calculateAverage(deltaArray) - ((config.getConfigValue("STOCK_PROFIT") + config.getConfigValue("STOCK_BUY_LOWER_LIMIT")))
-        let newMultiplierAboveSell = 0.05
+        let averageMultiplier = calculateAverage(deltaArray)
+        let multiplierAboveSell = averageMultiplier - ((config.getConfigValue("STOCK_PROFIT") + config.getConfigValue("STOCK_BUY_LOWER_LIMIT")))
 
         if (multiplierAboveSell < 0.05)
-            newMultiplierAboveSell = 0.05
+            multiplierAboveSell = 0.05
         if (multiplierAboveSell > 0.38)
-            newMultiplierAboveSell = 0.35
+            multiplierAboveSell = 0.35
         if (isNaN(multiplierAboveSell))
-            newMultiplierAboveSell = 0.05
+            multiplierAboveSell = 0.05
 
-        await csvWriter.writeRecords([[Date.now(), newMultiplierAboveSell, multiplierAboveSell]])
-        utils.log.generic(`Result written to CSV`)
+        await csvWriter.writeRecords([[Date.now(), multiplierAboveSell, averageMultiplier]])
+        utils.log.generic(`Result written to CSV with resulting MAS being ${multiplierAboveSell}`)
 
-        config.setConfigValue("STOCK_MULTIPLIER_ABOVE_SELL", newMultiplierAboveSell)
+        config.setConfigValue("STOCK_MULTIPLIER_ABOVE_SELL", multiplierAboveSell)
     }
 }
 
