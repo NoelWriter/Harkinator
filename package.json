@@ -10,7 +10,8 @@
     "init-frontend": "http-server -a localhost -p 8080",
     "open": "open-cli http://localhost:8080",
     "dashboard": "npm-run-all -p init-backend init-frontend open",
-    "start": "node src/main.js"
+    "start": "node src/main.js",
+    "probe": "node src/probeclient.js"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,8 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
     "discord.js": "^12.5.1",
     "express": "^4.17.1",
     "http-server": "^0.12.3",
