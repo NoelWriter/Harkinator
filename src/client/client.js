@@ -265,7 +265,8 @@ async function init(driver, instance) {
 
         // Enter specified mode
         await enterMode.execute(driver, config.getConfigValue('DEMO_MODE'), instance)
-
+	await driver.sleep(1000)    
+	
         // Find stock
         const stockElement = await findStock.execute(driver, config.getConfigValue('STOCK_PRIMARY'))
 
