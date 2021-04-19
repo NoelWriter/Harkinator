@@ -72,7 +72,6 @@ async function main() {
             }
         }
 
-        console.log(deltaArray)
         let averageMultiplier = calculateAverage(deltaArray)
         let multiplierAboveSell = averageMultiplier - ((config.getConfigValue("STOCK_PROFIT") + config.getConfigValue("STOCK_BUY_LOWER_LIMIT")))
 

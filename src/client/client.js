@@ -81,11 +81,11 @@ module.exports = {
         let tradeCounter = 0
         while (true) {
             tradeCounter++
-            if ((tradeCounter % 15 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD" && instance === 2 ) {
-                utils.log.generic("Starting Bitcoin Multiplier Probe")
-                let newMultiplier = await probeBitcoinPrice(this.driver, stockElement)
-                utils.log.generic("New Multiplier set at " + newMultiplier)
-            }
+            // if ((tradeCounter % 15 === 0 || tradeCounter === 1) && config.getConfigValue("STOCK_PRIMARY") === "Bitcoin / USD" && instance === 2 ) {
+            //     utils.log.generic("Starting Bitcoin Multiplier Probe")
+            //     let newMultiplier = await probeBitcoinPrice(this.driver, stockElement)
+            //     utils.log.generic("New Multiplier set at " + newMultiplier)
+            // }
 
             await utils.checkPause(this.driver)
             await this.trade(this.driver, stockElement, tradeCounter)
