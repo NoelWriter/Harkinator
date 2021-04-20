@@ -19,24 +19,23 @@ const csvWriter = createCsvWriter({
 main()
 
 async function main() {
-    await discordClient.init(config.getAuthValue('DISCORD_TOKEN')).then((discordClient) => {
-        discordClient.on("message", msg => {
+    await discordClient.init(config.getAuthValue('DISCORD_TOKEN')).then((discordClientInst) => {
+        discordClientInst.on("message", msg => {
             let messageParts = msg.content.split(" ")
-
             if (messageParts[0].toLowerCase() === 'setmas') {
                 if (messageParts.length < 2)
-                    this.sendMessage("Please include new amount")
+                    discordClient.sendMessage("Please include new amount")
                 if (msg.author.id === config.getAuthValue('DISCORD_USERID')) {
                     let newMAS = parseFloat(messageParts[1])
                     config.setConfigValue("MAX_MULTIPLIER_ABOVE_SELL", newMAS)
-                    this.sendMessage("Successfully set multiplier above sell " + newMAS)
+                    discordClient.sendMessage("Successfully set multiplier above sell " + newMAS)
                 }
             }
 
             if (messageParts[0].toLowerCase() === 'getmas') {
                 if (msg.author.id === config.getAuthValue('DISCORD_USERID')) {
                     const mas = config.getConfigValue("MULTIPLIER_ABOVE_SELL")
-                    this.sendMessage("Multiplier above sell is currently " + mas)
+                    discordClient.sendMessage("Multiplier above sell is currently " + mas)
                 }
             }
         })
