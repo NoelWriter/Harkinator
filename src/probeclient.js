@@ -73,12 +73,12 @@ async function main() {
         }
 
         let averageMultiplier = calculateAverage(deltaArray)
-        let multiplierAboveSell = averageMultiplier - ((config.getConfigValue("STOCK_PROFIT") + config.getConfigValue("STOCK_BUY_LOWER_LIMIT")))
+        let multiplierAboveSell = averageMultiplier - ((config.getConfigValue("STOCK_PROFIT") + config.getConfigValue("STOCK_BUY_LOWER_LIMIT") + 0.05))
 
         if (multiplierAboveSell < 0.05)
             multiplierAboveSell = 0.05
-        if (multiplierAboveSell > 0.38)
-            multiplierAboveSell = 0.35
+        if (multiplierAboveSell > 0.50)
+            multiplierAboveSell = 0.40
         if (isNaN(multiplierAboveSell))
             multiplierAboveSell = 0.05
 
