@@ -76,7 +76,7 @@ async function main() {
 
         let averageMultiplier = calculateAverage(deltaArray)
         const modulationAmount = getModulationAmount(stockElement, startSellPrice, await utils.getStockBuyPrice(stockElement))
-        utils.log.generic(`Modulation amount set to ${modulationAmount}, stock is ${modulationAmount > 0.075 ? 'going down' : 'going up'}`)
+        utils.log.generic(`Modulation amount set to ${modulationAmount}, stock is ${modulationAmount > 0 ? 'going down' : 'going up'}`)
         let multiplierAboveSell = averageMultiplier - ((config.getConfigValue("STOCK_PROFIT") + config.getConfigValue("STOCK_BUY_LOWER_LIMIT") + modulationAmount))
 
         if (multiplierAboveSell < 0.05)
@@ -103,10 +103,7 @@ function calculateAverage(array) {
 
 function getModulationAmount(stockElement, startSellPrice, endSellPrice) {
     const deltaSellPrice = endSellPrice - startSellPrice
-
-    const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {
-        return newMin + (val - minVal) * (newMax - newMin) / (maxVal - minVal);
-    };
+    utils.log.generic(`Difference in price is ${deltaSellPrice}`)
 
     const clampBetweenTwoRanges = (val, minVal, maxVal) => {
         if (val > maxVal)
@@ -116,11 +113,9 @@ function getModulationAmount(stockElement, startSellPrice, endSellPrice) {
         else
             return val
     };
+    const inverseDelta = !deltaSellPrice
+    let normalizedValue = inverseDelta / 70 * 0.15
 
-    let normalizedValue = normalizeBetweenTwoRanges(deltaSellPrice, -100, 100, 0.0, 0.15)
-    utils.log.generic(normalizedValue)
-    normalizedValue = -normalizedValue
-    utils.log.generic(normalizedValue)
     return clampBetweenTwoRanges(normalizedValue, 0, 0.15)
 }
 
