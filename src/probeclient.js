@@ -82,7 +82,7 @@ async function main() {
         if (multiplierAboveSell < 0.05)
             multiplierAboveSell = 0.05
         if (multiplierAboveSell > 0.31)
-            multiplierAboveSell = 0.31
+            multiplierAboveSell = 0.31 - modulationAmount
         if (isNaN(multiplierAboveSell))
             multiplierAboveSell = 0.05
 
