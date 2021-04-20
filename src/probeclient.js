@@ -11,7 +11,8 @@ const timeoutSignal = require("timeout-signal");
 const createCsvWriter = require('csv-writer').createArrayCsvWriter;
 const csvWriter = createCsvWriter({
     header: ['Time', 'Multiplier Above Sell (Rounded)', 'Determined Multiplier Above Sell'],
-    path: './logs/multiplierprobe.csv'
+    path: './logs/multiplierprobe.csv',
+    append: true
 });
 
 main()
