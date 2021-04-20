@@ -115,7 +115,8 @@ function getModulationAmount(stockElement, startSellPrice, endSellPrice) {
             return minVal
     };
 
-    const normalizedValue = normalizeBetweenTwoRanges(deltaSellPrice, -100, 100, 0.15, 0)
+    let normalizedValue = normalizeBetweenTwoRanges(deltaSellPrice, -100, 100, 0.0, 0.15)
+    normalizedValue = -normalizedValue
     return clampBetweenTwoRanges(normalizedValue, 0, 0.15)
 }
 
