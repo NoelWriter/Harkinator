@@ -8,6 +8,7 @@ const login = require("./client/phases/login")
 const webdriver = require("./client/webdriver");
 const fetch = require('node-fetch');
 const timeoutSignal = require("timeout-signal");
+const discordClient = require("./client/discordClient");
 const createCsvWriter = require('csv-writer').createArrayCsvWriter;
 const csvWriter = createCsvWriter({
     header: ['Time', 'Multiplier Above Sell (Rounded)', 'Determined Multiplier Above Sell'],
@@ -18,6 +19,29 @@ const csvWriter = createCsvWriter({
 main()
 
 async function main() {
+    await discordClient.init(config.getAuthValue('DISCORD_TOKEN')).then((discordClient) => {
+        discordClient.on("message", msg => {
+            let messageParts = msg.content.split(" ")
+
+            if (messageParts[0].toLowerCase() === 'setmas') {
+                if (messageParts.length < 2)
+                    this.sendMessage("Please include new amount")
+                if (msg.author.id === config.getAuthValue('DISCORD_USERID')) {
+                    let newMAS = parseFloat(messageParts[1])
+                    config.setConfigValue("MAX_MULTIPLIER_ABOVE_SELL", newMAS)
+                    this.sendMessage("Successfully set multiplier above sell " + newMAS)
+                }
+            }
+
+            if (messageParts[0].toLowerCase() === 'getmas') {
+                if (msg.author.id === config.getAuthValue('DISCORD_USERID')) {
+                    const mas = config.getConfigValue("MULTIPLIER_ABOVE_SELL")
+                    this.sendMessage("Multiplier above sell is currently " + mas)
+                }
+            }
+        })
+    })
+
     this.driverStartDate = Date.now()
 
     // Initialize webdriver
@@ -88,11 +112,13 @@ async function main() {
         const modulationAmount = getModulationAmount(stockElement, startSellPrice, await utils.getStockSellPrice(stockElement))
         utils.log.generic(`Modulation amount set to ${modulationAmount}, stock is ${modulationAmount > 0 ? 'going down' : 'going up'}`)
         let multiplierAboveSell = averageMultiplier - ((config.getConfigValue("STOCK_PROFIT") + config.getConfigValue("STOCK_BUY_LOWER_LIMIT") + modulationAmount))
+        const maxMultiplierAboveSell = config.getConfigValue("MAX_MULTIPLIER_ABOVE_SELL")
+
 
         if (multiplierAboveSell < 0.05)
             multiplierAboveSell = 0.05
-        if (multiplierAboveSell > 0.38)
-            multiplierAboveSell = 0.38 - modulationAmount
+        if (multiplierAboveSell > maxMultiplierAboveSell)
+            multiplierAboveSell = maxMultiplierAboveSell - modulationAmount
         if (isNaN(multiplierAboveSell))
             multiplierAboveSell = 0.05
 

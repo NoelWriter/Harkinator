@@ -147,6 +147,10 @@ app.post("/config", function (req, res) {
     req.body.DELAY_FREEFALL_DETECTED = parseInt(req.body.DELAY_FREEFALL_DETECTED);
   }
 
+  if (req.body.hasOwnProperty("MAX_MULTIPLIER_ABOVE_SELL")) {
+    req.body.MAX_MULTIPLIER_ABOVE_SELL = parseFloat(req.body.MAX_MULTIPLIER_ABOVE_SELL);
+  }
+
   if (req.body.hasOwnProperty("LAG_MAX_ORDER_DELAY")) {
     req.body.LAG_MAX_ORDER_DELAY = parseInt(req.body.LAG_MAX_ORDER_DELAY);
   }
