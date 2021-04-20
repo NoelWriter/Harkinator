@@ -73,8 +73,8 @@ async function main() {
 
             if (i % modulateSeconds === 0) {
                 utils.log.generic(`Probing has ${probeSeconds - i} seconds left`)
-                const modulationAmount = getModulationAmount(stockElement, loopSellPrice, await utils.getStockSellPrice(stockElement)) * 2
-                const newMultiplier = clampBetweenTwoRanges((curMultiplier - modulationAmount), 0.05, 0.35)
+                const modulationAmount = getModulationAmount(stockElement, loopSellPrice, await utils.getStockSellPrice(stockElement)) * 1.6
+                const newMultiplier = clampBetweenTwoRanges((curMultiplier - modulationAmount), 0.05, config.getConfigValue("MAX_MULTIPLIER_ABOVE_SELL"))
                 utils.log.generic(`In between multiplier is now ${newMultiplier}, modulated by subtracting ${modulationAmount}`)
                 config.setConfigValue("STOCK_MULTIPLIER_ABOVE_SELL", newMultiplier)
                 loopSellPrice = curSellprice
@@ -153,7 +153,7 @@ function getModulationAmount(stockElement, startSellPrice, endSellPrice) {
         return (value - min) / (max - min);
     }
 
-    return clampBetweenTwoRanges(norm(-deltaSellPrice, 0, 200), 0, 0.15)
+    return clampBetweenTwoRanges(norm(-deltaSellPrice, 0, 200), 0, 0.25)
 }
 
 
