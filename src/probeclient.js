@@ -35,7 +35,7 @@ async function main() {
     while (true) {
         let deltaArray = []
         let timestampArray = []
-        const probeSeconds = 60
+        const probeSeconds = 240
         utils.log.generic(`Probing new multiplier for +/- ${probeSeconds} seconds`)
 
         for (let i = 0; i < probeSeconds; i++) {
@@ -55,7 +55,7 @@ async function main() {
         const resPointArray = res.split('\n')
 
         for (const timestampArrayItem of timestampArray) {
-            for (let i = 0; i < 60; i++) {
+            for (let i = 0; i < 240; i++) {
                 const pointTimestamp = parseInt(resPointArray[i].split(',')[0])
                 const arrayTimestamp = Math.round(timestampArrayItem[2])
 
@@ -78,8 +78,8 @@ async function main() {
 
         if (multiplierAboveSell < 0.05)
             multiplierAboveSell = 0.05
-        if (multiplierAboveSell > 0.50)
-            multiplierAboveSell = 0.40
+        if (multiplierAboveSell > 0.30)
+            multiplierAboveSell = 0.30
         if (isNaN(multiplierAboveSell))
             multiplierAboveSell = 0.05
 
