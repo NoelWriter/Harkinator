@@ -75,7 +75,7 @@ async function main() {
         }
 
         let averageMultiplier = calculateAverage(deltaArray)
-        const modulationAmount = getModulationAmount(stockElement, startSellPrice, await utils.getStockBuyPrice(stockElement))
+        const modulationAmount = getModulationAmount(stockElement, startSellPrice, await utils.getStockSellPrice(stockElement))
         utils.log.generic(`Modulation amount set to ${modulationAmount}, stock is ${modulationAmount > 0 ? 'going down' : 'going up'}`)
         let multiplierAboveSell = averageMultiplier - ((config.getConfigValue("STOCK_PROFIT") + config.getConfigValue("STOCK_BUY_LOWER_LIMIT") + modulationAmount))
 
