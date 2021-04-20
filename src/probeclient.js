@@ -110,13 +110,17 @@ function getModulationAmount(stockElement, startSellPrice, endSellPrice) {
 
     const clampBetweenTwoRanges = (val, minVal, maxVal) => {
         if (val > maxVal)
-            return maxVal;
+            return maxVal
         if (val < minVal)
             return minVal
+        else
+            return val
     };
 
     let normalizedValue = normalizeBetweenTwoRanges(deltaSellPrice, -100, 100, 0.0, 0.15)
+    utils.log.generic(normalizedValue)
     normalizedValue = -normalizedValue
+    utils.log.generic(normalizedValue)
     return clampBetweenTwoRanges(normalizedValue, 0, 0.15)
 }
 
