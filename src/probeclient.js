@@ -81,8 +81,8 @@ async function main() {
 
         if (multiplierAboveSell < 0.05)
             multiplierAboveSell = 0.05
-        if (multiplierAboveSell > 0.30)
-            multiplierAboveSell = 0.30
+        if (multiplierAboveSell > 0.35)
+            multiplierAboveSell = 0.35
         if (isNaN(multiplierAboveSell))
             multiplierAboveSell = 0.05
 
