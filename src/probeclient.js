@@ -32,20 +32,29 @@ async function main() {
     if (!stockElement)
         console.log(stockElement)
 
+    let curMultiplier = 0
+
     while (true) {
         let deltaArray = []
         let timestampArray = []
         const probeSeconds = 60
         utils.log.generic(`Probing new multiplier for +/- ${probeSeconds} seconds`)
         const startSellPrice = await utils.getStockSellPrice(stockElement)
+        let loopSellPrice = startSellPrice
 
         for (let i = 0; i < probeSeconds; i++) {
             let curSpread = await utils.getSpread(stockElement)
             let curSellprice = await utils.getStockSellPrice(stockElement)
             let curTimestamp = Date.now() / 1000
 
-            if (i % 20 === 0)
+            if (i % 10 === 0) {
                 utils.log.generic(`Probing has ${probeSeconds - i} seconds left`)
+                const modulationAmount = getModulationAmount(stockElement, loopSellPrice, await utils.getStockSellPrice(stockElement))
+                const newMultiplier = (curMultiplier - modulationAmount)
+                utils.log.generic(`In between multiplier is now ${newMultiplier}, modulated by subtracting ${modulationAmount}`)
+                config.setConfigValue("STOCK_MULTIPLIER_ABOVE_SELL", newMultiplier)
+                loopSellPrice = curSellprice
+            }
 
             timestampArray.push([curSpread, curSellprice, curTimestamp])
             await driver.sleep(1000)
@@ -81,8 +90,8 @@ async function main() {
 
         if (multiplierAboveSell < 0.05)
             multiplierAboveSell = 0.05
-        if (multiplierAboveSell > 0.31)
-            multiplierAboveSell = 0.31 - modulationAmount
+        if (multiplierAboveSell > 0.35)
+            multiplierAboveSell = 0.35 - modulationAmount
         if (isNaN(multiplierAboveSell))
             multiplierAboveSell = 0.05
 
@@ -90,6 +99,7 @@ async function main() {
         utils.log.generic(`Result written to CSV with resulting MAS being ${multiplierAboveSell}`)
 
         config.setConfigValue("STOCK_MULTIPLIER_ABOVE_SELL", multiplierAboveSell)
+        curMultiplier = multiplierAboveSell
     }
 }
 
