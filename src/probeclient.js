@@ -38,6 +38,7 @@ async function main() {
         let deltaArray = []
         let timestampArray = []
         const probeSeconds = 160
+        const modulateSeconds = 5
         utils.log.generic(`Probing new multiplier for +/- ${probeSeconds} seconds`)
         const startSellPrice = await utils.getStockSellPrice(stockElement)
         let loopSellPrice = startSellPrice
@@ -47,9 +48,9 @@ async function main() {
             let curSellprice = await utils.getStockSellPrice(stockElement)
             let curTimestamp = Date.now() / 1000
 
-            if (i % 5 === 0) {
+            if (i % modulateSeconds === 0) {
                 utils.log.generic(`Probing has ${probeSeconds - i} seconds left`)
-                const modulationAmount = getModulationAmount(stockElement, loopSellPrice, await utils.getStockSellPrice(stockElement))
+                const modulationAmount = getModulationAmount(stockElement, loopSellPrice, await utils.getStockSellPrice(stockElement)) * 2
                 const newMultiplier = clampBetweenTwoRanges((curMultiplier - modulationAmount), 0.05, 0.35)
                 utils.log.generic(`In between multiplier is now ${newMultiplier}, modulated by subtracting ${modulationAmount}`)
                 config.setConfigValue("STOCK_MULTIPLIER_ABOVE_SELL", newMultiplier)
