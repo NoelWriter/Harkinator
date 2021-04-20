@@ -32,12 +32,12 @@ async function main() {
     if (!stockElement)
         console.log(stockElement)
 
-    let curMultiplier = 0
+    let curMultiplier = config.getConfigValue("STOCK_MULTIPLIER_ABOVE_SELL")
 
     while (true) {
         let deltaArray = []
         let timestampArray = []
-        const probeSeconds = 60
+        const probeSeconds = 160
         utils.log.generic(`Probing new multiplier for +/- ${probeSeconds} seconds`)
         const startSellPrice = await utils.getStockSellPrice(stockElement)
         let loopSellPrice = startSellPrice
@@ -50,7 +50,7 @@ async function main() {
             if (i % 10 === 0) {
                 utils.log.generic(`Probing has ${probeSeconds - i} seconds left`)
                 const modulationAmount = getModulationAmount(stockElement, loopSellPrice, await utils.getStockSellPrice(stockElement))
-                const newMultiplier = (curMultiplier - modulationAmount)
+                const newMultiplier = clampBetweenTwoRanges((curMultiplier - modulationAmount), 0.05, 0.35)
                 utils.log.generic(`In between multiplier is now ${newMultiplier}, modulated by subtracting ${modulationAmount}`)
                 config.setConfigValue("STOCK_MULTIPLIER_ABOVE_SELL", newMultiplier)
                 loopSellPrice = curSellprice
@@ -111,6 +111,15 @@ function calculateAverage(array) {
     return sum / len;
 }
 
+const clampBetweenTwoRanges = (val, minVal, maxVal) => {
+    if (val > maxVal)
+        return maxVal
+    if (val < minVal)
+        return minVal
+    return val
+};
+
+
 function getModulationAmount(stockElement, startSellPrice, endSellPrice) {
     const deltaSellPrice = endSellPrice - startSellPrice
     utils.log.generic(`Difference in price is ${deltaSellPrice}`)
@@ -118,14 +127,6 @@ function getModulationAmount(stockElement, startSellPrice, endSellPrice) {
     const norm = (value, min, max) => {
         return (value - min) / (max - min);
     }
-
-    const clampBetweenTwoRanges = (val, minVal, maxVal) => {
-        if (val > maxVal)
-            return maxVal
-        if (val < minVal)
-            return minVal
-        return val
-    };
 
     return clampBetweenTwoRanges(norm(-deltaSellPrice, 0, 200), 0, 0.15)
 }
