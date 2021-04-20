@@ -35,8 +35,9 @@ async function main() {
     while (true) {
         let deltaArray = []
         let timestampArray = []
-        const probeSeconds = 240
+        const probeSeconds = 60
         utils.log.generic(`Probing new multiplier for +/- ${probeSeconds} seconds`)
+        const startSellPrice = await utils.getStockSellPrice(stockElement)
 
         for (let i = 0; i < probeSeconds; i++) {
             let curSpread = await utils.getSpread(stockElement)
@@ -55,7 +56,7 @@ async function main() {
         const resPointArray = res.split('\n')
 
         for (const timestampArrayItem of timestampArray) {
-            for (let i = 0; i < 240; i++) {
+            for (let i = 0; i < probeSeconds; i++) {
                 const pointTimestamp = parseInt(resPointArray[i].split(',')[0])
                 const arrayTimestamp = Math.round(timestampArrayItem[2])
 
@@ -74,7 +75,9 @@ async function main() {
         }
 
         let averageMultiplier = calculateAverage(deltaArray)
-        let multiplierAboveSell = averageMultiplier - ((config.getConfigValue("STOCK_PROFIT") + config.getConfigValue("STOCK_BUY_LOWER_LIMIT") + 0.05))
+        const modulationAmount = getModulationAmount(stockElement, startSellPrice, await utils.getStockBuyPrice(stockElement))
+        console.log(modulationAmount)
+        let multiplierAboveSell = averageMultiplier - ((config.getConfigValue("STOCK_PROFIT") + config.getConfigValue("STOCK_BUY_LOWER_LIMIT") + modulationAmount))
 
         if (multiplierAboveSell < 0.05)
             multiplierAboveSell = 0.05
@@ -97,6 +100,17 @@ function calculateAverage(array) {
     }
     return sum / len;
 }
+
+function getModulationAmount(stockElement, startSellPrice, endSellPrice) {
+    const deltaSellPrice = endSellPrice - startSellPrice
+
+    const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {
+        return newMin + (val - minVal) * (newMax - newMin) / (maxVal - minVal);
+    };
+
+    return normalizeBetweenTwoRanges(deltaSellPrice, -100, 100, 0.15, 0)
+}
+
 
 /**
  * @param {*} this.driver
