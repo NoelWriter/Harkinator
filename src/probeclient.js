@@ -47,7 +47,7 @@ async function main() {
             let curSellprice = await utils.getStockSellPrice(stockElement)
             let curTimestamp = Date.now() / 1000
 
-            if (i % 10 === 0) {
+            if (i % 5 === 0) {
                 utils.log.generic(`Probing has ${probeSeconds - i} seconds left`)
                 const modulationAmount = getModulationAmount(stockElement, loopSellPrice, await utils.getStockSellPrice(stockElement))
                 const newMultiplier = clampBetweenTwoRanges((curMultiplier - modulationAmount), 0.05, 0.35)
@@ -118,7 +118,6 @@ const clampBetweenTwoRanges = (val, minVal, maxVal) => {
         return minVal
     return val
 };
-
 
 function getModulationAmount(stockElement, startSellPrice, endSellPrice) {
     const deltaSellPrice = endSellPrice - startSellPrice
