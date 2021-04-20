@@ -81,8 +81,8 @@ async function main() {
 
         if (multiplierAboveSell < 0.05)
             multiplierAboveSell = 0.05
-        if (multiplierAboveSell > 0.35)
-            multiplierAboveSell = 0.35
+        if (multiplierAboveSell > 0.31)
+            multiplierAboveSell = 0.31
         if (isNaN(multiplierAboveSell))
             multiplierAboveSell = 0.05
 
@@ -105,18 +105,19 @@ function getModulationAmount(stockElement, startSellPrice, endSellPrice) {
     const deltaSellPrice = endSellPrice - startSellPrice
     utils.log.generic(`Difference in price is ${deltaSellPrice}`)
 
+    const norm = (value, min, max) => {
+        return (value - min) / (max - min);
+    }
+
     const clampBetweenTwoRanges = (val, minVal, maxVal) => {
         if (val > maxVal)
             return maxVal
         if (val < minVal)
             return minVal
-        else
-            return val
+        return val
     };
-    const inverseDelta = !deltaSellPrice
-    let normalizedValue = inverseDelta / 70 * 0.15
 
-    return clampBetweenTwoRanges(normalizedValue, 0, 0.15)
+    return clampBetweenTwoRanges(norm(-deltaSellPrice, 0, 200), 0, 0.15)
 }
 
 
